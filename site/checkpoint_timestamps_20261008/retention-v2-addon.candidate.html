@@ -1,0 +1,335 @@
+<style id="agillm-fleet-ui-20261008">
+/* Three-model monitor. Existing editor, decoder controls and history stay intact. */
+#agillmTelemetry #agi-live,#agillmTelemetry #servingNowStrip{display:none!important}
+#agillmTelemetry .training-heading>span{display:none!important}
+#agillmFleetMonitor{color:#e3e8ef;min-width:0;margin:8px 0 10px;font:12px/1.45 system-ui,sans-serif}
+.af-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px;color:#9caabd}
+.af-top strong{color:#e5ebf3;font-size:12px;font-weight:650}
+.af-top button{border:1px solid #354255;background:#182332;color:#dce7f7;border-radius:7px;padding:5px 10px;font:inherit;cursor:pointer;min-height:30px}
+.af-top button:focus-visible,.af-details summary:focus-visible{outline:2px solid #75bfff;outline-offset:3px}
+.af-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.af-card{min-width:0;background:#111b28;border:1px solid #2b394b;border-radius:12px;padding:12px 14px;box-shadow:0 2px 10px #0002}
+.af-card[data-selected="true"]{border-color:#648fbd;background:#152334}
+.af-card header{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+.af-card h3{margin:0!important;font:650 13px/1.3 system-ui,sans-serif!important;color:#edf3fc!important;white-space:nowrap}
+.af-state{font-size:10px;color:#95d8b0;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.af-state:before{content:"";width:6px;height:6px;background:currentColor;border-radius:50%;flex-shrink:0}
+.af-state[data-fresh="false"]{color:#e0b984}
+.af-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.af-metric{min-width:0}
+.af-metric span{display:block;color:#92a4bb;font-size:10px;letter-spacing:.04em;text-transform:uppercase}
+.af-metric b{display:block;color:#edf4ff;font:650 18px/1.5 ui-monospace,Consolas,monospace;letter-spacing:-.035em;white-space:nowrap}
+.af-checkpoint{margin-top:11px;padding-top:9px;border-top:1px solid #2b394b;display:flex;justify-content:space-between;gap:6px;color:#a3b4c9;font-size:11px}
+.af-checkpoint strong{color:#a7d8bf;font-weight:650}
+.af-details{margin-top:8px;color:#9bafc6;font-size:11px}
+.af-details summary{cursor:pointer;color:#aebfd4;min-height:22px;list-style-position:inside}
+.af-details dl{display:grid;grid-template-columns:1fr auto;gap:5px 10px;margin:9px 0 2px}
+.af-details dt,.af-details dd{margin:0;min-width:0}
+.af-details dd{text-align:right;color:#d8e3f2;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.af-chart{margin-top:9px;height:40px;width:100%;display:block;color:#89bce9}
+.af-note{margin:9px 0 0;color:#8699b2;font-size:10px;line-height:1.5}
+#docwrap{border-radius:12px!important}
+#docbar{border-bottom:1px solid #283647!important}
+#doc:focus{outline:none}
+#docwrap:focus-within{box-shadow:0 0 0 1px #6189b3!important}
+#agillmTelemetry:not(.is-collapsed){max-height:240px!important;overflow-y:auto!important;scrollbar-width:thin}
+@media(min-width:1281px){#workspace{gap:12px!important}#agillmTelemetry{margin:8px 14px 0!important}.af-card{padding:11px 14px}.af-grid{gap:12px}}
+@media(max-width:900px){.af-grid{grid-template-columns:1fr}.af-card{padding:10px 12px}.af-card header{margin-bottom:6px}.af-metric b{font-size:17px}.af-checkpoint{margin-top:7px;padding-top:6px}.af-top{align-items:flex-start}.af-top strong{display:block}.af-top span{font-size:10px}#agillmTelemetry:not(.is-collapsed){max-height:35vh!important}.af-details{margin-top:5px}}
+@media(prefers-reduced-motion:reduce){#agillmFleetMonitor *{transition:none!important;animation:none!important}}
+.af-save-status{margin-top:7px;padding-top:7px;border-top:1px solid #2b394b;font-size:11px;line-height:1.55;color:#a3b4c9;overflow-wrap:anywhere}
+.af-save-status strong{color:#d7e5f5;font-weight:650}
+.af-checkpoint-updated{margin-top:2px;color:#aebed1;font-variant-numeric:tabular-nums}
+.af-checkpoint-updated time{color:#d8e3f2}
+.af-checkpoint-age{white-space:nowrap;color:#91a6bd}
+.af-serving-export{font-size:10px;line-height:1.5;color:#95a9bf;margin-top:4px;overflow-wrap:anywhere}
+</style>
+<script id="agillm-fleet-ui-runtime-20261008">
+/* AGILLM_CHECKPOINT_RETENTION_V2: checkpoint metadata only; no model state. */
+(function(root, factory) {
+  'use strict';
+  if (typeof module === 'object' && module.exports) module.exports = factory();
+  else root.AGILLMCheckpointRetention = factory();
+})(typeof globalThis !== 'undefined' ? globalThis : this, function() {
+  'use strict';
+  const models = ['standard', 'rpv16', 'bintf4b'];
+  function stepNumber(value) {
+    if (typeof value !== 'number' && !(typeof value === 'string' && /^\d+$/.test(value))) return null;
+    const n = Number(value);
+    return Number.isSafeInteger(n) && n >= 0 ? n : null;
+  }
+  function create(options) {
+    const parseTime = options.parseTime;
+    const storage = options.storage;
+    const now = options.now || Date.now;
+    const ttl = 7 * 86400000;
+    const storageKey = 'agillm_checkpoint_times_v2';
+    const records = Object.create(null), confirmed = Object.create(null);
+    function valid(record) {
+      return record && stepNumber(record.step) !== null && Number.isFinite(record.seenAt) &&
+        record.seenAt <= now() + 60000 && now() - record.seenAt <= ttl &&
+        typeof record.scope === 'string' && record.scope.length <= 240 &&
+        typeof record.identity === 'string' && record.identity.length <= 128 &&
+        (record.at === null || parseTime(record.at) !== null);
+    }
+    try {
+      const data = JSON.parse(storage?.getItem(storageKey) || 'null');
+      if (data?.version === 2) for (const model of models) {
+        if (valid(data.records?.[model])) records[model] = data.records[model];
+      }
+    } catch (_) { /* Disabled or corrupt browser storage must not break the page. */ }
+    function persist() {
+      try { storage?.setItem(storageKey, JSON.stringify({version:2, records})); } catch (_) {}
+    }
+    function observe(model, event, scope = '') {
+      if (!models.includes(model)) return;
+      scope = typeof scope === 'string' ? scope.slice(0,240) : '';
+      const step = stepNumber(event?.step);
+      // Retention fix 20261008: a degraded feed block (missing model_id/lineage/
+      // instance_id) must never wipe last-known data; only a genuine observation
+      // with a complete scope retires a previous lineage record.
+      const scopeParts = scope.split('|');
+      const scopeComplete = scopeParts.length === 3 && scopeParts.every(p => p !== '');
+      if (records[model] && (!valid(records[model]) || (step !== null && scopeComplete && records[model].scope && scope !== records[model].scope))) {
+        delete records[model];
+      }
+      confirmed[model] = false;
+      if (step === null) { persist(); return; }
+      const at = parseTime(event?.at);
+      const identity = typeof event?.identity === 'string' ? event.identity.slice(0,128) : '';
+      const previous = records[model];
+      const same = previous && previous.step === step &&
+        (!identity || !previous.identity || identity === previous.identity);
+      if (at !== null) {
+        // A restored checkpoint can have a LOWER step. Never impose max-step selection.
+        records[model] = {step, at, seenAt:now(), scope, identity};
+        confirmed[model] = true;
+      } else if (!same) {
+        // Never attach a previous checkpoint's timestamp to a different step or hash.
+        records[model] = {step, at:null, seenAt:now(), scope, identity};
+      }
+      persist();
+    }
+    function unavailable(model) { if (models.includes(model)) confirmed[model] = false; }
+    function view(model) {
+      const record = records[model];
+      if (!valid(record)) return {saved:null, savedAt:null, savedLastKnown:false};
+      return {saved:record.step, savedAt:record.at, savedLastKnown:confirmed[model] !== true};
+    }
+    return Object.freeze({observe, unavailable, view});
+  }
+  return Object.freeze({create, stepNumber});
+});
+
+/* AGILLM_CHECKPOINT_TIMESTAMPS_V1 */
+/* Checkpoint timestamps. Callers must pass checkpoint metadata, not poll times. */
+(function (root, factory) {
+  'use strict';
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.AGILLMCheckpointTime = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+  const earliest = Date.UTC(2000, 0, 1);
+  const latest = Date.UTC(2100, 0, 1);
+  const absoluteFormatter = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Europe/London', year: 'numeric', month: 'short', day: 'numeric',
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23',
+    timeZoneName: 'short'
+  });
+
+  function parse(value) {
+    let ms = NaN;
+    if (typeof value === 'number') {
+      ms = value < 1e11 ? value * 1000 : value;
+    } else if (typeof value === 'string' && value.trim()) {
+      const text = value.trim();
+      if (/^\d+(?:\.\d+)?$/.test(text)) {
+        const n = Number(text);
+        ms = n < 1e11 ? n * 1000 : n;
+      } else if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})$/i.test(text)) {
+        const year = Number(text.slice(0, 4));
+        const month = Number(text.slice(5, 7));
+        const day = Number(text.slice(8, 10));
+        if (month >= 1 && month <= 12 && day >= 1 &&
+            day <= new Date(Date.UTC(year, month, 0)).getUTCDate()) ms = Date.parse(text);
+      }
+    }
+    return Number.isFinite(ms) && ms >= earliest && ms < latest ? ms : null;
+  }
+
+  function age(ms, now) {
+    const delta = now - ms;
+    if (!Number.isFinite(delta)) return '';
+    if (delta < -60000) return 'timestamp is ahead of this device';
+    const minutes = Math.floor(Math.max(0, delta) / 60000);
+    if (minutes === 0) return 'less than a minute ago';
+    if (minutes < 60) return minutes + ' min ago';
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return hours + ' h' + (minutes % 60 ? ' ' + minutes % 60 + ' min' : '') + ' ago';
+    const days = Math.floor(hours / 24);
+    return days + (days === 1 ? ' day' : ' days') + ' ago';
+  }
+
+  function format(value, now = Date.now()) {
+    const ms = parse(value);
+    if (ms === null) return null;
+    return {
+      ms,
+      iso: new Date(ms).toISOString(),
+      absolute: absoluteFormatter.format(ms),
+      relative: age(ms, now)
+    };
+  }
+
+  function render(target, value, options = {}) {
+    if (!target || !target.ownerDocument) return false;
+    const doc = target.ownerDocument;
+    const result = format(value, options.now === undefined ? Date.now() : options.now);
+    const label = options.label || 'Last updated';
+    target.classList.add('checkpoint-last-updated');
+    if (!result) {
+      target.textContent = label + ': time unavailable';
+      target.removeAttribute('title');
+      return false;
+    }
+    const time = doc.createElement('time');
+    time.dateTime = result.iso;
+    time.textContent = result.absolute;
+    time.title = result.iso + (options.source ? ' · ' + options.source : '');
+    const relative = doc.createElement('span');
+    relative.className = 'checkpoint-age';
+    relative.textContent = result.relative ? ' (' + result.relative + ')' : '';
+    target.replaceChildren(doc.createTextNode(label + ': '), time, relative);
+    target.title = options.source || 'Checkpoint timestamp; not the page refresh time.';
+    return true;
+  }
+
+  return Object.freeze({ parse, age, format, render });
+});
+
+(()=>{
+'use strict';
+if(window.__agillmFleetUI20261008)return;window.__agillmFleetUI20261008=true;
+const labels={standard:'Standard 1.1B',rpv16:'RPV16 2.0B',bintf4b:'Binary 4B'};
+const healthURLs={standard:'/agillm43-infer/health',rpv16:'/agillm-rpv16-health',bintf4b:'/agillm-bintf4b-health'};
+const state={fleet:null,binary:null,health:{},fetched:0,busy:false,errors:{}};
+let checkpointStorage=null;
+try { checkpointStorage=window.localStorage; } catch (_) {}
+const checkpointStore=window.AGILLMCheckpointRetention.create({parseTime:window.AGILLMCheckpointTime.parse,storage:checkpointStorage});
+function checkpointScope(t){
+ if(!t||!(t.model_id||t.model||t.lineage||t.instance_id))return '';
+ return [t.model_id||t.model||'',t.lineage||'',t.instance_id??''].join('|');
+}
+function observeCheckpoints(key,value){
+ if(key==='fleet')for(const model of ['standard','rpv16']){
+  const t=value?.[model+'_live'],event=t?.last_checkpoint_event;
+  checkpointStore.observe(model,event?{step:event.step,at:event.ts,identity:event.sha256}:null,checkpointScope(t));
+ }
+ if(key==='binary'){
+  const event=value?.saved?.ckpt;
+  checkpointStore.observe('bintf4b',event?{step:event.step,at:event.updated_at,identity:event.sha256}:null,checkpointScope(value));
+  if(value?.ok!==true||value?.stale===true)checkpointStore.unavailable('bintf4b');
+ }
+}
+const number=n=>n!==null&&n!==undefined&&n!==''&&Number.isFinite(Number(n))?Number(n):null;
+const fmt=(n,d=0)=>number(n)===null?'—':Number(n).toLocaleString('en-GB',{maximumFractionDigits:d,minimumFractionDigits:d});
+const compact=n=>number(n)===null?'—':Number(n)>=1e9?(Number(n)/1e9).toFixed(2)+'B':Number(n)>=1e6?(Number(n)/1e6).toFixed(1)+'M':fmt(n);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ageText=n=>number(n)===null?'time unavailable':n<60?Math.floor(n)+'s ago':n<3600?Math.floor(n/60)+'m ago':Math.floor(n/3600)+'h ago';
+function timestamp(t){const x=number(t);if(x!==null)return x;const d=Date.parse(t);return Number.isFinite(d)?d/1000:null;}
+function servingStep(h){
+ if(!h)return null;
+ try{const x=window.AGILLMTelemetryValues?.servingStep(h);if(number(x)!==null)return number(x);}catch(_){}
+ const x=h.model?.step??h.step??h.ckpt_meta?.step;if(number(x)!==null)return number(x);
+ const m=String(h.ckpt??h.checkpoint??'').match(/step0*(\d+)/i);return m?Number(m[1]):null;
+}
+function sample(key){
+ const now=Date.now()/1000;
+ if(key==='bintf4b'){
+  const d=state.binary||{},t=d.training||{},ts=timestamp(t.time),age=ts===null?null:Math.max(0,now-ts);
+  const fresh=d.ok===true&&!d.stale&&age!==null&&age<180&&!state.errors.binary;
+  const evals=Object.values(t.eval||{}).map(v=>number(v.ar)).filter(v=>v!==null);
+  return {step:t.step,rate:t.rate,loss:t.ar,seen:t.seen,fresh,age,running:t.process_alive,validation:evals.length?evals.reduce((a,b)=>a+b,0)/evals.length:null,...checkpointStore.view('bintf4b'),validated:d.saved?.['ckpt.good']?.step,ps:t.ps,gpu:t.gpu_gb,nets:t.steps,history:d.history||[],rateLabel:'Training tok/s',rateDetail:'Trainer-reported current throughput'};
+ }
+ const t=state.fleet?.[key+'_live']||{},ts=timestamp(t.source_observed_at??t.observed_at??t.collected_at),age=ts===null?null:Math.max(0,now-ts);
+ return {step:t.step,rate:t.wall_tok_s??t.median_tok_s??t.raw_tok_s,loss:t.loss,seen:t.seen_tokens,fresh:t.fresh!==false&&age!==null&&age<180&&!state.errors.fleet,running:t.running,status:t.status,age,...checkpointStore.view(key),rateLabel:t.wall_tok_s!==undefined?'Wall tok/s':'Training tok/s',rateDetail:t.throughput_definition||'Trainer-reported throughput',gpu:t.gpu?.mem_used_mb?Number(t.gpu.mem_used_mb)/1024:null,validation:t.validation_loss??null};
+}
+function chart(history){
+ const values=history.slice(-60).map(x=>number(x.rate)).filter(x=>x!==null&&x>=0);if(values.length<2)return '';
+ const lo=Math.min(...values),hi=Math.max(...values),span=Math.max(hi-lo,1);
+ const pts=values.map((v,i)=>(i/(values.length-1)*300).toFixed(1)+','+(35-(v-lo)/span*29).toFixed(1)).join(' ');
+ return '<svg class="af-chart" viewBox="0 0 300 40" preserveAspectRatio="none" role="img" aria-label="Recent Binary 4B training throughput, '+esc(fmt(lo))+' to '+esc(fmt(hi))+' tokens per second"><polyline fill="none" stroke="currentColor" stroke-width="1.6" vector-effect="non-scaling-stroke" points="'+pts+'"/></svg>';
+}
+function checkpointTimeMarkup(value){
+ const f=window.AGILLMCheckpointTime.format(value);
+ if(!f)return '<span class="af-time-unavailable">Time unavailable</span>';
+ return '<time datetime="'+esc(f.iso)+'" title="'+esc(f.iso)+'">'+esc(f.absolute)+'</time> <span class="af-checkpoint-age">('+esc(f.relative)+')</span>';
+}
+function savedCheckpointMarkup(t){
+ const cached=t.savedLastKnown===true;
+ const label=cached?'Last known saved':'Latest saved';
+ const tip=cached?'Last-known checkpoint metadata retained while the feed is missing or delayed; not confirmation of the newest save.':'Checkpoint update timestamp, not the telemetry refresh.';
+ return '<div class="af-save-status" data-saved-step="'+esc(t.saved??'')+'" data-checkpoint-status="'+(cached?'last-known':'current')+'" title="'+esc(tip)+'"><span>'+label+' <strong>'+(number(t.saved)!==null?'#'+fmt(t.saved):'Unavailable')+'</strong></span><div class="af-checkpoint-updated">Last updated: '+checkpointTimeMarkup(t.savedAt)+'</div></div>';
+}
+function servingExportMarkup(h){
+ const value=h?.model?.exported_at??h?.ckpt_meta?.exported_at;
+ return h?.ready===true&&window.AGILLMCheckpointTime.parse(value)!==null?'<div class="af-serving-export">Serving exported: '+checkpointTimeMarkup(value)+'</div>':'';
+}
+// Standard serving-state diagnosis: distinguish loading from failed health requests.
+function servingStatusLabel(h,failed=false){
+ if(!h)return failed?'Status unavailable':'Checking…';
+ if(h.ready===true){const s=servingStep(h);return s===null?'Ready (checkpoint unverified)':'#'+fmt(s);}
+ if(h.warming===true)return 'Loading checkpoint';
+ return failed?'Status unavailable':'Not ready';
+}
+function card(key,open){
+ const t=sample(key),h=state.health[key],step=servingStep(h),ready=h?.ready===true;
+ const status=t.fresh?(t.running===false?(t.status==='completed'?'Complete':'Idle'):'Training'):(number(t.step)!==null?'Delayed':'Unavailable');
+ const selected=document.querySelector('#modelseg button.on')?.dataset.model;
+ const metric=(title,v,tip)=>'<div class="af-metric" title="'+esc(tip||title)+'"><span>'+esc(title)+'</span><b>'+esc(v)+'</b></div>';
+ let details=[['Trainer step',fmt(t.step)],['Latest saved',fmt(t.saved)],['Seen tokens',compact(t.seen)],['Source updated',ageText(t.age)]];
+ if(key==='bintf4b'){
+  details.push(['Validated checkpoint',fmt(t.validated)],['Mean per-net eval loss',fmt(t.validation,3)],['ParScale',typeof h?.parscale==='object'?'P'+fmt(h.parscale.streams):number(t.ps)!==null?'P'+fmt(t.ps):'—']);
+  if(Array.isArray(t.nets))details.push(['Per-network steps',t.nets.map(n=>fmt(n)).join(' / ')]);
+ }
+ if(number(t.gpu)!==null)details.push(['GPU memory',fmt(t.gpu,2)+' GB']);
+ return '<article class="af-card" data-model="'+key+'" data-selected="'+(selected===key)+'"><header><h3>'+labels[key]+'</h3><span class="af-state" data-fresh="'+t.fresh+'" title="'+esc(ageText(t.age))+'">'+status+'</span></header><div class="af-metrics">'+metric(t.rateLabel,fmt(t.rate),t.rateDetail+(t.fresh?'':' · last known sample'))+metric('Batch loss',fmt(t.loss,3),'Current training batch loss, not a validation score')+metric('Train step',compact(t.step))+'</div>'+savedCheckpointMarkup(t)+'<div class="af-checkpoint"><span>Serving checkpoint</span><strong>'+esc(servingStatusLabel(h,state.errors[key]))+'</strong></div>'+servingExportMarkup(h)+'<details class="af-details"'+(open?' open':'')+'><summary>Checkpoint & training details</summary><dl>'+details.map(([k,v])=>'<dt>'+esc(k)+'</dt><dd>'+esc(v)+'</dd>').join('')+'</dl>'+(key==='bintf4b'?chart(t.history):'')+'</details></article>';
+}
+function render(){
+ const rail=document.getElementById('agillmTelemetry');if(!rail)return;
+ let box=document.getElementById('agillmFleetMonitor');
+ if(!box){box=document.createElement('section');box.id='agillmFleetMonitor';box.setAttribute('aria-label','Live training and serving checkpoints for all three models');const old=document.getElementById('agi-live');old?old.before(box):rail.append(box);}
+ const opened=new Set([...box.querySelectorAll('.af-details[open]')].map(d=>d.closest('.af-card').dataset.model));
+ const focused=document.activeElement?.closest('#agillmFleetMonitor');const focusKey=focused?.closest('.af-card')?.dataset.model;const focusRefresh=document.activeElement?.id==='afRefresh';
+ const count=Object.keys(labels).filter(k=>sample(k).fresh).length;
+ box.innerHTML='<div class="af-top"><div><strong>Three models. One live view.</strong><span id="afFreshness"> '+count+'/3 telemetry feeds fresh · refresh every 30s</span></div><button type="button" id="afRefresh" aria-label="Refresh training telemetry"'+(state.busy?' disabled':'')+'>Refresh</button></div><div class="af-grid">'+Object.keys(labels).map(k=>card(k,opened.has(k))).join('')+'</div><p class="af-note">Training steps and saved checkpoints are not the same as the weights answering your requests. Serving rows come from each model’s live health endpoint. Missing checkpoint metadata keeps a labelled last-known step and timestamp; it never borrows a timestamp from another checkpoint.</p>';
+ box.querySelector('#afRefresh').addEventListener('click',refresh);
+ if(focusKey)box.querySelector('[data-model="'+focusKey+'"] summary')?.focus({preventScroll:true});else if(focusRefresh)box.querySelector('#afRefresh')?.focus({preventScroll:true});
+ const chosen=document.querySelector('#modelseg button.on')?.dataset.model;
+ if(chosen==='bintf4b'){
+  const checkpoint=document.getElementById('latestCkpt'),h=state.health.bintf4b;
+  if(checkpoint&&h?.ready)checkpoint.textContent='Binary 4B · serving #'+fmt(servingStep(h));
+ }
+}
+async function get(url){const c=new AbortController(),timeout=setTimeout(()=>c.abort(),8000);try{const r=await fetch(url,{cache:'no-store',signal:c.signal});if(!r.ok)throw Error('HTTP '+r.status);return await r.json();}finally{clearTimeout(timeout);}}
+async function refresh(){
+ if(state.busy)return;state.busy=true;render();
+ const tasks=[['fleet','/agillm-fleet-live.json'],['binary','/agillm-bintf4b-training.json'],...Object.entries(healthURLs)];
+ await Promise.all(tasks.map(async([key,url])=>{
+  try {
+   const value=await get(url);
+   if(key==='fleet'||key==='binary'){state[key]=value;observeCheckpoints(key,value);}else state.health[key]=value;
+   delete state.errors[key];
+  } catch(e) {
+   state.errors[key]=true;
+   if(key==='fleet'){checkpointStore.unavailable('standard');checkpointStore.unavailable('rpv16');}
+   else if(key==='binary')checkpointStore.unavailable('bintf4b');
+   else state.health[key]={ready:false};
+  } finally { render(); }
+ }));
+ state.busy=false;state.fetched=Date.now();render();
+}
+function start(){render();refresh();setInterval(()=>{if(!document.hidden)refresh();},30000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh();});document.addEventListener('click',e=>{if(e.target.closest('#modelseg'))setTimeout(render,200);});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
+</script>

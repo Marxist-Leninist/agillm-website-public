@@ -1,0 +1,52 @@
+{
+  "started_at": 1791471004.3469117,
+  "expected_step": 3558989,
+  "checks": [],
+  "health_before": {
+    "ok": true,
+    "ready": true,
+    "warming": false,
+    "ckpt": "pretrain_step03558989_from03514490_20261008T1246Z.pt",
+    "uptime_s": 307,
+    "model_identity_verified": true,
+    "model": {
+      "name": "AGILLM 4.4 Standard 1.1B",
+      "step": 3558989,
+      "seen_tokens": 609080250368,
+      "source_checkpoint_sha256": "c73a688eee009be8199f23ee23574be5ee3031cac8dc7f4f1c8db94a19de3e7f",
+      "tokenizer_sha256": "REDACTED"
+    },
+    "checkpoint_step": 3558989,
+    "step": 3558989,
+    "canonical_modes": [
+      "ar",
+      "sat_fixed",
+      "sat_variable",
+      "nat"
+    ],
+    "loads": 1,
+    "concurrency": 1,
+    "request_timeout_s": 1800.0,
+    "queue_timeout_s": 240.0,
+    "dtype": "fp32",
+    "live_slots": 1,
+    "busy": 0,
+    "draining_slots": 0,
+    "active_request_count": 0,
+    "pending_request_count": 0,
+    "slot_threads": [
+      8
+    ],
+    "slot_dtypes": [
+      "fp32"
+    ],
+    "cancel_preserves_worker": true,
+    "target_ckpt": "pretrain_step03558989_from03514490_20261008T1246Z.pt",
+    "reliability_patch": "cooperative-cancel-20261002",
+    "host": "geth-cpu",
+    "device": "cpu"
+  },
+  "ok": false,
+  "error": "HTTPError: HTTP Error 401: Unauthorized",
+  "finished_at": 1791471004.4647372
+}

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AGILLM-64B · live</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--fg:#14171c;--mute:#5b6472;--line:#dfe3ea;--acc:#c0392b;--ok:#1f8a4c;--warn:#b7791f;color-scheme:light}
+@media (prefers-color-scheme: dark){:root{--bg:#0f1115;--card:#171a21;--fg:#e8ebf0;--mute:#9aa4b2;--line:#2a2f3a;--acc:#ff6b5b;--ok:#4cc38a;--warn:#e0a84f;color-scheme:dark}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+main{max-width:860px;margin:0 auto;padding:16px}
+h1{font-size:1.35rem;margin:6px 0 2px}.sub{color:var(--mute);font-size:.9rem;margin:0 0 12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+.st{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:.9rem;color:var(--mute)}.st b{color:var(--fg)}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;background:var(--warn)}.dot.ok{background:var(--ok)}
+textarea{width:100%;min-height:96px;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;background:var(--bg);color:var(--fg);resize:vertical}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:10px}.row label{font-size:.85rem;color:var(--mute)}
+input[type=range]{width:120px;vertical-align:middle}
+button{border:0;border-radius:10px;padding:10px 18px;font:600 15px system-ui;cursor:pointer;background:var(--acc);color:#fff}
+button.sec{background:transparent;color:var(--fg);border:1px solid var(--line)}button:disabled{opacity:.5;cursor:default}
+#out{white-space:pre-wrap;word-wrap:break-word;min-height:120px;font:15px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace}
+#out .p{color:var(--mute)}.note{font-size:.85rem;color:var(--mute)}a{color:var(--acc)}
+</style></head><body><main>
+<h1>AGILLM-64B · binary weights · live</h1>
+<p class="sub">64.4B-parameter binary transformer (bin8), served from the latest backed-up checkpoint on CPU. <a href="/agillm-ui">← all models</a></p>
+<div class="card"><div class="st" id="st"><span><span class="dot" id="dot"></span><b id="state">checking…</b></span><span>checkpoint step <b id="step">–</b></span><span>last speed <b id="spd">–</b></span><span>generations served <b id="srv">–</b></span></div>
+<p class="note">Early in training (about 2.2M tokens seen at step 1103), so expect word-frequency text, not sentences yet. Runs on CPU at roughly 1–2 tokens/s, one generation at a time.</p></div>
+<div class="card"><textarea id="p" placeholder="Type a prompt…">The history of the Roman Empire</textarea>
+<div class="row"><label>tokens <input type="range" id="mx" min="8" max="160" value="48"> <b id="mxv">48</b></label>
+<label>temperature <input type="range" id="tp" min="0" max="150" value="80"> <b id="tpv">0.80</b></label>
+<button id="go">Generate</button><button id="stop" class="sec" disabled>Stop</button></div></div>
+<div class="card"><div id="out"><span class="p">Output streams here.</span></div><div class="note" id="info"></div></div>
+</main><script>
+const $=id=>document.getElementById(id);let ctl=null;
+$('mx').oninput=()=>$('mxv').textContent=$('mx').value;$('tp').oninput=()=>$('tpv').textContent=($('tp').value/100).toFixed(2);
+async function health(){try{const r=await fetch('/agillm-64b/api/health',{cache:'no-store'});if(!r.ok)throw 0;const h=await r.json();
+$('dot').className='dot'+(h.busy?'':' ok');$('state').textContent=h.busy?'busy (one generation running)':'ready';$('step').textContent=(h.step??'–').toLocaleString();
+$('spd').textContent=h.last_tok_s?h.last_tok_s+' tok/s':'–';$('srv').textContent=h.served??0;}catch(e){$('dot').className='dot';$('state').textContent='warming up (loading weights)';}}
+health();setInterval(health,10000);
+$('stop').onclick=()=>{if(ctl)ctl.abort();};
+$('go').onclick=async()=>{const out=$('out');out.textContent='';const pr=document.createElement('span');pr.className='p';pr.textContent=$('p').value;out.appendChild(pr);
+const gen=document.createElement('span');out.appendChild(gen);$('go').disabled=true;$('stop').disabled=false;$('info').textContent='prefilling the prompt…';
+ctl=new AbortController();const t0=performance.now();let n=0;
+try{const r=await fetch('/agillm-64b/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},signal:ctl.signal,
+body:JSON.stringify({prompt:$('p').value,max_new:+$('mx').value,temperature:$('tp').value/100,top_p:0.95})});
+if(r.status===503){$('info').textContent='The 64B is busy with another generation. Try again in a minute.';return;}
+if(!r.ok){$('info').textContent='Backend error '+r.status+'.';return;}
+const rd=r.body.getReader(),dec=new TextDecoder();let buf='';
+for(;;){const {value,done}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});let i;
+while((i=buf.indexOf('\n'))>=0){const line=buf.slice(0,i);buf=buf.slice(i+1);if(!line.trim())continue;const m=JSON.parse(line);
+if(m.t!==undefined){gen.textContent+=m.t;n++;$('info').textContent=n+' pieces · '+(n/((performance.now()-t0)/1000)).toFixed(2)+' /s';}
+if(m.done){$('info').textContent=m.pieces+' pieces in '+m.seconds+' s (step '+m.step+')';}}}}
+catch(e){if(e.name!=='AbortError')$('info').textContent='Connection error: '+e;else $('info').textContent+=' · stopped';}
+finally{$('go').disabled=false;$('stop').disabled=true;ctl=null;health();}};
+</script></body></html>

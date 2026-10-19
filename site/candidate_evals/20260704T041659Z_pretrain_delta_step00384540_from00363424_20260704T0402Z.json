@@ -1,0 +1,154 @@
+{
+  "bridge_pid": 3625133,
+  "candidate": "/opt/agillm43_offload/ckpts/pretrain_delta_step00384540_from00363424_20260704T0402Z.pt",
+  "finished_at": "2026-07-04T04:18:22Z",
+  "health": {
+    "ckpt": "pretrain_delta_step00384540_from00363424_20260704T0402Z.pt",
+    "loads": 1,
+    "ok": true,
+    "ready": true,
+    "uptime_s": 45,
+    "warming": false
+  },
+  "quality": {
+    "fast nat": {
+      "cases": [
+        {
+          "button_tok_s": 19.809997915944678,
+          "case": "math",
+          "continuation": ". Question @ AnswerPython{l] Were",
+          "gen_tok_s": 20.1,
+          "hit": false,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 24.5488919340289,
+          "case": "fact",
+          "continuation": ". QuestionParis lusheverything ' wealthy Franz",
+          "gen_tok_s": 24.9,
+          "hit": true,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 38.291426021721094,
+          "case": "code",
+          "continuation": "')  define) (values\" :  return. hello Python] \")  greet @print hello",
+          "gen_tok_s": 38.7,
+          "hit": true,
+          "tokens": 16
+        },
+        {
+          "button_tok_s": 38.729254211177945,
+          "case": "language",
+          "continuation": "tense-it \" lush healditionally hiWere criedeverything.  hello",
+          "gen_tok_s": 39.2,
+          "hit": true,
+          "tokens": 12
+        }
+      ],
+      "hits": 3,
+      "median_button_tok_s": 31.420158977874998,
+      "median_gen_tok_s": 31.8,
+      "total": 4
+    },
+    "quality ar": {
+      "cases": [
+        {
+          "button_tok_s": 5.164647692107598,
+          "case": "math",
+          "continuation": "{lvester lush musician percussion. Question Season",
+          "gen_tok_s": 5.2,
+          "hit": false,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 6.65722384999,
+          "case": "fact",
+          "continuation": "lush. everything musician greeting SeasonWereracing",
+          "gen_tok_s": 6.7,
+          "hit": false,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 4.398437115965896,
+          "case": "code",
+          "continuation": "define greet{listics(valueshello\") print('') ] ); advspectriseactivation",
+          "gen_tok_s": 4.4,
+          "hit": true,
+          "tokens": 16
+        },
+        {
+          "button_tok_s": 8.382198412280742,
+          "case": "language",
+          "continuation": "tense. Wereeverything criedditionally Mugonedracing{l lush musician",
+          "gen_tok_s": 8.4,
+          "hit": true,
+          "tokens": 12
+        }
+      ],
+      "hits": 2,
+      "median_button_tok_s": 5.910935771048799,
+      "median_gen_tok_s": 5.95,
+      "total": 4
+    },
+    "quality sat var": {
+      "cases": [
+        {
+          "button_tok_s": 9.67378482462923,
+          "case": "math",
+          "continuation": ".  @ hello musicianPython hi MugWere",
+          "gen_tok_s": 9.7,
+          "hit": false,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 11.15991661267599,
+          "case": "fact",
+          "continuation": ".  lushPariseverything @ musicianditionally greeting",
+          "gen_tok_s": 11.2,
+          "hit": true,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 12.231886667856278,
+          "case": "code",
+          "continuation": "hello @print') . :  greethello{l politeeverything greeting that lushracing charm",
+          "gen_tok_s": 12.3,
+          "hit": true,
+          "tokens": 16
+        },
+        {
+          "button_tok_s": 11.778160359796626,
+          "case": "language",
+          "continuation": ".  musician hi helloWere @ minereverythingditionally cried Season \"",
+          "gen_tok_s": 11.8,
+          "hit": true,
+          "tokens": 12
+        }
+      ],
+      "hits": 3,
+      "median_button_tok_s": 11.469038486236308,
+      "median_gen_tok_s": 11.5,
+      "total": 4
+    }
+  },
+  "speed": {
+    "ar": {
+      "median_button_tok_s": 5.245732868336638,
+      "median_gen_tok_s": 5.25
+    },
+    "nat": {
+      "median_button_tok_s": 69.6219544570618,
+      "median_gen_tok_s": 70.25
+    },
+    "sat fixed": {
+      "median_button_tok_s": 13.090300176741229,
+      "median_gen_tok_s": 13.100000000000001
+    },
+    "sat var": {
+      "median_button_tok_s": 11.775675946371052,
+      "median_gen_tok_s": 11.75
+    }
+  },
+  "started_at": "2026-07-04T04:16:59Z"
+}

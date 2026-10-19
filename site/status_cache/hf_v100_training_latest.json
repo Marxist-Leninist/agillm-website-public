@@ -1,0 +1,12 @@
+{
+  "checkpoint_main_sha256": "14049306d42ec6bd0b2a6c7fcb4694034184a60eb45d58a37d138c16fc84d612",
+  "checkpoint_name": "pretrain_step03130936_from03041791_20260929T1849Z.pt",
+  "hf_checked_at": 1790745452,
+  "hf_path": "checkpoints/step3130936_v100_20260929",
+  "hf_repo": "MarxistLeninist/AGILLM-4.4",
+  "saved_at": "2026-09-29T18:50:45Z",
+  "seen_tok": 398683639808,
+  "step": 3130936,
+  "trainer_host": "V100 52631126",
+  "trainer_source": "huggingface"
+}

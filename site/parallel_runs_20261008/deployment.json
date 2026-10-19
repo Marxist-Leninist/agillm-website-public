@@ -1,0 +1,10 @@
+{
+  "before_sha256": "d324224dabd10b277c194dfdac25264de3263ec319e33c2c0b4c18b157ecf67c",
+  "candidate_sha256": "d3cd3deb6150f4b3bccff2a674d9a6051d0173ef5be84bdc78e25904fe4e438b",
+  "candidate": "/opt/agillm43_netserve/parallel_runs_20261008/candidate.html",
+  "javascript_syntax": "passed",
+  "applied": true,
+  "backup": "/opt/agillm43_netserve/parallel_runs_20261008/before-20261008T151117Z.html",
+  "installed_at": "20261008T151117Z",
+  "live_path": "/opt/agillm43_netserve/agillm_completion.html"
+}

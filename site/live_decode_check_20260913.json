@@ -1,0 +1,95 @@
+{
+  "utc": "2026-09-13T14:47:04.318065+00:00",
+  "rows": [
+    {
+      "mode": "ar",
+      "variable": false,
+      "ok": true,
+      "wall_s": 8.5344,
+      "end_to_end_tok_s": 2.812,
+      "ckpt": "pretrain_step02939922_from02930767_20260913T1425Z.pt",
+      "host": "vast-47086549",
+      "threads": 12,
+      "queue_wait_s": 0.001,
+      "text": "The year is 2050 and 0. The average of the 0.5% of the 0% of the 0% of the",
+      "stats": {
+        "seconds": 5.27,
+        "tokens": 24,
+        "tok_s": 4.6
+      }
+    },
+    {
+      "mode": "sat",
+      "variable": false,
+      "ok": true,
+      "wall_s": 5.9764,
+      "end_to_end_tok_s": 4.016,
+      "ckpt": "pretrain_step02939922_from02930767_20260913T1425Z.pt",
+      "host": "vast-47086549",
+      "threads": 12,
+      "queue_wait_s": 0.001,
+      "text": "The year is 2050 and 0. %.1%000 of 0. %. %%  %%",
+      "stats": {
+        "seconds": 3.29,
+        "tokens": 24,
+        "tok_s": 7.3,
+        "sat_trace": {
+          "ar_realign": 0,
+          "core_forwards": 14,
+          "generated_tokens": 24,
+          "mode": "sat-fixed",
+          "stride_hist": {
+            "1": 0,
+            "2": 12
+          },
+          "var_stride1": 0
+        }
+      }
+    },
+    {
+      "mode": "sat",
+      "variable": true,
+      "ok": true,
+      "wall_s": 4.4532,
+      "end_to_end_tok_s": 5.389,
+      "ckpt": "pretrain_step02939922_from02930767_20260913T1425Z.pt",
+      "host": "vast-47086549",
+      "threads": 12,
+      "queue_wait_s": 0.001,
+      "text": "The year is 2050 and  .. The The of of 200.  ..        .",
+      "stats": {
+        "seconds": 3.31,
+        "tokens": 24,
+        "tok_s": 7.3,
+        "sat_trace": {
+          "ar_realign": 0,
+          "core_forwards": 14,
+          "generated_tokens": 24,
+          "mode": "sat-var",
+          "stride_hist": {
+            "1": 2,
+            "2": 11
+          },
+          "var_stride1": 2
+        }
+      }
+    },
+    {
+      "mode": "nat",
+      "variable": false,
+      "ok": true,
+      "wall_s": 1.4439,
+      "end_to_end_tok_s": 16.622,
+      "ckpt": "pretrain_step02939922_from02930767_20260913T1425Z.pt",
+      "host": "vast-47086549",
+      "threads": 12,
+      "queue_wait_s": 0.001,
+      "text": "The year is 2050 and",
+      "stats": {
+        "seconds": 0.34,
+        "tokens": 24,
+        "tok_s": 71.3
+      }
+    }
+  ]
+}

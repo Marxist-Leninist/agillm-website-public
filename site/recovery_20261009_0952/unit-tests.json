@@ -1,0 +1,62 @@
+{
+  "ok": true,
+  "tests": [
+    {
+      "name": "first_child_fits",
+      "passed": true
+    },
+    {
+      "name": "second_model_blocked_not_requests",
+      "passed": true
+    },
+    {
+      "name": "ample_capacity_preserves_two_workers",
+      "passed": true
+    },
+    {
+      "name": "host_reserve",
+      "passed": true
+    },
+    {
+      "name": "psi_short",
+      "passed": true
+    },
+    {
+      "name": "psi_sustained",
+      "passed": true
+    },
+    {
+      "name": "missing_observation_defers_load",
+      "passed": true
+    },
+    {
+      "name": "unlimited_group_still_checks_host",
+      "passed": true
+    },
+    {
+      "name": "cgroup_reserve",
+      "passed": true
+    },
+    {
+      "name": "input_not_mutated",
+      "passed": true
+    }
+  ],
+  "actual_memory": {
+    "version": "bridge-memory-admission-v1-20261009",
+    "allowed": false,
+    "reason": "host_reserve",
+    "new_child_peak_bytes": 6442450944,
+    "host_reserve_bytes": 2147483648,
+    "group_reserve_bytes": 402653184,
+    "observed": true,
+    "at_unix": 1791535993.7038636,
+    "host_available_bytes": 6977531904,
+    "host_total_bytes": 32859361280,
+    "psi_full_avg10": 1.03,
+    "psi_full_avg60": 0.54,
+    "group_current_bytes": 485142528,
+    "group_max_bytes": null,
+    "inherited_headroom_bytes": null
+  }
+}

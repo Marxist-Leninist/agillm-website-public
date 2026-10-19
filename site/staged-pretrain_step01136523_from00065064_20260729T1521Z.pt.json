@@ -1,0 +1,16 @@
+{
+  "base": "pretrain_step01136523_from00065064_20260729T1521Z.pt",
+  "optimizer_shard_omitted": true,
+  "path": "/mnt/geth-vol1/agillm43/ckpts/artifacts/full/repretrain_v4_wip/pretrain_step01136523_from00065064_20260729T1521Z.pt",
+  "scaler_shard_omitted": true,
+  "schema": "agillm43.inference_stage.v1",
+  "sha256": "30d3e403f98798c760f38f3ebabda318ed8068b4aee9053758b74707337c2e85",
+  "staged_at": "2026-07-29T16:04:52Z",
+  "status": "staged",
+  "verify": {
+    "bytes": 5132148673,
+    "extra": [],
+    "ok": true,
+    "required": 31
+  }
+}

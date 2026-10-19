@@ -1,0 +1,11 @@
+{
+  "runtime": "/opt/agillm43_netserve/runtime_derived/runtime_standard_modes_20261008_mmap_v45.py",
+  "sha256": "e5db2d71eced66bd7868507060560233dee3a8fea167ab252498a84b3493b768",
+  "tests": [
+    "copy-versus-mapped output exact equality",
+    "mapped data pointers",
+    "tied output projection identity and output equality",
+    "dtype mismatch preserves old copy/cast behavior"
+  ],
+  "source_checkpoint_unchanged": true
+}

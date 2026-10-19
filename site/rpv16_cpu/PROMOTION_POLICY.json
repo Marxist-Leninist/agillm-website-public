@@ -1,0 +1,42 @@
+{
+  "current_serving": {
+    "step": 638898,
+    "seen_tokens": 31403630592,
+    "source_checkpoint_sha256": "413c306b48dfb8c2b1ae89e4e8c4359187f3f68491b0d864f83044d9dcda6b0e",
+    "heldout_ce": 6.8328,
+    "heldout_protocol": "frozen heldout_token_ids.json, first 8 windows / 1000 targets, per-tensor int8 (served format); served step412150 scored 7.0272 on the same targets; 32-window/4000-target check: step412150 6.9555 vs trainer step639410 6.7930",
+    "why": "owner-requested latest checkpoint from the vast trainer (Scott 2026-10-10: put latest checkpoint from vast.ai on agillm-ui); -0.19 nats vs served; all 4 public modes smoke-passed",
+    "root": "/mnt/geth-vol1/agillm-rpv16-1pf/step638898-owner-latest-20261010/cpu_int8",
+    "promoted_at": "2026-10-10T10:45:41Z",
+    "receipt": "/opt/agillm43_netserve/rpv16_cpu/owner_latest_20261010/promotion.json"
+  },
+  "effective_from": "2026-09-25T06:15:00Z",
+  "promotion_may_be_blocked_by": [
+    "candidate_missing_learned_multimode_state",
+    "heldout_ce_not_better_than_current_multimode",
+    "checkpoint_or_conversion_incomplete",
+    "checksum_or_identity_mismatch",
+    "model_fails_to_load",
+    "canonical_modes_missing",
+    "any_decode_mode_smoke_failed",
+    "explicit_owner_stop"
+  ],
+  "promotion_rule": "A newer candidate may replace the served checkpoint only when it preserves learned AR+SAT+NAT all-heads state, passes conversion/checksum/load plus all-mode health/smoke gates, and has lower fixed-set held-out CE than the current multimode serving baseline.",
+  "quality_gate_enabled": true,
+  "required_allheads_schema": "agillm.gb10.1pf.allheads.v3",
+  "required_canonical_modes": [
+    "ar",
+    "sat_fixed",
+    "sat_variable",
+    "nat"
+  ],
+  "required_source_schema": "agillm.gb10.1pf.recovery.v6",
+  "schema": "agillm.rpv16.public-serving-policy.v4",
+  "selection": "better_heldout_ce_among_valid_multimode_checkpoints",
+  "superseded": {
+    "note": "v3 did not require preserving the multimode all-heads serving contract and its recorded serving baseline became stale.",
+    "schema": "agillm.rpv16.public-serving-policy.v3",
+    "selection": "best_heldout_ce"
+  },
+  "updated_by": "fable51 owner-latest promotion 2026-10-10"
+}

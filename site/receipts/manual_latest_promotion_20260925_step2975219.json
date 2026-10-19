@@ -1,0 +1,64 @@
+{
+  "artifact_gate": {
+    "rc": 0,
+    "stderr": "",
+    "stdout": "AGILLM_RELOAD_GATE {\"checkpoint\": \"pretrain_step02975219_from02972240_20260925T0520Z.pt\", \"checkpoint_type\": \"full\", \"sha256\": \"48c87e746c74e0951131b0c8d4f710ed247ca868deb9f15f32605e15dcf3e5b1\", \"shards_required\": true, \"status\": \"pass\"}\n"
+  },
+  "checkpoint_sha256": "48c87e746c74e0951131b0c8d4f710ed247ca868deb9f15f32605e15dcf3e5b1",
+  "completed_at": "2026-09-25T06:01:16Z",
+  "primary_health": {
+    "active_request_count": 0,
+    "busy": 0,
+    "ckpt": "pretrain_step02975219_from02972240_20260925T0520Z.pt",
+    "concurrency": 1,
+    "device": "cpu",
+    "draining_slots": 0,
+    "dtype": "fp32",
+    "host": "geth-cpu",
+    "live_slots": 1,
+    "loads": 2,
+    "ok": true,
+    "pending_request_count": 0,
+    "queue_timeout_s": 240.0,
+    "ready": true,
+    "request_timeout_s": 1800.0,
+    "slot_dtypes": [
+      "fp32"
+    ],
+    "slot_threads": [
+      8
+    ],
+    "uptime_s": 65159,
+    "warming": false
+  },
+  "runtime_sha256": "eb636c7519c5ad9509f9d84c85adbc3ca649f3d5c1912dc817d8057c1fe09f1e",
+  "schema": "agillm44.gb10.local-promotion.v1",
+  "secondary_health": null,
+  "serving_checkpoint": "pretrain_step02975219_from02972240_20260925T0520Z.pt",
+  "sha256_total": 64,
+  "sha256_verified": 64,
+  "smoke": {
+    "ar": {
+      "ok": true,
+      "request_id": "chatgpt-latest-2975219-AR-1790316071555014866",
+      "stats": {
+        "seconds": 3.07,
+        "tok_s": 2.6,
+        "tokens": 8
+      }
+    },
+    "nat": {
+      "ok": true,
+      "request_id": "chatgpt-latest-2975219-NAT-1790316075956257520",
+      "stats": {
+        "seconds": 0.32,
+        "tok_s": 25.2,
+        "tokens": 8
+      }
+    }
+  },
+  "source_receipt": "/opt/agillm43_netserve/receipts/latest_standard_20260925_0641/standard-promotion.json",
+  "source_receipt_sha256": "19a7f24c9d5dbcc5a1ab0462354a68d35f136490b3b54573722c3bdf4eb39460",
+  "status": "complete",
+  "step": 2975219
+}

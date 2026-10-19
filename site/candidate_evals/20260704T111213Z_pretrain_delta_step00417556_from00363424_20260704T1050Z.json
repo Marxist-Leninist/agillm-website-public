@@ -1,0 +1,154 @@
+{
+  "bridge_pid": 3785117,
+  "candidate": "/opt/agillm43_offload/candidates/pretrain_delta_step00417556_from00363424_20260704T1050Z.pt",
+  "finished_at": "2026-07-04T11:13:37Z",
+  "health": {
+    "ckpt": "pretrain_delta_step00417556_from00363424_20260704T1050Z.pt",
+    "loads": 1,
+    "ok": true,
+    "ready": true,
+    "uptime_s": 55,
+    "warming": false
+  },
+  "quality": {
+    "fast nat": {
+      "cases": [
+        {
+          "button_tok_s": 22.932381987301717,
+          "case": "math",
+          "continuation": ".  to < isQuestion\"/>print -",
+          "gen_tok_s": 23.7,
+          "hit": false,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 25.22671498329092,
+          "case": "fact",
+          "continuation": "tohens Answer andQuestionParis the.",
+          "gen_tok_s": 25.5,
+          "hit": true,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 51.74715254757449,
+          "case": "code",
+          "continuation": "print hello.  Python:  define,\"/> < return that\")  add list)  greet",
+          "gen_tok_s": 52.3,
+          "hit": true,
+          "tokens": 16
+        },
+        {
+          "button_tok_s": 41.99816258839727,
+          "case": "language",
+          "continuation": "\"print, and kittens painfulOUSHello\"/> hi hello.",
+          "gen_tok_s": 42.6,
+          "hit": true,
+          "tokens": 12
+        }
+      ],
+      "hits": 3,
+      "median_button_tok_s": 33.61243878584409,
+      "median_gen_tok_s": 34.05,
+      "total": 4
+    },
+    "quality ar": {
+      "cases": [
+        {
+          "button_tok_s": 7.037735738250107,
+          "case": "math",
+          "continuation": "<\"/>\"/deg,WOUSNET hi",
+          "gen_tok_s": 7.1,
+          "hit": false,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 7.475561595615511,
+          "case": "fact",
+          "continuation": ". QuestionOUS\"/>\"/,Wyms,",
+          "gen_tok_s": 7.5,
+          "hit": false,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 8.024276747653328,
+          "case": "code",
+          "continuation": "print(values) ') \"/> hello < greet_backiting\"/>  section sys,Wyms",
+          "gen_tok_s": 8.0,
+          "hit": true,
+          "tokens": 16
+        },
+        {
+          "button_tok_s": 7.942021512027437,
+          "case": "language",
+          "continuation": "painful. Hello hello hiOUS\"/>\"/,Woses and kittens",
+          "gen_tok_s": 8.0,
+          "hit": true,
+          "tokens": 12
+        }
+      ],
+      "hits": 2,
+      "median_button_tok_s": 7.708791553821474,
+      "median_gen_tok_s": 7.75,
+      "total": 4
+    },
+    "quality sat var": {
+      "cases": [
+        {
+          "button_tok_s": 12.659737617733214,
+          "case": "math",
+          "continuation": ".  hi <)  helloprint\"/>(values",
+          "gen_tok_s": 12.7,
+          "hit": false,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 12.665046409093774,
+          "case": "fact",
+          "continuation": ". , < kittenssection ATP\"/> and",
+          "gen_tok_s": 12.7,
+          "hit": false,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 15.889712024579156,
+          "case": "code",
+          "continuation": ": print. hello hello\"/> return and(values\")  Python that, <) ,W",
+          "gen_tok_s": 15.9,
+          "hit": true,
+          "tokens": 16
+        },
+        {
+          "button_tok_s": 12.028937334467118,
+          "case": "language",
+          "continuation": "and.  hello < hi\"/>print kittenshello Lord\"  mild",
+          "gen_tok_s": 12.1,
+          "hit": true,
+          "tokens": 12
+        }
+      ],
+      "hits": 2,
+      "median_button_tok_s": 12.662392013413495,
+      "median_gen_tok_s": 12.7,
+      "total": 4
+    }
+  },
+  "speed": {
+    "ar": {
+      "median_button_tok_s": 7.7210492649426,
+      "median_gen_tok_s": 7.75
+    },
+    "nat": {
+      "median_button_tok_s": 84.19653445570052,
+      "median_gen_tok_s": 85.05
+    },
+    "sat fixed": {
+      "median_button_tok_s": 14.031815147389196,
+      "median_gen_tok_s": 14.05
+    },
+    "sat var": {
+      "median_button_tok_s": 14.07580357634925,
+      "median_gen_tok_s": 14.1
+    }
+  },
+  "started_at": "2026-07-04T11:12:13Z"
+}

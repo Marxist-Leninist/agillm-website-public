@@ -1,0 +1,58 @@
+{
+  "passed_isolation": true,
+  "two_active_before_cancel": true,
+  "cancel": {
+    "status": 200,
+    "body": {
+      "ok": true,
+      "canceling": true,
+      "queued": false,
+      "request_id": "concurrency-stop-A-1791471885337516439",
+      "slot": 3,
+      "warming": false,
+      "cooperative": true,
+      "note": "request canceled without unloading the model"
+    }
+  },
+  "results": [
+    {
+      "status": 500,
+      "body": {
+        "ok": false,
+        "error": "[INFER_SERVER_ERROR] RuntimeError: request canceled",
+        "slot": 3,
+        "queue_wait_s": 0.0
+      }
+    },
+    {
+      "status": 200,
+      "body": {
+        "ok": true,
+        "text": "The capital of France is the 2.5 million people in a population, and it has been an",
+        "stats": {
+          "seconds": 1.1930387020111084,
+          "tokens": 16,
+          "tok_s": 13.411132407547852,
+          "finish_reason": "length",
+          "generation_finish": {
+            "finish_reason": "length",
+            "generated_tokens": 16,
+            "max_new": 16,
+            "eos_emitted": false,
+            "source": "runtime-token-ids"
+          },
+          "output_protocol": "agillm.generation-result.v1"
+        },
+        "wall_s": 1.196,
+        "button_tok_s": 13.38,
+        "ckpt": "pretrain_step03558989_from03514490_20261008T1246Z.pt",
+        "host": "geth-cpu",
+        "dtype": "fp32",
+        "slot": 2,
+        "threads": 8,
+        "request_id": "concurrency-stop-B-1791471885337516439",
+        "queue_wait_s": 0.001
+      }
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "status": "DEPLOYED_AND_VERIFIED",
+  "at": 1790957921.0536182,
+  "service": "agillm43-bridge.service",
+  "bridge_sha256": "af2e452fdb70cf66ea1ade7b9cc0b9aca0d00f39bce0274afa8424bef99e66d2",
+  "runtime_sha256": "703ffdcff85ef9f8b2cec0abd82c81cb77d69131c4312848730a572201f7f36e",
+  "checkpoint": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt",
+  "checkpoint_sha256_unchanged": "ca5c83c6d4df8eed4b2d9e64424168e7a08a6ec6e7e092cca426da5e98cfbb93",
+  "unit_tests_passed": 9,
+  "completion_receipt": "/opt/agillm43_netserve/inference_fix_20261002_1712/completion_receipt.json"
+}

@@ -1,0 +1,108 @@
+<style id="agi-live-css">
+#agi-live{padding:4px 18px 8px;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+#agi-live .lc{background:#111624;border:1px solid #2a3346;border-radius:12px;padding:11px 14px}
+#agi-live .lc.stale{opacity:.6}
+#agi-live .lh{display:flex;align-items:center;gap:8px;margin:0 0 8px;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:#8b98ab}
+#agi-live .lh b{color:#e6edf3;font-size:12.5px;letter-spacing:0;text-transform:none}
+#agi-live .dot{width:8px;height:8px;border-radius:50%;background:#3fb950;flex:none}
+#agi-live .dot.stale{background:#8b98ab}
+#agi-live .age{margin-left:auto;font-size:10.5px;color:#6b7688;letter-spacing:0;text-transform:none}
+#agi-live .hero{display:flex;gap:16px;flex-wrap:wrap;margin:2px 0 8px}
+#agi-live .k{font-size:10px;color:#8b98ab;text-transform:uppercase;letter-spacing:.04em}
+#agi-live .v{font:600 20px/1.15 ui-monospace,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+#agi-live .v.rise{color:#d29922}#agi-live .v.good{color:#3fb950}
+#agi-live .s{font-size:10.5px;color:#6b7688;font-family:ui-monospace,Menlo,monospace}
+#agi-live dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:2px 12px;font-size:11.5px}
+#agi-live dt{color:#8b98ab;white-space:nowrap}
+#agi-live dd{margin:0;text-align:right;font-variant-numeric:tabular-nums;font-family:ui-monospace,Menlo,monospace;font-size:11px}
+#agi-live .ramp{margin-top:8px;font-size:11px;color:#8b98ab;background:#0b101a;border:1px solid #223;border-radius:8px;padding:6px 8px}
+#agi-live .ramp b{color:#e6edf3}
+#agi-live .bar{height:5px;border-radius:3px;background:#1b2333;margin-top:5px;overflow:hidden}
+#agi-live .bar i{display:block;height:100%;background:linear-gradient(90deg,#d29922,#3fb950)}
+#agi-live .cap{grid-column:1/-1;color:#6b7688;font-size:10px}
+</style>
+<script id="agi-live-js">
+(function(){
+"use strict";
+var CID="agi-live";
+function I(n){return (n==null||n!==n)?"-":Math.round(n).toLocaleString("en-US");}
+function LR(x){return (x==null||x!==x)?"-":Number(x).toExponential(2);}
+function ag(s){if(s==null)return"";s=Math.max(0,s);return s<90?Math.round(s)+"s ago":s<5400?Math.round(s/60)+"m ago":Math.round(s/3600)+"h ago";}
+function ec(s){return String(s==null?"":s).replace(/[&<>]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;"}[c];});}
+function box(k,v,cls,sub){return '<div><div class="k">'+ec(k)+'</div><div class="v '+(cls||"")+'">'+ec(v)+'</div>'+(sub?'<div class="s">'+ec(sub)+'</div>':'')+'</div>';}
+function row(k,v){return '<dt>'+ec(k)+'</dt><dd>'+ec(v)+'</dd>';}
+function host(){
+  var el=document.getElementById(CID);
+  if(el)return el;
+  el=document.createElement("section");el.id=CID;
+  var c=document.getElementById("agi44-curves"),b=document.getElementById("agi44-curves-body"),fx=false;
+  try{fx=c&&window.getComputedStyle(c).position==="fixed";}catch(e){}
+  if(fx&&b){b.appendChild(el);}
+  else if(c&&c.parentNode){c.parentNode.insertBefore(el,c.nextSibling);}
+  else{document.body.insertBefore(el,document.body.firstChild);}
+  return el;
+}
+function rpv(g,cp){
+  if(!g||!g.ok)return"";
+  var fr=g.polled_at?(Date.now()/1000-g.polled_at):null,st=fr!=null&&fr>150;
+  var pf=((cp||g.compute_status||{}).whole_step_useful_math)||{},ck=g.last_checkpoint_event||{},dl="";
+  dl+=row("objective",g.objective||"-");
+  dl+=row("median tok/s",I(g.median_tok_s));
+  dl+=row("GPU util",g.gpu_util_pct!=null?g.gpu_util_pct+"%":"-");
+  if(pf.tflops_s_est!=null)dl+=row("compute",pf.tflops_s_est+" TFLOP/s"+(pf.percent_of_1pflop_target!=null?" ("+pf.percent_of_1pflop_target+"% of 1PF)":""));
+  dl+=row("seen tokens",I(g.seen_tokens));
+  if(ck.step!=null)dl+=row("last ckpt","step "+I(ck.step));
+  return '<div class="lc'+(st?" stale":"")+'"><div class="lh"><span class="dot'+(st?" stale":"")+'"></span><b>RPV16 2.0B</b> GB10 live<span class="age">'+ec(ag(fr))+'</span></div><div class="hero">'+
+    box("AR loss",(g.loss!=null?Number(g.loss).toFixed(3):"-"),"","step "+I(g.step))+
+    box("tok/s",I(g.median_tok_s),"")+
+    box("GPU",(g.gpu_util_pct!=null?g.gpu_util_pct+"%":"-"),(g.gpu_util_pct>=85?"good":""))+
+    '</div><dl>'+dl+'</dl></div>';
+}
+function std(s){
+  if(!s||!s.ok)return"";
+  var fr=s.polled_at?(Date.now()/1000-s.polled_at):null,st=fr!=null&&fr>150;
+  var pf=(s.compute_status||{}).whole_step_useful_math||{},ov=s.lr_override||null,gd=s.lr_guard||null,rh="";
+  if(ov&&ov.lr){
+    var tg=ov.lr,ln=s.lr||0,f=tg>0?Math.max(0,Math.min(1,ln/tg)):0,rv=gd&&gd.state==="REVERTED";
+    rh='<div class="ramp">LR re-warm: 4e-8 to <b>'+LR(tg)+'</b>'+(rv?' - <span style="color:#f85149">reverted (schedule LR)</span>':' - now <b>'+LR(ln)+'</b> ('+Math.round(f*100)+'% of target)')+
+      '<div class="bar"><i style="width:'+Math.round(f*100)+'%"></i></div>'+
+      (gd?'<div style="margin-top:5px;font-size:10.5px">guard: '+ec(gd.state||"-")+(gd.base_val!=null?' - baseline heldout '+gd.base_val:'')+'</div>':'')+'</div>';
+  }
+  var hc=s.heldout_ce!=null?Number(s.heldout_ce).toFixed(4):"-",lc=(ov&&ov.lr&&s.lr&&s.lr>1e-7)?"rise":"",dl="";
+  dl+=row("heldout step",s.heldout_step!=null?I(s.heldout_step):"-");
+  dl+=row("batch loss",s.loss!=null?Number(s.loss).toFixed(3):"-");
+  dl+=row("raw tok/s",I(s.raw_tok_s));
+  dl+=row("full-stack tok/s",I(s.fullstack_equiv_tok_s));
+  dl+=row("GPU util (shared)",s.gpu_util_pct!=null?s.gpu_util_pct+"%":"-");
+  if(s.gpu_mem_this_trainer_mb!=null)dl+=row("GPU mem (this)",(s.gpu_mem_this_trainer_mb/1024).toFixed(1)+" GB");
+  if(pf.tflops_s_est!=null)dl+=row("compute",pf.tflops_s_est+" TFLOP/s");
+  dl+=row("seen tokens",I(s.seen_tokens));
+  return '<div class="lc'+(st?" stale":"")+'"><div class="lh"><span class="dot'+(st?" stale":"")+'"></span><b>Standard 1.1B</b> DBlock live<span class="age">'+ec(ag(fr))+'</span></div><div class="hero">'+
+    box("heldout CE",hc,"","lower = better")+
+    box("LR",LR(s.lr),lc,ov&&ov.lr?("to "+LR(ov.lr)):"")+
+    box("step",I(s.step),"")+
+    '</div>'+rh+'<dl>'+dl+'</dl></div>';
+}
+function render(d){
+  if(!d)return;
+  var h=rpv(d.gb10_live,d.compute_status)+std(d.standard_live),el=host();
+  if(!h){el.innerHTML="";return;}
+  el.innerHTML=h+'<div class="cap">live trainer vitals - refreshes with the chart (lean feed, ~1/min) - loss/CE are the trainers own numbers</div>';
+}
+window.AGILLMLiveTele={render:render};
+function hook(){
+  var a=window.AGILLMProgressV1;
+  if(a&&!a.__lw){var o=a.render;a.render=function(d){try{render(d);}catch(e){}return o?o.apply(this,arguments):undefined;};a.__lw=true;return true;}
+  return false;
+}
+if(!hook()){
+  var t=0,iv=setInterval(function(){t++;if(hook()||t>20)clearInterval(iv);},500),pl=false;
+  function sp(){
+    if(window.AGILLMProgressV1&&window.AGILLMProgressV1.__lw)return;
+    if(document.hidden||pl)return;pl=true;
+    fetch("/api/training?history=0",{cache:"no-store"}).then(function(r){return r.json();}).then(render).catch(function(){}).then(function(){pl=false;});
+  }
+  setTimeout(sp,1200);setInterval(sp,60000);
+}
+})();
+</script>

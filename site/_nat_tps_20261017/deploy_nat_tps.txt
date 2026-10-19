@@ -1,0 +1,145 @@
+#!/usr/bin/env python3
+"""NAT_LIVE_TPS_20261017: apply the agillm-ui NAT tok/s patch in place on GETH.
+
+Exact-string edits (each must match exactly once), a timestamped backup, and a
+compare-and-swap on the file's SHA-256 so a concurrent edit by another agent is
+never overwritten: if the file changed between read and replace, nothing is
+written and the script exits 3.
+
+usage: python3 -I deploy_nat_tps.txt /opt/agillm43_netserve/agillm_completion.html [--check]
+"""
+import hashlib, io, os, shutil, sys, time
+
+EDITS = [
+# 1) NAT one-shot live line: show the button→now ceiling tok/s while the parallel result is pending.
+('''  let phase = "checking inference worker";
+  const paintProgress = () => {
+    if (signal.aborted) return;
+    const seconds = Math.max(0, (performance.now() - t0) / 1000);
+    status.textContent = `${runContext.modelShort} · NAT · ${phase} · ${seconds.toFixed(1)}s · btn→now`;
+  };
+''', '''  let phase = "checking inference worker";
+  // NAT_LIVE_TPS_20261017: a one-shot NAT request delivers no token before the
+  // whole result, so the only honest live throughput is the button→now ceiling:
+  // the tok/s this run records if the complete result landed this instant. It
+  // falls as the clock runs and meets the button→done figure when the result
+  // arrives. Shown once the request is in flight for at least one second so the
+  // first redraws do not flash an absurdly large number.
+  const requestedTokens = metricNumber(runContext.maxNew);
+  const paintProgress = () => {
+    if (signal.aborted) return;
+    const seconds = Math.max(0, (performance.now() - t0) / 1000);
+    const ceiling = requestSent && requestedTokens !== null && seconds >= 1 ? requestedTokens / seconds : null;
+    status.textContent = ceiling !== null
+      ? `${runContext.modeLabel} · +0/${runContext.maxNew} tok · ≤${ceiling.toFixed(1)} tok/s · ${seconds.toFixed(1)}s · btn→now · ${phase} · ${runContext.modelShort}`
+      : `${runContext.modeLabel} · ${phase} · ${seconds.toFixed(1)}s · btn→now · ${runContext.modelShort}`;
+  };
+'''),
+# 2) NAT one-shot finished line: tokens, finish reason and button→done tok/s first (phone row is ellipsised).
+('''  const tokenMismatch = !outputTokenCountMatches(runContext, s.tokens);
+  const telemetryText = telemetrySummary(telemetry);
+  status.textContent = `${tokenMismatch || !popoutRuntimeVerified ? "⚠️ " : ""}${runContext.modelShort} · ${modeLbl} · +${s.tokens ?? "?"}/${runContext.maxNew} tok · ${rate !== null ? rate.toFixed(1) : "?"} tok/s${telemetryText ? " · " + telemetryText : ""} · ${wallSeconds.toFixed(3)}s · btn→done${suffix}${tokenMismatch ? " · token mismatch" : ""}${!popoutRuntimeVerified ? " · runtime mode unverified" : ""}`;
+  const queueSeconds = metricNumber(j.queue_wait_s);
+  if (queueSeconds !== null && queueSeconds >= .1) {
+    status.textContent += ` · queued ${queueSeconds.toFixed(1)}s`;
+  }
+  recordRunStats(s.tokens, wallSeconds);
+  const finishText = generationFinishText(s);
+  if (finishText) status.textContent = finishText + " · " + status.textContent;
+  status.title = status.textContent;
+''', '''  const tokenMismatch = !outputTokenCountMatches(runContext, s.tokens);
+  const telemetryText = telemetrySummary(telemetry);
+  const finishText = generationFinishText(s);
+  const queueSeconds = metricNumber(j.queue_wait_s);
+  // NAT_LIVE_TPS_20261017: same order as the streaming modes' finished line, with the
+  // button→done throughput near the front. The phone status is one ellipsised row, so a
+  // model/mode/finish prefix used to push the tok/s figure past the visible width.
+  status.textContent = `${tokenMismatch || !popoutRuntimeVerified ? "⚠️ " : ""}+${s.tokens ?? "?"}/${runContext.maxNew} tok${finishText ? " · " + finishText : ""} · ${rate !== null ? rate.toFixed(1) : "?"} tok/s · ${wallSeconds.toFixed(3)}s · btn→done${suffix} · ${runContext.modelShort} · ${modeLbl}${telemetryText ? " · " + telemetryText : ""}${queueSeconds !== null && queueSeconds >= .1 ? ` · queued ${queueSeconds.toFixed(1)}s` : ""}${tokenMismatch ? " · token mismatch" : ""}${!popoutRuntimeVerified ? " · runtime mode unverified" : ""}`;
+  recordRunStats(s.tokens, wallSeconds);
+  status.title = status.textContent;
+'''),
+# 3) updDecode: a quiet call (applyModelUi(true) after a run) must not replace the finished-run line.
+('''function updDecode() {
+  const binary32 = modelKey === "bintf32b";''', '''function updDecode(quiet = false) {
+  const binary32 = modelKey === "bintf32b";'''),
+('''  if (smart && !streaming && !recovering) {
+    status.textContent = modeLabel() + " · smart prompt-aware profile";
+  } else if (dec === "sample" && mode !== "ar" && !streaming && !recovering) {
+    status.textContent = mode.toUpperCase() + " · manual stochastic picks on the selected head";
+  }
+}''', '''  // NAT_LIVE_TPS_20261017: these notices describe a decode choice the user just made. A quiet
+  // refresh (applyModelUi(true) when a run finishes) used to overwrite the finished-run
+  // tokens/tok/s line with them, and the phone toast then hid that notice 1.8 s later, so the
+  // button→done throughput was never visible after a run.
+  if (quiet) return;
+  if (smart && !streaming && !recovering) {
+    status.textContent = modeLabel() + " · smart prompt-aware profile";
+  } else if (dec === "sample" && mode !== "ar" && !streaming && !recovering) {
+    status.textContent = mode.toUpperCase() + " · manual stochastic picks on the selected head";
+  }
+}'''),
+('''function applyModelUi(quiet = false) {
+  updDecode();''', '''function applyModelUi(quiet = false) {
+  updDecode(quiet);'''),
+# 4) Phone toast: a finished-run line (button→done) is run telemetry, not a transient notice.
+('''    // Keep live generation/recovery telemetry visible. Everything else is a
+    // transient notice and must never permanently occupy phone screen space.
+    if (!idle && !streaming && !recovering) {''', '''    // Keep live generation/recovery telemetry visible, and the finished run's
+    // tokens · tok/s · button→done line until the next notice replaces it
+    // (NAT_LIVE_TPS_20261017). Everything else is a transient notice and must
+    // never permanently occupy phone screen space.
+    const finishedRun = value.includes('btn→done');
+    if (!idle && !streaming && !recovering && !finishedRun) {'''),
+]
+MARKER = 'NAT_LIVE_TPS_20261017'
+EXPECTED_MARKERS = 4
+
+def sha256_of(path):
+    h = hashlib.sha256()
+    with open(path, 'rb') as f:
+        for chunk in iter(lambda: f.read(1 << 20), b''):
+            h.update(chunk)
+    return h.hexdigest()
+
+def main():
+    if len(sys.argv) < 2:
+        print(__doc__); return 2
+    path = sys.argv[1]
+    check_only = '--check' in sys.argv
+    raw = io.open(path, 'rb').read()
+    sha_before = hashlib.sha256(raw).hexdigest()
+    src = raw.decode('utf-8')
+    if src.count(MARKER):
+        print(f'ALREADY APPLIED: {src.count(MARKER)} markers present in {path}; nothing to do'); return 0
+    for i, (old, new) in enumerate(EDITS, 1):
+        n = src.count(old)
+        if n != 1:
+            print(f'ABORT: edit {i} matched {n} times (expected 1); file has drifted; nothing written'); return 4
+        src = src.replace(old, new)
+    out = src.encode('utf-8')
+    assert src.count(MARKER) == EXPECTED_MARKERS, src.count(MARKER)
+    print(f'before sha256 {sha_before} bytes {len(raw)}')
+    print(f'after  sha256 {hashlib.sha256(out).hexdigest()} bytes {len(out)}')
+    if check_only:
+        print('CHECK OK: all edits apply exactly once; not written'); return 0
+    stamp = time.strftime('%Y%m%dT%H%M%SZ', time.gmtime())
+    backup = f'{path}.bak-nat-tps-{stamp}'
+    tmp = f'{path}.nat-tps.{stamp}.tmp'
+    shutil.copy2(path, backup)
+    st = os.stat(path)
+    with open(tmp, 'wb') as f:
+        f.write(out); f.flush(); os.fsync(f.fileno())
+    os.chmod(tmp, st.st_mode & 0o7777)
+    # compare-and-swap: refuse if another writer changed the file since it was read
+    if sha256_of(path) != sha_before:
+        os.unlink(tmp)
+        print('ABORT: file changed during patching (sha mismatch); nothing written; backup left at', backup); return 3
+    os.replace(tmp, path)
+    dfd = os.open(os.path.dirname(path) or '.', os.O_RDONLY)
+    try: os.fsync(dfd)
+    finally: os.close(dfd)
+    print(f'WRITTEN {path}; backup {backup}; live sha256 {sha256_of(path)}')
+    return 0
+
+if __name__ == '__main__':
+    sys.exit(main())

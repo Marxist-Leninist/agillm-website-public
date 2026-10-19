@@ -1,0 +1,53 @@
+{
+  "checkpoint": "/mnt/geth-vol1/agillm43/ckpts/artifacts/full/repretrain_v4_wip/pretrain_step01251489_from01164629_20260730T1910Z.pt",
+  "health": {
+    "busy": 0,
+    "ckpt": "pretrain_step01251489_from01164629_20260730T1910Z.pt",
+    "concurrency": 1,
+    "dtype": "fp32",
+    "live_slots": 1,
+    "loads": 2,
+    "ok": true,
+    "ready": true,
+    "slot_dtypes": [
+      "fp32"
+    ],
+    "slot_threads": [
+      16
+    ],
+    "uptime_s": 3105,
+    "warming": false
+  },
+  "loss": 9.042245864868164,
+  "previous_checkpoint": "/mnt/geth-vol1/agillm43/ckpts/artifacts/full/repretrain_v4_wip/pretrain_step01136523_from00065064_20260729T1521Z.pt",
+  "previous_env_backup": "/opt/agillm43_netserve/bridge.env.backup-before-pretrain_step01251489_from01164629_20260730T1910Z.pt-20260730T194617Z",
+  "previous_sha256": "30d3e403f98798c760f38f3ebabda318ed8068b4aee9053758b74707337c2e85",
+  "promoted_at": "2026-07-30T19:48:06Z",
+  "schema": "agillm43.vast_promotion.v1",
+  "seen_tok": 61513187328,
+  "sha256": "d08b53fcc7800479ce790f0d332279bbd5df669cbcf390ba0eb8116b764d213a",
+  "smoke": {
+    "ar": {
+      "ckpt": "pretrain_step01251489_from01164629_20260730T1910Z.pt",
+      "ok": true,
+      "tokens": 2,
+      "wall_s": 0.498
+    },
+    "nat": {
+      "ckpt": "pretrain_step01251489_from01164629_20260730T1910Z.pt",
+      "ok": true,
+      "tokens": 2,
+      "wall_s": 0.304
+    },
+    "sat": {
+      "ckpt": "pretrain_step01251489_from01164629_20260730T1910Z.pt",
+      "ok": true,
+      "tokens": 2,
+      "wall_s": 0.364
+    }
+  },
+  "status": "promoted-and-smoke-tested",
+  "step": 1251489,
+  "vast_instance_id": 44137950,
+  "verification": "mirror SHA-256; exact 33-shard SHA-256 inventory; approved serving root; immutable atomic pin; gated reload; NAT/AR/SAT smoke"
+}

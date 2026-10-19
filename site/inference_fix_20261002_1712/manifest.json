@@ -1,0 +1,11 @@
+{
+  "original_bridge_sha256": "27859ba1a3c5a7afdce3b3c77880113c6424ab6e440ee54af84d4ccc08b09b35",
+  "original_runtime_sha256": "2c5c6b99981de4578413c2dd32824475045f62fcf2e370df5ec3fdb5e435c9b6",
+  "checkpoint_weights_changed": false,
+  "decoding_functions_changed": false,
+  "bridge_sha256": "af2e452fdb70cf66ea1ade7b9cc0b9aca0d00f39bce0274afa8424bef99e66d2",
+  "runtime_sha256": "703ffdcff85ef9f8b2cec0abd82c81cb77d69131c4312848730a572201f7f36e",
+  "changed_runtime_functions": [
+    "infer_server"
+  ]
+}

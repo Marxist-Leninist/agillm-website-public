@@ -1,0 +1,15 @@
+{
+  "passed": 9,
+  "checks": [
+    "active cancellation preserves worker and creates request-specific marker",
+    "queued cancellation never touches resident worker",
+    "early cancel tombstone rejects reordered request and isolates other requests",
+    "queue deadline includes unavailable/warming worker, without synchronous load",
+    "queued cancellation exits immediately",
+    "busy worker timeout neither reloads nor duplicates worker",
+    "idle worker acquired immediately",
+    "runtime cancellation before and during forward, pipe resync, next request succeeds",
+    "unchanged uncanceled AR/SAT-fixed/SAT-variable/NAT server output in harness"
+  ],
+  "scope": "mocked lifecycle/queue tests; actual model validation still required"
+}

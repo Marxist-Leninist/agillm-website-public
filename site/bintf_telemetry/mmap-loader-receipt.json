@@ -1,0 +1,16 @@
+{
+  "at": 1791469620.0193982,
+  "runtime": "/opt/agillm43_netserve/runtime_derived/runtime_standard_modes_20261008_mmap_v43.py",
+  "runtime_sha256": "ad1d2bc0446f52bd33b54159da83e08ae488dd8fc0213332941217fcfd0e6cef",
+  "previous_runtime": "/opt/agillm43_netserve/runtime_derived/runtime_standard_modes_20261003_fastpath_v42.py",
+  "tests": [
+    "bitwise values",
+    "dtypes",
+    "tied aliases",
+    "private mapping does not modify saved weights"
+  ],
+  "external_cache": "/opt/agillm43_netserve/weight_cache",
+  "memory_high_gib": 7,
+  "memory_max_gib": 8,
+  "checkpoint_step": 3558989
+}

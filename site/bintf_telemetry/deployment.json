@@ -1,0 +1,7 @@
+{
+  "deployed_at": "20261008T135434Z",
+  "backup": "/opt/agillm43_netserve/bintf_telemetry/backup-20261008T135434Z",
+  "page_sha256": "136c2b1528742b8b094147bd54c6451184e2285ef94c324e5db58a1d681938b2",
+  "endpoint": "/agillm-bintf4b-training.json",
+  "timer": "agillm-bintf-telemetry.timer"
+}

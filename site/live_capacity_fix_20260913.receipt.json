@@ -1,0 +1,10 @@
+{
+  "patch": "live-capacity-and-buffered-end-to-end-20260913",
+  "path": "/opt/agillm43_netserve/agillm_completion.html",
+  "backup": "/opt/agillm43_netserve/agillm_completion.html.bak-live-capacity-20260913",
+  "sha256_before": "c0af5b46bb186ecf75962fb95ea092c6a1652ae2eea401934fab331ce0744a35",
+  "sha256_after": "22e39b6b60609f511718a32ec095d3cc62f5be8e267da2a7d4dacd5b01d15d84",
+  "inline_scripts_checked": 11,
+  "topology_regressions": 6,
+  "training_or_decode_policy_changed": false
+}

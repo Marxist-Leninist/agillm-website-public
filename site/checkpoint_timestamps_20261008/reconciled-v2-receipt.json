@@ -1,0 +1,14 @@
+{
+  "applied": true,
+  "unit_tests": {
+    "passed": 22,
+    "failed": 0
+  },
+  "inline_scripts_checked": 21,
+  "peer_scope_fix_preserved": true,
+  "ui_sha256": "75aa4131339d205a601506a73fb631ba3e6ba988d8eb2c438f7877b87f365547",
+  "addon_sha256": "ae8b404a4a59f3cd08ff2f37b07ff8b7ef9dcaada51e8b7d03f6c4fba508bf22",
+  "service_or_model_changes": [],
+  "applied_at": "20261008T145900Z",
+  "backup": "/opt/agillm43_netserve/checkpoint_timestamps_20261008/backup-reconciled-20261008T145900Z"
+}

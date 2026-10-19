@@ -1,0 +1,57 @@
+{
+  "live": false,
+  "checks": {
+    "page": {
+      "status": 200,
+      "title": "AGILLM \u00b7 RPV16 1PF \u00b7 2.0B",
+      "url": "https://codex.opentransformers.online/agillm-ui",
+      "editor": 1
+    },
+    "isolated_editors": true,
+    "panels": [
+      {
+        "number": 1,
+        "main": true,
+        "busy": false,
+        "streaming": false,
+        "recovering": false,
+        "model": "rpv16",
+        "requestId": null,
+        "stats": null,
+        "status": "ready"
+      },
+      {
+        "number": 2,
+        "main": false,
+        "busy": false,
+        "streaming": false,
+        "recovering": false,
+        "model": "rpv16",
+        "requestId": null,
+        "stats": null,
+        "status": "ready"
+      }
+    ],
+    "main_editor_box": {
+      "x": 9,
+      "y": 180,
+      "width": 374,
+      "height": 382.375
+    },
+    "child_editor_box": {
+      "x": 736,
+      "y": 205,
+      "width": 684,
+      "height": 610
+    },
+    "four_panel_limit": true,
+    "single_view_preserves_editor": true,
+    "mobile": {
+      "width": 390,
+      "page_width": 390,
+      "grid_columns": "374px"
+    },
+    "no_runtime_errors": true
+  },
+  "errors": []
+}

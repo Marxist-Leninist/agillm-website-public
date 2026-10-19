@@ -1,0 +1,180 @@
+{
+  "passed": true,
+  "initial": {
+    "ok": true,
+    "ready": true,
+    "warming": false,
+    "ckpt": "pretrain_step03558989_from03514490_20261008T1246Z.pt",
+    "uptime_s": 1095,
+    "model_identity_verified": true,
+    "model": {
+      "name": "AGILLM 4.4 Standard 1.1B",
+      "step": 3558989,
+      "seen_tokens": 609080250368,
+      "source_checkpoint_sha256": "c73a688eee009be8199f23ee23574be5ee3031cac8dc7f4f1c8db94a19de3e7f",
+      "tokenizer_sha256": "REDACTED"
+    },
+    "checkpoint_step": 3558989,
+    "step": 3558989,
+    "canonical_modes": [
+      "ar",
+      "sat_fixed",
+      "sat_variable",
+      "nat"
+    ],
+    "loads": 3,
+    "concurrency": 2,
+    "request_timeout_s": 1800.0,
+    "queue_timeout_s": 240.0,
+    "dtype": "fp32",
+    "live_slots": 2,
+    "busy": 0,
+    "draining_slots": 0,
+    "active_request_count": 0,
+    "pending_request_count": 0,
+    "slot_threads": [
+      8,
+      8
+    ],
+    "slot_dtypes": [
+      "fp32",
+      "fp32"
+    ],
+    "cancel_preserves_worker": true,
+    "target_ckpt": "pretrain_step03558989_from03514490_20261008T1246Z.pt",
+    "reliability_patch": "cooperative-cancel-20261002",
+    "host": "geth-cpu",
+    "device": "cpu"
+  },
+  "max_busy": 2,
+  "slots": [
+    3,
+    2
+  ],
+  "results": [
+    {
+      "label": "A",
+      "request_id": "concurrency-qa-A-1791471792317975939",
+      "status": 200,
+      "start": 4556227.800499353,
+      "end": 4556229.579299249,
+      "response": {
+        "ok": true,
+        "text": "The capital of France is the 2.5 million people in",
+        "stats": {
+          "seconds": 1.6176998615264893,
+          "tokens": 8,
+          "tok_s": 4.945293122823824,
+          "finish_reason": "length",
+          "generation_finish": {
+            "finish_reason": "length",
+            "generated_tokens": 8,
+            "max_new": 8,
+            "eos_emitted": false,
+            "source": "runtime-token-ids"
+          },
+          "output_protocol": "agillm.generation-result.v1"
+        },
+        "wall_s": 1.622,
+        "button_tok_s": 4.93,
+        "ckpt": "pretrain_step03558989_from03514490_20261008T1246Z.pt",
+        "host": "geth-cpu",
+        "dtype": "fp32",
+        "slot": 3,
+        "threads": 8,
+        "request_id": "concurrency-qa-A-1791471792317975939",
+        "queue_wait_s": 0.001
+      }
+    },
+    {
+      "label": "B",
+      "request_id": "concurrency-qa-B-1791471792318861895",
+      "status": 200,
+      "start": 4556227.801051252,
+      "end": 4556229.507571889,
+      "response": {
+        "ok": true,
+        "text": "The capital of France is the 2.5 million people in",
+        "stats": {
+          "seconds": 1.6204040050506592,
+          "tokens": 8,
+          "tok_s": 4.9370403770076425,
+          "finish_reason": "length",
+          "generation_finish": {
+            "finish_reason": "length",
+            "generated_tokens": 8,
+            "max_new": 8,
+            "eos_emitted": false,
+            "source": "runtime-token-ids"
+          },
+          "output_protocol": "agillm.generation-result.v1"
+        },
+        "wall_s": 1.664,
+        "button_tok_s": 4.81,
+        "ckpt": "pretrain_step03558989_from03514490_20261008T1246Z.pt",
+        "host": "geth-cpu",
+        "dtype": "fp32",
+        "slot": 2,
+        "threads": 8,
+        "request_id": "concurrency-qa-B-1791471792318861895",
+        "queue_wait_s": 0.0
+      }
+    }
+  ],
+  "health_samples": [
+    {
+      "t": 4556227.844920418,
+      "ready": true,
+      "concurrency": 2,
+      "live_slots": 2,
+      "busy": 0,
+      "active_request_count": 0,
+      "pending_request_count": 0
+    },
+    {
+      "t": 4556228.17595996,
+      "ready": true,
+      "concurrency": 2,
+      "live_slots": 2,
+      "busy": 2,
+      "active_request_count": 2,
+      "pending_request_count": 0
+    },
+    {
+      "t": 4556228.503902942,
+      "ready": true,
+      "concurrency": 2,
+      "live_slots": 2,
+      "busy": 2,
+      "active_request_count": 2,
+      "pending_request_count": 0
+    },
+    {
+      "t": 4556228.833601865,
+      "ready": true,
+      "concurrency": 2,
+      "live_slots": 2,
+      "busy": 2,
+      "active_request_count": 2,
+      "pending_request_count": 0
+    },
+    {
+      "t": 4556229.162732617,
+      "ready": true,
+      "concurrency": 2,
+      "live_slots": 2,
+      "busy": 2,
+      "active_request_count": 2,
+      "pending_request_count": 0
+    },
+    {
+      "t": 4556229.509440272,
+      "ready": true,
+      "concurrency": 2,
+      "live_slots": 2,
+      "busy": 1,
+      "active_request_count": 1,
+      "pending_request_count": 0
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+<style id="agi44-chart-v2-css">
+/* AGILLM loss chart v2 (2026-09-23): chart first, full rail width, taller canvas. */
+#agillmTelemetry #agi44-curves-body{width:100%;max-height:var(--telemetry-detail-height,62dvh)}
+#agi44-curves.open #agi44-curves-body{display:flex;flex-direction:column}
+#agi44-curves-body>*{flex:0 0 auto;min-width:0}
+#agi44-curves-body>.telemetry-close{order:0}
+#agillmTelemetry #agi44-curves-body>.telemetry-close{position:absolute;top:8px;right:8px;margin:0;min-height:30px;padding:0 10px;z-index:3}
+#agi44-curves-body>h4{order:1}
+#agillmTelemetry #agi44-curves-body>h4{padding-right:86px;min-height:30px}
+#agi44-sum{order:2}
+#agi44-ranges{order:3}
+#agi44-curves-body>.qf{order:4}
+#agi44-series{order:5}
+#agi44-curves-body>.wrap{order:6}
+#agi44-foot{order:7}
+#agi44-mode-loss{order:8}
+#agi44-now{order:9}
+#agi44-health{order:10}
+#agi44-flags{order:11}
+#agi44-progress{order:12}
+#agi44-curves-body>.note{order:13}
+#agi44-curves-body>.note[hidden]{display:none}
+#agi44-curves canvas{height:clamp(230px,calc(var(--telemetry-detail-height,600px) - 215px),560px);cursor:crosshair;touch-action:pan-y}
+#agi44-sum{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}
+#agi44-sum .t{flex:1 1 104px;min-width:92px;border:1px solid #2a3346;border-radius:8px;padding:5px 8px 4px;background:#0b0e14}
+#agi44-sum .t small{display:block;color:#8b98ab;font-size:9.5px;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#agi44-sum .t b{display:block;font-size:15px;line-height:1.25;font-weight:650;font-variant-numeric:tabular-nums;color:#e6edf3;white-space:nowrap}
+#agi44-sum .t i{display:block;font-style:normal;font-size:10.5px;color:#8b98ab;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+#agi44-sum .t i.dn{color:#3fb950}
+#agi44-sum .t i.up{color:#f0883e}
+#agi44-sum .t .sw{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px;vertical-align:0}
+#agi44-curves .seg2{display:inline-flex;border:1px solid #2a3346;border-radius:999px;overflow:hidden;margin-right:4px}
+#agi44-curves .seg2 button{background:#0b0e14;border:0;color:#c9d1d9;padding:3px 11px;font:inherit;font-size:11.5px;cursor:pointer;min-height:28px}
+#agi44-curves .seg2 button+button{border-left:1px solid #2a3346}
+#agi44-curves .seg2 button.on{background:#16263d;color:#e6edf3;box-shadow:inset 0 0 0 1px #58a6ff}
+#agi44-curves button.sr b.v{font-weight:600;color:#e6edf3;font-variant-numeric:tabular-nums}
+#agi44-curves .sr.na{opacity:.6;cursor:default;font-style:italic;font-size:11px;color:#8b98ab}
+#agi44-curves .sel{position:absolute;display:none;background:rgba(88,166,255,.13);border-left:1px solid rgba(88,166,255,.6);border-right:1px solid rgba(88,166,255,.6);pointer-events:none}
+#agi44-curves .xh{position:absolute;display:none;width:1px;background:rgba(201,209,217,.28);pointer-events:none}
+#agi44-curves .tip{z-index:2;line-height:1.5}
+#agi44-ranges .qf{display:inline-flex;flex-wrap:wrap;gap:5px;align-items:center;margin:0 0 0 auto}
+#agi44-ranges .qf b{margin-right:0}
+#agi44-ranges .qfb{min-height:28px;padding:3px 10px;font-size:11.5px}
+#agi44-series{margin-top:2px}
+#agi44-curves #agi44-ranges{gap:5px 6px}
+#agi44-ranges button.rg{padding:3px 9px;min-height:28px}
+@media(max-width:620px){
+ /* phone: tiles, controls and legend are single swipeable rows so the chart stays in view */
+ #agi44-curves #agi44-sum,#agi44-curves #agi44-ranges,#agi44-curves #agi44-series{flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+ #agi44-sum::-webkit-scrollbar,#agi44-ranges::-webkit-scrollbar,#agi44-series::-webkit-scrollbar{display:none}
+ #agi44-sum>*,#agi44-ranges>*,#agi44-series>*{flex:0 0 auto}
+ #agi44-sum{margin:6px 0 0;gap:5px}
+ #agi44-sum .t{min-width:88px;padding:4px 7px}
+ #agi44-sum .t b{font-size:14px}
+ #agi44-curves #agi44-ranges{margin:7px 0 4px}
+ #agi44-ranges .qf{flex-wrap:nowrap;margin-left:4px}
+ #agi44-curves #agi44-series{margin:2px 0 6px}
+ #agi44-series .sr{white-space:nowrap}
+ #agi44-curves canvas{height:clamp(220px,calc(var(--telemetry-detail-height,520px) - 190px),420px)}
+ #agi44-curves .seg2 button{padding:3px 8px}
+ #agillmTelemetry #agi44-curves-body>h4{font-size:9.5px}
+}
+</style>

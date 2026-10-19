@@ -1,0 +1,27 @@
+{"event": "start", "ok": true, "ckpt": "pretrain_step02939922_from02930767_20260913T1425Z.pt", "host": "vast-47086549", "slot": 11, "threads": 12, "dtype": "fp32", "request_id": "legacy-1789310979756476801-127665574426176", "queue_wait_s": 0.001}
+{"event": "stream_tok", "data": {"i": 0, "text": " "}}
+{"event": "stream_tok", "data": {"i": 1, "text": " "}}
+{"event": "stream_tok", "data": {"i": 2, "text": " "}}
+{"event": "stream_tok", "data": {"i": 3, "text": " "}}
+{"event": "stream_tok", "data": {"i": 4, "text": " "}}
+{"event": "stream_tok", "data": {"i": 5, "text": " "}}
+{"event": "stream_tok", "data": {"i": 6, "text": " "}}
+{"event": "stream_tok", "data": {"i": 7, "text": " "}}
+{"event": "stream_tok", "data": {"i": 8, "text": " "}}
+{"event": "stream_tok", "data": {"i": 9, "text": " "}}
+{"event": "stream_tok", "data": {"i": 10, "text": " "}}
+{"event": "stream_tok", "data": {"i": 11, "text": " "}}
+{"event": "stream_tok", "data": {"i": 12, "text": " "}}
+{"event": "stream_tok", "data": {"i": 13, "text": " "}}
+{"event": "stream_tok", "data": {"i": 14, "text": " "}}
+{"event": "stream_tok", "data": {"i": 15, "text": " "}}
+{"event": "stream_tok", "data": {"i": 16, "text": " "}}
+{"event": "stream_tok", "data": {"i": 17, "text": " "}}
+{"event": "stream_tok", "data": {"i": 18, "text": " "}}
+{"event": "stream_tok", "data": {"i": 19, "text": " "}}
+{"event": "stream_tok", "data": {"i": 20, "text": " "}}
+{"event": "stream_tok", "data": {"i": 21, "text": " "}}
+{"event": "stream_tok", "data": {"i": 22, "text": " "}}
+{"event": "stream_tok", "data": {"i": 23, "text": " "}}
+{"event": "stats", "stats": {"seconds": 0.41, "tokens": 24, "tok_s": 58.0}}
+{"event": "done", "ok": true, "text": "The year is 2050 and", "stats": {"seconds": 0.41, "tokens": 24, "tok_s": 58.0}, "finish_reason": null, "generation_finish": {}, "wall_s": 0.417, "button_tok_s": 57.5, "ckpt": "pretrain_step02939922_from02930767_20260913T1425Z.pt", "host": "vast-47086549", "dtype": "fp32", "slot": 11, "threads": 12, "request_id": "legacy-1789310979756476801-127665574426176", "queue_wait_s": 0.001}

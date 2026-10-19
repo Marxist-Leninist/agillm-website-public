@@ -1,0 +1,32 @@
+{
+  "checkpoint": "/mnt/geth-vol1/agillm43/ckpts/artifacts/full/repretrain_v4_wip/pretrain_step00932388_from00065064_20260727T1019Z.pt",
+  "loss": 8.844791412353516,
+  "previous_env_backup": "/opt/agillm43_netserve/bridge.env.backup-before-pretrain_step00932388_from00065064_20260727T1019Z-20260727T105030Z",
+  "promoted_at": "2026-07-27T10:51:46Z",
+  "schema": "agillm43.vast_promotion.v1",
+  "seen_tok": 45828734976,
+  "sha256": "4c8fca8f947927636f468f3739ff74c6d482f1e0f38a8c11dae56462c74e4eb0",
+  "smoke": {
+    "ar": {
+      "ckpt": "pretrain_step00932388_from00065064_20260727T1019Z.pt",
+      "ok": true,
+      "tokens": 2,
+      "wall_s": 0.399
+    },
+    "nat": {
+      "ckpt": "pretrain_step00932388_from00065064_20260727T1019Z.pt",
+      "ok": true,
+      "tokens": 2,
+      "wall_s": 0.203
+    },
+    "sat": {
+      "ckpt": "pretrain_step00932388_from00065064_20260727T1019Z.pt",
+      "ok": true,
+      "tokens": 2,
+      "wall_s": 0.309
+    }
+  },
+  "status": "promoted-and-smoke-tested",
+  "step": 932388,
+  "vast_instance_id": 44137950
+}

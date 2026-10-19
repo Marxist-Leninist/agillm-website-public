@@ -1,0 +1,20 @@
+{
+  "schema": "agillm.checkpoint_timestamps.v1",
+  "marker": "AGILLM_CHECKPOINT_TIMESTAMPS_V1",
+  "before_ui_sha256": "c032877c1e395f8f544a1e169b159e6b2be50ced8a5fa29297fdada65a2baad1",
+  "after_ui_sha256": "3c9393510f414af6f1c348df3d5f6cc421dc7077b8428c8730597a4e8212d4ea",
+  "before_addon_sha256": "15f11c916fe132d6650851da17ffe42814daa35efd147caf8fc86d59f70fa69d",
+  "after_addon_sha256": "bb934f642e80d2e84c6c32127cbd888f87866f6ec31b526e721d9f055c3fc004",
+  "scripts_syntax_checked": 21,
+  "applied": true,
+  "saved_timestamp_sources": {
+    "standard": "standard_live.last_checkpoint_event.ts",
+    "rpv16": "rpv16_live.last_checkpoint_event.ts",
+    "bintf4b": "saved.ckpt.updated_at"
+  },
+  "serving_timestamp_source": "health.model.exported_at when explicitly available",
+  "timezone": "Europe/London",
+  "service_restarts": [],
+  "applied_at": "20261008T143049Z",
+  "backup": "/opt/agillm43_netserve/checkpoint_timestamps_20261008/backup-20261008T143049Z"
+}

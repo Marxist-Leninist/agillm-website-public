@@ -1,0 +1,17 @@
+{
+  "checkpoint": "/mnt/geth-vol1/agillm43/ckpts/artifacts/full/repretrain_v4_wip/pretrain_step01027722_from00065064_20260728T1119Z.pt",
+  "loss": 8.793755531311035,
+  "previous_checkpoint": "/mnt/geth-vol1/agillm43/ckpts/artifacts/full/repretrain_v4_wip/pretrain_step00989490_from00065064_20260728T0119Z.pt",
+  "previous_env_backup": "/opt/agillm43_netserve/bridge.env.cutover-backup-20260728T121811Z",
+  "previous_sha256": "51f4e50ea18363f27e9ca5736f78357422b188a4c293245e75570f02c2d9c346",
+  "promoted_at": "2026-07-28T12:19:58Z",
+  "promoted_by": "GPT-5.6 Pro via SG1",
+  "schema": "agillm43.vast_promotion.v1",
+  "seen_tok": 50514591744,
+  "sha256": "18ec712785ca77474e3eea9cbe670b9d4e309a01b6206890c2835ef00a126585",
+  "source": "vast.ai",
+  "status": "promoted-and-smoke-tested",
+  "step": 1027722,
+  "vast_instance_id": 44137950,
+  "verification": "source latest.json and stability; exact 33-shard inventory; source/destination SHA-256 for every shard; immutable env transactional swap; safe reload gate; NAT/AR/SAT local smoke"
+}

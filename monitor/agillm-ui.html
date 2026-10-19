@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AGILLM GB10 · 1PF Full Stack</title>
+<style>
+:root{--bg:#080b11;--panel:#0f1520;--panel2:#121a28;--line:#263146;--fg:#edf3f9;--muted:#92a0b5;--blue:#66a7ff;--green:#4bd07d;--amber:#e8b24f;--red:#ff6b71;--violet:#b995ff}
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at 15% 0,#14223a 0,#080b11 31rem);color:var(--fg);font:14px/1.48 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1180px;margin:auto;padding:34px 18px 54px} header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:22px}
+h1{font-size:27px;line-height:1.15;margin:0;letter-spacing:-.03em}.sub{color:var(--muted);margin-top:6px;max-width:760px}.badges{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.badge{border:1px solid var(--line);background:#0b111b;border-radius:999px;padding:6px 10px;color:var(--muted);font-size:12px;white-space:nowrap}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;background:var(--muted)}.dot.ok{background:var(--green);box-shadow:0 0 10px #4bd07d88}.dot.warn{background:var(--amber)}.dot.bad{background:var(--red)}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}.card{grid-column:span 3;background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:14px;padding:15px 16px;min-width:0}.card.w6{grid-column:span 6}.card.w12{grid-column:span 12}
+.kicker{text-transform:uppercase;letter-spacing:.11em;color:var(--muted);font-size:10px;font-weight:700;margin-bottom:7px}.big{font-size:31px;font-weight:720;letter-spacing:-.035em;font-variant-numeric:tabular-nums}.unit{font-size:12px;font-weight:500;color:var(--muted);margin-left:5px}
+.detail{color:var(--muted);font-size:12px;margin-top:4px}.meter{height:5px;background:#070a0f;border-radius:99px;overflow:hidden;margin-top:11px}.meter>i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--violet));width:0;transition:width .35s}
+dl{display:grid;grid-template-columns:minmax(120px,auto) 1fr;gap:6px 12px;margin:0}dt{color:var(--muted)}dd{margin:0;text-align:right;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin:24px 0 10px}.section-title h2{font-size:15px;margin:0}.section-title span{color:var(--muted);font-size:12px}
+.statusline{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.state{border:1px solid var(--line);border-radius:8px;padding:4px 8px;font-size:11px}.state.ok{color:var(--green)}.state.warn{color:var(--amber)}.state.bad{color:var(--red)}
+.callout{border-left:3px solid var(--violet);padding:9px 12px;background:#0a0f19;border-radius:7px;color:var(--muted);font-size:12px}.callout b{color:var(--fg)}
+form{display:grid;grid-template-columns:1fr auto;gap:10px}textarea{grid-column:1/-1;width:100%;min-height:92px;background:#090e16;color:var(--fg);border:1px solid var(--line);border-radius:11px;padding:11px;resize:vertical;font:inherit}
+.controls{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.controls label{color:var(--muted);font-size:12px}.controls input[type=number]{width:76px;background:#090e16;color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:7px}.controls input[type=checkbox]{accent-color:var(--blue)}.controls select{background:#090e16;color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:7px}
+button{border:0;border-radius:10px;padding:10px 18px;background:var(--blue);color:#06101e;font-weight:750;cursor:pointer}button:disabled{opacity:.5;cursor:progress}
+.metrics{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}.metric{background:#090e16;border:1px solid var(--line);border-radius:9px;padding:7px 10px;min-width:130px}.metric b{display:block;font-size:16px;font-variant-numeric:tabular-nums}.metric span{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.08em}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#070b11;border:1px solid var(--line);border-radius:10px;padding:12px;min-height:72px;max-height:330px;overflow:auto;margin:10px 0 0;font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.spark{height:84px;width:100%;display:block;margin-top:10px;background:#090e16;border:1px solid var(--line);border-radius:9px}
+a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}.footer{color:var(--muted);font-size:11px;margin-top:18px}
+@media(max-width:900px){.card{grid-column:span 6}.card.w6{grid-column:span 12}header{display:block}.badges{justify-content:flex-start;margin-top:12px}}
+@media(max-width:560px){.card,.card.w6{grid-column:span 12}.wrap{padding:24px 12px 42px}.big{font-size:27px}form{grid-template-columns:1fr}button{width:100%}}
+</style>
+</head>
+<body><div class="wrap">
+<header>
+ <div><h1>AGILLM GB10 · 1PF Full Stack</h1><div class="sub">Live RPV16 target-fix-v6 trainer, durable checkpoint, serving lineage and measured throughput. Kernel peak and end-to-end tokens/sec are deliberately separate because arithmetic units do not, tragically, train the rest of the stack by telepathy.</div></div>
+ <div class="badges">
+  <span class="badge"><i id="trainerDot" class="dot"></i><span id="trainerState">trainer…</span></span>
+  <span class="badge"><i id="serveDot" class="dot"></i><span id="serveState">serving…</span></span>
+  <span class="badge" id="updated">refreshing…</span>
+ </div>
+</header>
+
+<div class="grid">
+ <div class="card"><div class="kicker">Full-stack throughput · 64 steps</div><div class="big" id="fs64">—<span class="unit">tok/s</span></div><div class="detail" id="fs64d">physical input tokens / wall time</div><div class="meter"><i id="fsMeter"></i></div></div>
+ <div class="card"><div class="kicker">Full-stack throughput · 256 steps</div><div class="big" id="fs256">—<span class="unit">tok/s</span></div><div class="detail">longer mixed-objective window</div></div>
+ <div class="card"><div class="kicker">Live trainer</div><div class="big" id="liveStep">—</div><div class="detail"><span id="liveObj">—</span> · instant <span id="instant">—</span> tok/s</div></div>
+ <div class="card"><div class="kicker">Latest durable checkpoint</div><div class="big" id="ckStep">—</div><div class="detail" id="ckAge">—</div></div>
+
+ <div class="card w6">
+  <div class="kicker">1 PFLOP compute target</div>
+  <dl>
+   <dt>Kernel primitive</dt><dd class="mono">mma.sp + packed mxf4nvf4 + 2:4</dd>
+   <dt>Measured kernel ceiling</dt><dd><b id="pf">1.022 PFLOP/s</b></dd>
+   <dt>Trainer rolling throughput</dt><dd id="pfTrainer">— tok/s</dd>
+   <dt>Important distinction</dt><dd>kernel peak ≠ end-to-end trainer compute rate</dd>
+  </dl>
+ </div>
+ <div class="card w6">
+  <div class="kicker">Active full-stack path</div>
+  <dl>
+   <dt>Branch</dt><dd class="mono" id="branch">—</dd>
+   <dt>Pipeline moving rate</dt><dd id="pipeline">—</dd>
+   <dt>Checkpoint stall</dt><dd id="stall">—</dd>
+   <dt>Async checkpoint</dt><dd id="asyncCk">—</dd>
+   <dt>GPU reserved</dt><dd id="gpuMem">—</dd>
+  </dl>
+ </div>
+</div>
+
+<div class="section-title"><h2>Optimization evidence</h2><span>Measured A/B results, not aspirational marketing arithmetic</span></div>
+<div class="grid">
+ <div class="card w6"><div class="kicker">Descending-cache hybrid</div><div class="statusline"><span class="state ok">EXACT AR/SAT</span><span class="state warn">CANDIDATE</span></div>
+  <dl style="margin-top:10px"><dt>AR speedup</dt><dd id="arX">—</dd><dt>SAT speedup</dt><dd id="satX">—</dd><dt>NAT</dt><dd id="natCache">—</dd><dt>Estimated 80/10/10 mix</dt><dd id="mixEst">—</dd></dl>
+ </div>
+ <div class="card w6"><div class="kicker">Rejected / staged lanes</div>
+  <dl><dt>Masked quant</dt><dd><span class="state bad">REJECTED</span> <span id="masked">—</span></dd><dt>Async checkpoint</dt><dd id="asyncState">—</dd><dt>Production rule</dt><dd>keep only measured, correctness-safe wins</dd></dl>
+ </div>
+</div>
+
+<div class="section-title"><h2>Checkpoint & serving lineage</h2><span>Training and inference are not silently conflated</span></div>
+<div class="grid">
+ <div class="card w6">
+  <div class="kicker">Training checkpoint</div>
+  <dl><dt>File</dt><dd class="mono" id="ckName">—</dd><dt>Step</dt><dd id="ckStep2">—</dd><dt>Seen tokens</dt><dd id="seen">—</dd><dt>Schema</dt><dd id="schema">—</dd><dt>Saved</dt><dd id="saved">—</dd><dt>Size</dt><dd id="size">—</dd></dl>
+ </div>
+ <div class="card w6">
+  <div class="kicker">Serving now</div>
+  <dl><dt>Public bridge checkpoint</dt><dd class="mono" id="publicCk">—</dd><dt>Dedicated RPV16 CPU</dt><dd class="mono" id="rpvCk">—</dd><dt>RPV16 step</dt><dd id="rpvStep">—</dd><dt>RPV16 dtype</dt><dd id="rpvDtype">—</dd><dt>RPV16 latest trained</dt><dd class="mono" id="rpvLatest">—</dd><dt>Promotion status</dt><dd id="promotion">awaiting newest CPU promotion</dd></dl>
+  <div class="callout" style="margin-top:10px"><b>Why two numbers?</b> The trainer is advancing independently while a serving-safe CPU snapshot is converted and qualified. The UI shows both rather than inventing a comforting but false single “latest” value.</div>
+ </div>
+</div>
+
+<div class="section-title"><h2>Recent throughput</h2><span id="chartLabel">last live points</span></div>
+<div class="card w12"><canvas id="spark" class="spark"></canvas><div class="detail">Raw per-step tok/s. Rolling full-stack cards above are the useful numbers for overall trainer speed.</div></div>
+
+<div class="section-title"><h2>Live inference</h2><span>button press → completed response</span></div>
+<div class="card w12">
+ <form id="form">
+  <textarea id="prompt" placeholder="Prompt the currently served checkpoint…">The future of efficient language-model training is</textarea>
+  <div class="controls">
+   <label>max tokens <input id="mx" type="number" min="1" max="1024" value="48"></label>
+   <label>temperature <input id="temp" type="number" min="0" max="2" step=".1" value=".7"></label>
+   <label>top-p <input id="topP" type="number" min="0" max="1" step=".05" value=".95"></label>
+   <label><input id="greedy" type="checkbox"> greedy</label>
+   <label>mode <select id="mode"><option value="ar">AR</option><option value="sat" selected>SAT-1</option><option value="sat-var">SAT-var</option><option value="nat">NAT</option></select></label>
+   <label>SAT-V rate <input id="satRate" type="number" min="0" max="0.5" step="0.05" value="0"></label>
+   <label>objective <select id="objective"><option value="1">1 intelligence</option><option value="2" selected>2 balanced</option><option value="3">3 speed</option></select></label>
+  </div>
+  <button id="go" type="submit">Generate</button>
+ </form>
+ <div class="metrics">
+  <div class="metric"><span>Button → done</span><b id="latency">—</b></div>
+  <div class="metric"><span>Button → done tok/s</span><b id="btps">—</b></div>
+  <div class="metric"><span>Output tokens</span><b id="outTokens">—</b></div>
+ </div>
+ <pre id="out">No request yet.</pre>
+</div>
+
+<div class="footer">Refreshes every 10 seconds · <a href="/api/checkpoint">checkpoint JSON</a> · <a href="/api/training">training JSON</a> · <a href="/agillm-curves">curves</a></div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const nf=new Intl.NumberFormat("en-GB",{maximumFractionDigits:0});
+const n=x=>(x===null||x===undefined||Number.isNaN(+x))?"—":nf.format(+x);
+const f=(x,d=1)=>(x===null||x===undefined||Number.isNaN(+x))?"—":Number(x).toFixed(d);
+const bytes=x=>{if(!x)return"—";let v=+x,u=["B","KiB","MiB","GiB","TiB"],i=0;while(v>=1024&&i<u.length-1){v/=1024;i++}return v.toFixed(i?1:0)+" "+u[i]};
+const ago=t=>{if(!t)return"—";const s=Math.max(0,Date.now()/1000-+t);if(s<90)return Math.round(s)+"s ago";if(s<5400)return Math.round(s/60)+"m ago";if(s<172800)return Math.round(s/3600)+"h ago";return Math.round(s/86400)+"d ago"};
+function state(dot,text,ok,warn=false){dot.className="dot "+(ok?"ok":warn?"warn":"bad");}
+function draw(rows){
+ const c=$("spark"),dpr=devicePixelRatio||1,w=Math.max(300,c.clientWidth),h=Math.max(84,c.clientHeight);c.width=w*dpr;c.height=h*dpr;const x=c.getContext("2d");x.scale(dpr,dpr);x.clearRect(0,0,w,h);
+ const a=(rows||[]).slice(-120).filter(p=>Number.isFinite(+p.tps));if(a.length<2)return;
+ const vals=a.map(p=>+p.tps),lo=Math.min(...vals),hi=Math.max(...vals),span=Math.max(1,hi-lo);x.strokeStyle="#66a7ff";x.lineWidth=2;x.beginPath();
+ a.forEach((p,i)=>{const xx=8+i/(a.length-1)*(w-16),yy=h-8-(+p.tps-lo)/span*(h-16);i?x.lineTo(xx,yy):x.moveTo(xx,yy)});x.stroke();
+ x.fillStyle="#92a0b5";x.font="10px system-ui";x.fillText(n(lo)+" tok/s",8,h-5);x.fillText(n(hi)+" tok/s",8,12);
+}
+async function refresh(){
+ let ck,tr;try{[ck,tr]=await Promise.all([fetch("/api/checkpoint",{cache:"no-store"}).then(r=>r.json()),fetch("/api/training",{cache:"no-store"}).then(r=>r.json())])}catch(e){$("trainerState").textContent="unreachable";state($("trainerDot"),"",false);return}
+ const L=tr.latest||{},F=tr.fullstack||{},O=tr.optimization||{},C=tr.checkpoint||{},S=ck.serving||{},rpv=S.rpv16_cpu||{},pub=S.public_bridge||{};
+ const live=!!tr.ok&&((tr.health||{}).overall==="ok");$("trainerState").textContent=live?"trainer live":"trainer degraded";state($("trainerDot"),"",live,!live);
+ const serve=!!(rpv.ok&&rpv.ready);$("serveState").textContent=serve?"RPV16 CPU ready":"RPV16 CPU degraded";state($("serveDot"),"",serve,!serve);
+ $("updated").textContent="updated "+ago(tr.polled_at);
+ $("fs64").innerHTML=n(L.fullstack_tok_s_64)+'<span class="unit">tok/s</span>';$("fs256").innerHTML=n(L.fullstack_tok_s_256)+'<span class="unit">tok/s</span>';
+ $("fsMeter").style.width=Math.min(100,(+(L.fullstack_tok_s_64||0)/120000)*100)+"%";$("fs64d").textContent=(F.rolling64?.steps||0)+" steps · "+f(F.rolling64?.wall_s,1)+"s wall";
+ $("liveStep").textContent=n(L.step);$("liveObj").textContent=(L.objective||"—").toUpperCase();$("instant").textContent=n(L.raw_tok_s);
+ $("ckStep").textContent=n(C.step??ck.step);$("ckAge").textContent="durable · "+ago(C.ts??ck.saved_at_unix);
+ $("pf").textContent=f(O.kernel_target_pflops,3)+" PFLOP/s";$("pfTrainer").textContent=n(L.fullstack_tok_s_64)+" tok/s rolling-64";
+ $("branch").textContent=tr.branch||ck.branch||"—";$("pipeline").textContent=n(L.pipeline_tok_s)+" tok/s moving";$("stall").textContent=f(C.stall_s??ck.checkpoint_stall_s,2)+" s / save";$("asyncCk").textContent=(F.async_checkpoint?"enabled":"sync (current production)");$("gpuMem").textContent=f(L.gpu_peak_gb,1)+" GiB";
+ const dc=O.descending_cache_candidate||{};$("arX").textContent=f(dc.ar_speedup_x,3)+"×";$("satX").textContent=f(dc.sat_speedup_x,3)+"×";$("natCache").textContent=dc.nat||"—";$("mixEst").textContent=n(dc.estimated_mixed_tok_s)+" tok/s candidate";
+ const mq=O.masked_quant_candidate||{};$("masked").textContent=(mq.speedup_pct?("+"+f(mq.speedup_pct,3)+"% · max Δloss "+mq.max_loss_delta):"—");$("asyncState").textContent=(O.async_checkpoint_candidate||{}).state||"—";
+ $("ckName").textContent=ck.checkpoint_name||"—";$("ckStep2").textContent=n(ck.step);$("seen").textContent=n(ck.seen_tok);$("schema").textContent=ck.checkpoint_schema||"—";$("saved").textContent=ck.created_at_iso||ago(ck.saved_at_unix);$("size").textContent=bytes(ck.size_bytes);
+ $("publicCk").textContent=pub.ckpt||"—";$("rpvCk").textContent=rpv.ckpt||"—";$("rpvStep").textContent=n(rpv.model?.step);$("rpvDtype").textContent=rpv.dtype||"—";const rl=((ck||{}).latest_trained||{}).rpv16||{};$("rpvLatest").textContent=n(rl.step)+" · "+bytes(rl.size_bytes)+" · "+ago(rl.ts);
+ const same=rpv.model?.step && ck.step && +rpv.model.step===+ck.step;$("promotion").textContent=same?"latest durable checkpoint served":"serving older qualified snapshot";
+ draw(tr.train);$("chartLabel").textContent=(tr.train?.length||0)+" collected points · last 120 drawn";
+}
+function outputTokenCount(d){
+ for(const k of ["tokens_generated","generated_tokens","new_tokens","completion_tokens","output_tokens"]){if(Number.isFinite(+d?.[k]))return +d[k]}
+ if(Number.isFinite(+d?.usage?.completion_tokens))return +d.usage.completion_tokens;
+ for(const k of ["token_ids","generated_token_ids","output_ids"]){if(Array.isArray(d?.[k]))return d[k].length}
+ return null;
+}
+function applyObjective(){const o=$("objective").value;if(o==="1"){$("mode").value="ar"}else if(o==="2"){$("mode").value="sat";$("satRate").value="0"}else{$("mode").value="sat-var";$("satRate").value="0.3"}}
+$("objective").addEventListener("change",applyObjective);
+$("form").addEventListener("submit",async e=>{
+ e.preventDefault();const b=$("go");b.disabled=true;$("out").textContent="generating…";$("latency").textContent="…";$("btps").textContent="…";$("outTokens").textContent="…";const t0=performance.now();
+ try{
+  const r=await fetch("/api/generate",{method:"POST",headers:{"Content-Type":"application/json"},const _m=$("mode").value,_r=Math.max(0,Math.min(.5,+$("satRate").value||0));
+  const _body={prompt:$("prompt").value,max_new_tokens:+$("mx").value,temperature:+$("temp").value,top_p:+$("topP").value,repetition_penalty:1.05,greedy:$("greedy").checked,mode:_m==="sat-var"?"sat":_m,var:_m==="sat-var",sat_var_stride2_rate:_r};
+  const r=await fetch("/api/generate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(_body)})});
+  const d=await r.json(),secs=(performance.now()-t0)/1000,toks=outputTokenCount(d);$("latency").textContent=secs.toFixed(2)+" s";$("outTokens").textContent=toks??"not reported";$("btps").textContent=toks!==null?(toks/secs).toFixed(2)+" tok/s":"not reported";
+  $("out").textContent=d.text||d.generation||d.completion||d.output||d.error||JSON.stringify(d,null,2);
+ }catch(err){const secs=(performance.now()-t0)/1000;$("latency").textContent=secs.toFixed(2)+" s";$("btps").textContent="request failed";$("outTokens").textContent="—";$("out").textContent="request failed: "+err}
+ b.disabled=false;
+});
+refresh();setInterval(refresh,10000);addEventListener("resize",()=>refresh());
+</script></body></html>

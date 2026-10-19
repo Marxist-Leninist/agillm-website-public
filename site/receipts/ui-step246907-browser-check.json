@@ -1,0 +1,15 @@
+{
+  "ok": true,
+  "errors": [],
+  "serving_strip": "RPV16 2.0B serving\n#246,907\nStandard 1.1B serving\n#2,975,219",
+  "training_heading": "Training\nServing live \u00b7 training telemetry delayed\nHide",
+  "rpv_card": "RPV16 2.0B \u00b7 GB10\nTraining link \u00b7 2h ago stale\nserving 246,907\nAR LOSS\n7.043\nbatch\nTRAIN TOK/S\n23,364\ninput tokens\n% OF 1 PF\n27.90%\n279 TF/s",
+  "standard_card": "Standard 1.1B \u00b7 DBlock\nTraining link \u00b7 2h ago stale\nserving 2,975,219\nHELDOUT CE\n5.2215\nlower is better\nRAW TOK/S\n60,387\ntraining\nUSEFUL TOK/S\n2,768\nfull-stack",
+  "mobile_overflow": false,
+  "mode_buttons": [
+    "AR",
+    "SAT\u00b7F",
+    "SAT\u00b7V",
+    "NAT"
+  ]
+}

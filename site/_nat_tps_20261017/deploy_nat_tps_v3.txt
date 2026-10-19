@@ -1,0 +1,173 @@
+#!/usr/bin/env python3
+"""NAT_LIVE_TPS_20261017 v3: review follow-ups on top of the deployed v2 build.
+
+Applies to a file that already carries the four v2 markers (live sha256
+7a8f43cc857374e206042eea4d1616dbd6210fa97f1393ad4ecef2a55ef53ed9 on GETH):
+  1. live NAT line: the requested-tokens ceiling is labelled "max" and the last
+     recorded run of this mode on this model is shown as the realistic reference;
+     the uninformative "waiting for parallel result" phase is dropped once the
+     figure is shown so "worker busy" / "receiving result" stay readable.
+  2. finished line: the warning reason sits right after the ⚠️ instead of past
+     the phone's ellipsis.
+  3. after a run or a Stop, the phone toast is re-evaluated once the run flags
+     are clear, so only btn→done lines persist and other notices auto-hide.
+Same mechanics as deploy_nat_tps.py: exact anchors (each once), timestamped
+backup, sha256 compare-and-swap atomic replace, idempotent.
+
+usage: python3 -I deploy_nat_tps_v3.txt <agillm_completion.html> [--check]
+"""
+import hashlib, io, os, shutil, sys, time
+
+V2_MARKER = 'NAT_LIVE_TPS_20261017'
+V3_MARKER = 'NAT_LIVE_TPS_20261017_V3'
+
+EDITS = [
+# 1) live line: "max" label + last recorded run + informative phases only
+('''  // NAT_LIVE_TPS_20261017: a one-shot NAT request delivers no token before the
+  // whole result, so the only honest live throughput is the button→now ceiling:
+  // the tok/s this run records if the complete result landed this instant. It
+  // falls as the clock runs and meets the button→done figure when the result
+  // arrives. Shown once the request is in flight for at least one second so the
+  // first redraws do not flash an absurdly large number.
+  const requestedTokens = metricNumber(runContext.maxNew);
+  const paintProgress = () => {
+    if (signal.aborted) return;
+    const seconds = Math.max(0, (performance.now() - t0) / 1000);
+    const ceiling = requestSent && requestedTokens !== null && seconds >= 1 ? requestedTokens / seconds : null;
+    status.textContent = ceiling !== null
+      ? `${runContext.modeLabel} · +0/${runContext.maxNew} tok · ≤${ceiling.toFixed(1)} tok/s · ${seconds.toFixed(1)}s · btn→now · ${phase} · ${runContext.modelShort}`
+      : `${runContext.modeLabel} · ${phase} · ${seconds.toFixed(1)}s · btn→now · ${runContext.modelShort}`;
+  };
+''', '''  // NAT_LIVE_TPS_20261017 (NAT_LIVE_TPS_20261017_V3): a one-shot NAT request delivers
+  // no token before the whole result, so no live rate can be measured. Two labelled
+  // figures take its place once the request has been in flight for a second: "max",
+  // the button→now ceiling (requested tokens / elapsed: the tok/s this run would
+  // record if the complete result landed this instant; it falls as the clock runs),
+  // and "last run", the button→done tok/s of the most recent recorded run of this
+  // mode on this model, which is the realistic expectation.
+  const requestedTokens = metricNumber(runContext.maxNew);
+  const lastRate = lastRecordedRate(runContext.modelKey, runContext.modeKey);
+  const paintProgress = () => {
+    if (signal.aborted) return;
+    const seconds = Math.max(0, (performance.now() - t0) / 1000);
+    const ceiling = requestSent && requestedTokens !== null && seconds >= 1 ? requestedTokens / seconds : null;
+    // Once the figures are shown, "waiting for parallel result" is the normal state and
+    // says nothing; the phases that carry information (queued behind a busy worker,
+    // receiving the result) stay in the row, ahead of the model name.
+    const phaseText = ceiling !== null && phase === "waiting for parallel result" ? "" : ` · ${phase}`;
+    status.textContent = ceiling !== null
+      ? `${runContext.modeLabel} · +0/${runContext.maxNew} tok · ${seconds.toFixed(1)}s · max ${ceiling.toFixed(1)} tok/s${lastRate !== null ? ` · last run ${lastRate.toFixed(1)} tok/s` : ""}${phaseText} · btn→now · ${runContext.modelShort}`
+      : `${runContext.modeLabel}${phaseText} · ${seconds.toFixed(1)}s · btn→now · ${runContext.modelShort}`;
+  };
+'''),
+# 1b) helper next to endToEndRate
+('''function endToEndRate(tokens, wallSeconds) {
+  const tokenCount = metricNumber(tokens), wall = metricNumber(wallSeconds);
+  return tokenCount !== null && wall !== null && wall > 0 ? tokenCount / wall : null;
+}
+''', '''function endToEndRate(tokens, wallSeconds) {
+  const tokenCount = metricNumber(tokens), wall = metricNumber(wallSeconds);
+  return tokenCount !== null && wall !== null && wall > 0 ? tokenCount / wall : null;
+}
+// NAT_LIVE_TPS_20261017_V3: button→done tok/s of the most recent recorded generation of
+// this mode on this model (run history is newest first); null when there is none yet.
+function lastRecordedRate(modelKey, modeKey) {
+  for (const entry of RUN_HISTORY) {
+    if (!entry || entry.kind !== "generation" || entry.modelKey !== modelKey || entry.modeKey !== modeKey) continue;
+    const rate = metricNumber(entry.tok_s);
+    if (rate !== null && rate > 0) return rate;
+  }
+  return null;
+}
+'''),
+# 2) finished line: warning reason right after the ⚠️
+('''  status.textContent = `${tokenMismatch || !popoutRuntimeVerified ? "⚠️ " : ""}+${s.tokens ?? "?"}/${runContext.maxNew} tok${finishText ? " · " + finishText : ""} · ${rate !== null ? rate.toFixed(1) : "?"} tok/s · ${wallSeconds.toFixed(3)}s · btn→done${suffix} · ${runContext.modelShort} · ${modeLbl}${telemetryText ? " · " + telemetryText : ""}${queueSeconds !== null && queueSeconds >= .1 ? ` · queued ${queueSeconds.toFixed(1)}s` : ""}${tokenMismatch ? " · token mismatch" : ""}${!popoutRuntimeVerified ? " · runtime mode unverified" : ""}`;
+''', '''  // NAT_LIVE_TPS_20261017_V3: the reason for a warning sits next to the ⚠️, where the
+  // phone's single ellipsised row still shows it.
+  const warningPrefix = tokenMismatch ? "⚠️ token mismatch · " : !popoutRuntimeVerified ? "⚠️ runtime mode unverified · " : "";
+  status.textContent = `${warningPrefix}+${s.tokens ?? "?"}/${runContext.maxNew} tok${finishText ? " · " + finishText : ""} · ${rate !== null ? rate.toFixed(1) : "?"} tok/s · ${wallSeconds.toFixed(3)}s · btn→done${suffix} · ${runContext.modelShort} · ${modeLbl}${telemetryText ? " · " + telemetryText : ""}${queueSeconds !== null && queueSeconds >= .1 ? ` · queued ${queueSeconds.toFixed(1)}s` : ""}${tokenMismatch && !popoutRuntimeVerified ? " · runtime mode unverified" : ""}`;
+'''),
+# 3a) expose the phone toast evaluator
+('''  if (statusEl) new MutationObserver(syncStatus).observe(statusEl, { childList:true, characterData:true, subtree:true });
+''', '''  // NAT_LIVE_TPS_20261017_V3: the run and Stop cleanups re-evaluate the toast once the
+  // streaming/recovering flags are clear (see the finally blocks).
+  window.__agillmSyncStatus = syncStatus;
+  if (statusEl) new MutationObserver(syncStatus).observe(statusEl, { childList:true, characterData:true, subtree:true });
+'''),
+# 3b) run cleanup
+('''    applyModelUi(true);
+    syncUndoButton();
+    if (!recovering) {
+      go.hidden = false; go.disabled = !modeCapability(modelKey, currentModeKey()).available;
+''', '''    applyModelUi(true);
+    syncUndoButton();
+    // NAT_LIVE_TPS_20261017_V3: with the run flags clear, a finished btn→done line stays
+    // on the phone and any other notice (error, stopped) gets its normal auto-hide.
+    if (window.__agillmSyncStatus) window.__agillmSyncStatus();
+    if (!recovering) {
+      go.hidden = false; go.disabled = !modeCapability(modelKey, currentModeKey()).available;
+'''),
+# 3c) Stop cleanup
+('''  }).finally(() => {
+    recovering = false;
+    applyModelUi(true);
+    recoveryPromise = null;
+''', '''  }).finally(() => {
+    recovering = false;
+    applyModelUi(true);
+    if (window.__agillmSyncStatus) window.__agillmSyncStatus();
+    recoveryPromise = null;
+'''),
+]
+EXPECTED_V3_MARKERS = 5
+
+def sha256_of(path):
+    h = hashlib.sha256()
+    with open(path, 'rb') as f:
+        for chunk in iter(lambda: f.read(1 << 20), b''):
+            h.update(chunk)
+    return h.hexdigest()
+
+def main():
+    if len(sys.argv) < 2:
+        print(__doc__); return 2
+    path = sys.argv[1]
+    check_only = '--check' in sys.argv
+    raw = io.open(path, 'rb').read()
+    sha_before = hashlib.sha256(raw).hexdigest()
+    src = raw.decode('utf-8')
+    if src.count(V3_MARKER):
+        print(f'ALREADY APPLIED: {src.count(V3_MARKER)} v3 markers present in {path}; nothing to do'); return 0
+    if src.count(V2_MARKER) != 4:
+        print(f'ABORT: expected the v2 build (4 markers), found {src.count(V2_MARKER)}; nothing written'); return 4
+    for i, (old, new) in enumerate(EDITS, 1):
+        n = src.count(old)
+        if n != 1:
+            print(f'ABORT: edit {i} matched {n} times (expected 1); file has drifted; nothing written'); return 4
+        src = src.replace(old, new)
+    out = src.encode('utf-8')
+    assert src.count(V3_MARKER) == EXPECTED_V3_MARKERS, src.count(V3_MARKER)
+    print(f'before sha256 {sha_before} bytes {len(raw)}')
+    print(f'after  sha256 {hashlib.sha256(out).hexdigest()} bytes {len(out)}')
+    if check_only:
+        print('CHECK OK: all edits apply exactly once; not written'); return 0
+    stamp = time.strftime('%Y%m%dT%H%M%SZ', time.gmtime())
+    backup = f'{path}.bak-nat-tps-v3-{stamp}'
+    tmp = f'{path}.nat-tps-v3.{stamp}.tmp'
+    shutil.copy2(path, backup)
+    st = os.stat(path)
+    with open(tmp, 'wb') as f:
+        f.write(out); f.flush(); os.fsync(f.fileno())
+    os.chmod(tmp, st.st_mode & 0o7777)
+    if sha256_of(path) != sha_before:
+        os.unlink(tmp)
+        print('ABORT: file changed during patching (sha mismatch); nothing written; backup left at', backup); return 3
+    os.replace(tmp, path)
+    dfd = os.open(os.path.dirname(path) or '.', os.O_RDONLY)
+    try: os.fsync(dfd)
+    finally: os.close(dfd)
+    print(f'WRITTEN {path}; backup {backup}; live sha256 {sha256_of(path)}')
+    return 0
+
+if __name__ == '__main__':
+    sys.exit(main())

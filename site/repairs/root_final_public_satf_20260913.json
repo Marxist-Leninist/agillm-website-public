@@ -1,0 +1,95 @@
+{
+  "checked_at": 1789322048.7197056,
+  "route": "public HTTPS /agillm-stream from GETH",
+  "mode": "SAT-F",
+  "requested_tokens": 32,
+  "first_token_s": 1.7595,
+  "token_events": 32,
+  "token_event_times": [
+    1.7595,
+    1.9064,
+    1.9066,
+    2.0529,
+    2.053,
+    2.053,
+    2.053,
+    2.4307,
+    2.4309,
+    2.431,
+    2.431,
+    2.431,
+    2.431,
+    2.9613,
+    2.9614,
+    2.9614,
+    2.9614,
+    2.9615,
+    2.9615,
+    2.9616,
+    2.9616,
+    3.1079,
+    3.108,
+    3.108,
+    3.108,
+    3.4787,
+    3.4788,
+    3.4789,
+    3.479,
+    3.6271,
+    3.6272,
+    4.2784
+  ],
+  "total_s": 4.2793,
+  "done": {
+    "at_s": 4.2787,
+    "data": {
+      "event": "done",
+      "ok": true,
+      "text": "Hello, my name is good!. I It't really this to!\n.\n the are of best kids and can have a more than person they being not with their your child baby may",
+      "stats": {
+        "seconds": 2.06,
+        "tokens": 32,
+        "tok_s": 15.6,
+        "sat_trace": {
+          "ar_realign": 0,
+          "core_forwards": 18,
+          "generated_tokens": 32,
+          "mode": "sat-fixed",
+          "stride_hist": {
+            "1": 0,
+            "2": 16
+          },
+          "var_stride1": 0
+        }
+      },
+      "finish_reason": null,
+      "generation_finish": {},
+      "wall_s": 2.061,
+      "button_tok_s": 15.53,
+      "ckpt": "pretrain_step02945390_from02930767_20260913T1725Z.pt",
+      "host": "vast-47086549",
+      "dtype": "bf16",
+      "slot": 1,
+      "threads": 12,
+      "request_id": "root-final-public-satf-1789322044440416590",
+      "queue_wait_s": 0.001
+    }
+  },
+  "start": [
+    {
+      "at_s": 1.7592,
+      "data": {
+        "event": "start",
+        "ok": true,
+        "ckpt": "pretrain_step02945390_from02930767_20260913T1725Z.pt",
+        "host": "vast-47086549",
+        "slot": 1,
+        "threads": 12,
+        "dtype": "bf16",
+        "request_id": "root-final-public-satf-1789322044440416590",
+        "queue_wait_s": 0.001
+      }
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,34 @@
+{
+  "collector": "/opt/agillm43_netserve/bintf_telemetry/collect16b.py",
+  "service": "/etc/systemd/system/agillm-bintf16b-telemetry.service",
+  "timer": "/etc/systemd/system/agillm-bintf16b-telemetry.timer",
+  "output": "/opt/agillm43_netserve/bintf16b_training_status.json",
+  "source": {
+    "instance": 53075549,
+    "host": "ssh3.vast.ai",
+    "port": 35548,
+    "run": "/workspace/agillm16b_run",
+    "read_only": true
+  },
+  "verification": {
+    "first_success": 1791815205.347226,
+    "second_success": 1791815236.3987226,
+    "enabled": true,
+    "active": true,
+    "exit_status": 0,
+    "strict_json": true,
+    "last_good_failure_test": true,
+    "error_redaction_test": true,
+    "nan_sanitized": true,
+    "stale_test": true,
+    "output_mode": "0644",
+    "history_count": 160,
+    "eval_steps": [
+      60000,
+      57500,
+      58750
+    ],
+    "satvar": "unknown"
+  },
+  "nginx": "Owned by serving worker; route completion not yet checked"
+}

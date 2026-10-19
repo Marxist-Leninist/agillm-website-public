@@ -1,0 +1,430 @@
+{
+  "schema": "agillm43.sat-deployment.v1",
+  "created_at": "2026-08-11T01:28:10.328960+00:00",
+  "status": "serving_verified",
+  "checkpoint": {
+    "step": 1814761,
+    "file": "pretrain_step01814761_from01788354_20260810T2149Z.pt",
+    "sha256": "34f56469994a32f329eaeca61c0a216c24d202338e94f7385c05bba8cd68c26e"
+  },
+  "runtime": {
+    "name": "SAT v13",
+    "sha256": "5875bae7a46eaeea0b6e2e14bb1b5ee6d945bcc273690f40099e91f37b99dd06",
+    "causal_second_control_available": true,
+    "causal_second_default_weight": 0.0
+  },
+  "profiles": {
+    "shared": {
+      "temperature": 1.1,
+      "top_p": 0.98,
+      "top_k": 512,
+      "min_p": 0.001,
+      "repetition_penalty": 1.2,
+      "presence_penalty": 0.2,
+      "frequency_penalty": 0.2,
+      "penalty_last_n": 192,
+      "symbol_penalty": 4.0,
+      "function_penalty": 1.0,
+      "numeric_penalty": 0.5,
+      "prompt_align_greedy": true,
+      "realign_greedy": true,
+      "second_greedy": false,
+      "second_temperature_scale": 0.9
+    },
+    "fixed": {
+      "var": false,
+      "sat_ar_first_weight": 2.0,
+      "sat_ar_second_weight": 0.0,
+      "sat_gate_greedy": true,
+      "stride": 2
+    },
+    "variable": {
+      "var": true,
+      "sat_ar_first_weight": 0.5,
+      "sat_ar_second_weight": 0.0,
+      "sat_gate_greedy": false,
+      "sat_gate_temperature": 100.0,
+      "sat_gate_stride2_bias": -14.0,
+      "learned_stride_values": [
+        1,
+        2
+      ]
+    }
+  },
+  "deployment": {
+    "public_primary": {
+      "ok": true,
+      "ready": true,
+      "warming": false,
+      "ckpt": "pretrain_step01814761_from01788354_20260810T2149Z.pt",
+      "uptime_s": 283,
+      "loads": 2,
+      "concurrency": 2,
+      "request_timeout_s": 1800.0,
+      "queue_timeout_s": 30.0,
+      "dtype": "fp32",
+      "live_slots": 2,
+      "busy": 0,
+      "active_request_count": 0,
+      "pending_request_count": 0,
+      "slot_threads": [
+        16,
+        8
+      ],
+      "slot_dtypes": [
+        "fp32",
+        "fp32"
+      ],
+      "host": "vast-47086549",
+      "device": "cpu"
+    },
+    "fallback": {
+      "ok": true,
+      "ready": true,
+      "warming": false,
+      "ckpt": "pretrain_step01814761_from01788354_20260810T2149Z.pt",
+      "uptime_s": 178,
+      "loads": 1,
+      "concurrency": 1,
+      "request_timeout_s": 1800.0,
+      "queue_timeout_s": 30.0,
+      "dtype": "fp32",
+      "live_slots": 1,
+      "busy": 0,
+      "active_request_count": 0,
+      "pending_request_count": 0,
+      "slot_threads": [
+        16
+      ],
+      "slot_dtypes": [
+        "fp32"
+      ],
+      "host": "geth",
+      "device": "cpu"
+    },
+    "remote_bridge_sha256": "968426f49f0baa55c66bca8443dbdd3223de4744f2ba96fee94d48d2c5020ff6",
+    "fallback_bridge_sha256": "acb4dcc0911516d89babe4dcf05137bbf97adfc5bb8fa4d5fd1f91931cdbd9b5",
+    "ui_sha256": "9d872cabf52c655c46ac72de9e07db2b55bd608cf2098fcf3b0b1be36c5a6c5a",
+    "trainer_pid": 298205,
+    "trainer_touched": false
+  },
+  "acceptance": {
+    "manifest_path": "/opt/agillm43_netserve/receipts/sat_v13_public_20260811T012434Z/manifest.json",
+    "manifest_sha256": "ef0bb3af4f5a26e77b9d0d7a9956ca495f7c174da0e39e4d5a69ac41252e136c",
+    "active_two_observed": true,
+    "summary": [
+      {
+        "mode": "fixed",
+        "passed": 4,
+        "median_button_tok_s": 4.005,
+        "mean_content_words": 9.5,
+        "mean_symbol_char_ratio": 0.0161,
+        "total_stride1": 0,
+        "total_stride2": 96,
+        "profiles": [
+          [
+            2.0,
+            0.0,
+            4.0,
+            1.0,
+            0.5,
+            true,
+            1.0,
+            0.0
+          ]
+        ]
+      },
+      {
+        "mode": "var",
+        "passed": 4,
+        "median_button_tok_s": 3.225,
+        "mean_content_words": 8.0,
+        "mean_symbol_char_ratio": 0.0115,
+        "total_stride1": 22,
+        "total_stride2": 74,
+        "profiles": [
+          [
+            0.5,
+            0.0,
+            4.0,
+            1.0,
+            0.5,
+            false,
+            100.0,
+            -14.0
+          ]
+        ]
+      }
+    ]
+  },
+  "experiments": {
+    "v12_finalists": {
+      "manifest_path": "/opt/agillm43_netserve/receipts/sat_v12_finalists_vast/manifest.json",
+      "manifest_sha256": "e46de437c677d90abc6714e1a407c69e27c0ef1ec3c9beb5a653266138ffb758",
+      "ranked": [
+        {
+          "profile": "var48_w4",
+          "mode": "var",
+          "passed": 4,
+          "median_button_tok_s": 6.13,
+          "median_heuristic_score": 5.431,
+          "median_natural_text_score": 0.9066,
+          "median_content_words": 5.5,
+          "total_keyword_hits": 2,
+          "prompts_with_keyword_hit": 2,
+          "median_symbol_char_ratio": 0.0,
+          "stride1": 45,
+          "stride2": 51,
+          "stride1_fraction": 0.4688,
+          "mean_core_forwards": 35.75
+        },
+        {
+          "profile": "fixed_w2",
+          "mode": "fixed",
+          "passed": 4,
+          "median_button_tok_s": 9.3,
+          "median_heuristic_score": 5.6293,
+          "median_natural_text_score": 0.9259,
+          "median_content_words": 10.0,
+          "total_keyword_hits": 0,
+          "prompts_with_keyword_hit": 0,
+          "median_symbol_char_ratio": 0.0,
+          "stride1": 0,
+          "stride2": 96,
+          "stride1_fraction": 0.0,
+          "mean_core_forwards": 24.5
+        },
+        {
+          "profile": "fixed_w05",
+          "mode": "fixed",
+          "passed": 4,
+          "median_button_tok_s": 9.575,
+          "median_heuristic_score": 5.6219,
+          "median_natural_text_score": 0.9322,
+          "median_content_words": 8.0,
+          "total_keyword_hits": 0,
+          "prompts_with_keyword_hit": 0,
+          "median_symbol_char_ratio": 0.0,
+          "stride1": 0,
+          "stride2": 96,
+          "stride1_fraction": 0.0,
+          "mean_core_forwards": 24.5
+        },
+        {
+          "profile": "fixed_w4",
+          "mode": "fixed",
+          "passed": 4,
+          "median_button_tok_s": 9.215,
+          "median_heuristic_score": 5.5896,
+          "median_natural_text_score": 0.9166,
+          "median_content_words": 8.5,
+          "total_keyword_hits": 0,
+          "prompts_with_keyword_hit": 0,
+          "median_symbol_char_ratio": 0.0,
+          "stride1": 0,
+          "stride2": 96,
+          "stride1_fraction": 0.0,
+          "mean_core_forwards": 24.5
+        },
+        {
+          "profile": "var20_w05",
+          "mode": "var",
+          "passed": 4,
+          "median_button_tok_s": 7.775,
+          "median_heuristic_score": 5.3544,
+          "median_natural_text_score": 0.9343,
+          "median_content_words": 7.5,
+          "total_keyword_hits": 0,
+          "prompts_with_keyword_hit": 0,
+          "median_symbol_char_ratio": 0.0,
+          "stride1": 18,
+          "stride2": 78,
+          "stride1_fraction": 0.1875,
+          "mean_core_forwards": 29
+        },
+        {
+          "profile": "var38_w2",
+          "mode": "var",
+          "passed": 4,
+          "median_button_tok_s": 6.75,
+          "median_heuristic_score": 5.2455,
+          "median_natural_text_score": 0.8851,
+          "median_content_words": 6.0,
+          "total_keyword_hits": 0,
+          "prompts_with_keyword_hit": 0,
+          "median_symbol_char_ratio": 0.0046,
+          "stride1": 40,
+          "stride2": 56,
+          "stride1_fraction": 0.4167,
+          "mean_core_forwards": 34.5
+        }
+      ]
+    },
+    "causal_second_rejected": {
+      "manifest_path": "/opt/agillm43_netserve/receipts/sat_v13_stage1_20260811T011327Z/manifest.json",
+      "manifest_sha256": "eccd476fb9c88d8c2ee4093b7cf73b62581ef3d4be72bab3df21fcfb27e509fe",
+      "reason": "All nonzero second-token AR weights reduced content output and throughput; production remains 0.0.",
+      "summary": [
+        {
+          "profile": "fixed_s0",
+          "mode": "fixed",
+          "passed": 2,
+          "median_button_tok_s": 5.52,
+          "total_keyword_hits": 0,
+          "mean_content_words": 10.5,
+          "mean_symbol_char_ratio": 0.0,
+          "mean_ar_second_forwards": 0.0
+        },
+        {
+          "profile": "fixed_s05",
+          "mode": "fixed",
+          "passed": 2,
+          "median_button_tok_s": 4.925,
+          "total_keyword_hits": 0,
+          "mean_content_words": 1.5,
+          "mean_symbol_char_ratio": 0.0,
+          "mean_ar_second_forwards": 24.0
+        },
+        {
+          "profile": "fixed_s1",
+          "mode": "fixed",
+          "passed": 2,
+          "median_button_tok_s": 5.475,
+          "total_keyword_hits": 0,
+          "mean_content_words": 2.0,
+          "mean_symbol_char_ratio": 0.0,
+          "mean_ar_second_forwards": 24.0
+        },
+        {
+          "profile": "fixed_s2",
+          "mode": "fixed",
+          "passed": 2,
+          "median_button_tok_s": 3.825,
+          "total_keyword_hits": 0,
+          "mean_content_words": 1.0,
+          "mean_symbol_char_ratio": 0.0,
+          "mean_ar_second_forwards": 24.0
+        },
+        {
+          "profile": "fixed_s4",
+          "mode": "fixed",
+          "passed": 2,
+          "median_button_tok_s": 4.755,
+          "total_keyword_hits": 0,
+          "mean_content_words": 1.0,
+          "mean_symbol_char_ratio": 0.0,
+          "mean_ar_second_forwards": 24.0
+        },
+        {
+          "profile": "var20_s0",
+          "mode": "var",
+          "passed": 2,
+          "median_button_tok_s": 6.035,
+          "total_keyword_hits": 0,
+          "mean_content_words": 7.0,
+          "mean_symbol_char_ratio": 0.0038,
+          "mean_ar_second_forwards": 0.0
+        },
+        {
+          "profile": "var20_s05",
+          "mode": "var",
+          "passed": 2,
+          "median_button_tok_s": 3.47,
+          "total_keyword_hits": 0,
+          "mean_content_words": 2.0,
+          "mean_symbol_char_ratio": 0.0,
+          "mean_ar_second_forwards": 15.5
+        },
+        {
+          "profile": "var20_s1",
+          "mode": "var",
+          "passed": 2,
+          "median_button_tok_s": 4.33,
+          "total_keyword_hits": 0,
+          "mean_content_words": 2.0,
+          "mean_symbol_char_ratio": 0.0,
+          "mean_ar_second_forwards": 17.0
+        },
+        {
+          "profile": "var20_s2",
+          "mode": "var",
+          "passed": 2,
+          "median_button_tok_s": 3.525,
+          "total_keyword_hits": 0,
+          "mean_content_words": 1.5,
+          "mean_symbol_char_ratio": 0.0,
+          "mean_ar_second_forwards": 19.5
+        },
+        {
+          "profile": "var48_s1",
+          "mode": "var",
+          "passed": 2,
+          "median_button_tok_s": 3.59,
+          "total_keyword_hits": 0,
+          "mean_content_words": 2.0,
+          "mean_symbol_char_ratio": 0.004,
+          "mean_ar_second_forwards": 13.5
+        }
+      ]
+    },
+    "deterministic_gate_rejected": {
+      "manifest_path": "/opt/agillm43_netserve/receipts/sat_gate_threshold_20260811T011807Z/manifest.json",
+      "manifest_sha256": "114b864dfa614df9506546d9c9221d6936254174a60c1e9ff9fbe8305dc321a2",
+      "reason": "Thresholds 0.476-0.479 over-selected stride 1 and reduced throughput/content; 0.480 collapsed to fixed stride 2. Balanced calibrated stochastic gate retained.",
+      "summary": [
+        {
+          "threshold": 0.476,
+          "passed": 4,
+          "median_button_tok_s": 2.875,
+          "total_stride1": 88,
+          "total_stride2": 8,
+          "mean_content_words": 2.0,
+          "mean_unique_content_words": 2.0
+        },
+        {
+          "threshold": 0.477,
+          "passed": 4,
+          "median_button_tok_s": 3.22,
+          "total_stride1": 86,
+          "total_stride2": 10,
+          "mean_content_words": 2.75,
+          "mean_unique_content_words": 2.75
+        },
+        {
+          "threshold": 0.478,
+          "passed": 4,
+          "median_button_tok_s": 3.67,
+          "total_stride1": 60,
+          "total_stride2": 36,
+          "mean_content_words": 4.25,
+          "mean_unique_content_words": 4.25
+        },
+        {
+          "threshold": 0.479,
+          "passed": 4,
+          "median_button_tok_s": 5.91,
+          "total_stride1": 21,
+          "total_stride2": 75,
+          "mean_content_words": 6.75,
+          "mean_unique_content_words": 6.75
+        },
+        {
+          "threshold": 0.48,
+          "passed": 4,
+          "median_button_tok_s": 8.88,
+          "total_stride1": 0,
+          "total_stride2": 96,
+          "mean_content_words": 9.25,
+          "mean_unique_content_words": 9.25
+        }
+      ]
+    }
+  },
+  "ui": {
+    "url": "https://codex.opentransformers.online/agillm-ui",
+    "top_k_range_max": 1024,
+    "mode_sampler_profiles": true,
+    "manual_sampler_overrides_persist_per_chat": true
+  },
+  "quality_note": "Token priors remove most control/TeX garbage and increase content-word output, but SAT continuations remain limited by the checkpoint/head and are not equivalent to AR coherence."
+}

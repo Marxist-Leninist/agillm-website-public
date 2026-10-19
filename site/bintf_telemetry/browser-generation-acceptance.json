@@ -1,0 +1,44 @@
+{
+  "started_at": 1791471594.8058913,
+  "checks": [
+    {
+      "mode": "ar",
+      "route": "https://codex.opentransformers.online/agillm-stream",
+      "status": 200,
+      "wall_s": 2.501,
+      "response_bytes": 1919,
+      "editor_text": "",
+      "response_tail": "t\": 1, \"threads\": 8, \"dtype\": \"fp32\", \"request_id\": \"req-2129e9be-9cdd-4c34-8ce7-56732c259d81\", \"queue_wait_s\": 0.002}\n{\"event\": \"stream_begin\", \"data\": {\"mode\": \"ar\", \"slots\": 8}}\n{\"event\": \"stream_tok\", \"data\": {\"i\": 0, \"text\": \" the\"}}\n{\"event\": \"stream_tok\", \"data\": {\"i\": 1, \"text\": \" largest\"}}\n{\"event\": \"stream_tok\", \"data\": {\"i\": 2, \"text\": \" and\"}}\n{\"event\": \"stream_tok\", \"data\": {\"i\": 3, \"text\": \" most\"}}\n{\"event\": \"stream_tok\", \"data\": {\"i\": 4, \"text\": \" important\"}}\n{\"event\": \"stream_tok\", \"data\": {\"i\": 5, \"text\": \" for\"}}\n{\"event\": \"stream_tok\", \"data\": {\"i\": 6, \"text\": \" its\"}}\n{\"event\": \"stream_tok\", \"data\": {\"i\": 7, \"text\": \" economic\"}}\n{\"event\": \"generation_finish\", \"data\": {\"finish_reason\": \"length\", \"generated_tokens\": 8, \"max_new\": 8, \"eos_emitted\": false, \"source\": \"runtime-token-ids\"}}\n{\"event\": \"stats\", \"stats\": {\"seconds\": 2.3182618618011475, \"tokens\": 8, \"tok_s\": 3.4508612386801247, \"finish_reason\": \"length\", \"generation_finish\": {\"finish_reason\": \"length\", \"generated_tokens\": 8, \"max_new\": 8, \"eos_emitted\": false, \"source\": \"runtime-token-ids\"}, \"output_protocol\": \"agillm.generation-result.v1\"}}\n{\"event\": \"done\", \"ok\": true, \"text\": \"The capital of France is the largest and most important for its economic\", \"stats\": {\"seconds\": 2.3182618618011475, \"tokens\": 8, \"tok_s\": 3.4508612386801247, \"finish_reason\": \"length\", \"generation_finish\": {\"finish_reason\": \"length\", \"generated_tokens\": 8, \"max_new\": 8, \"eos_emitted\": false, \"source\": \"runtime-token-ids\"}, \"output_protocol\": \"agillm.generation-result.v1\"}, \"wall_s\": 2.378, \"button_tok_s\": 3.36, \"ckpt\": \"REDACTED.pt\", \"host\": \"geth-cpu\", \"dtype\": \"fp32\", \"slot\": 1, \"threads\": 8, \"request_id\": \"req-2129e9be-9cdd-4c34-8ce7-56732c259d81\", \"queue_wait_s\": 0.002}\n"
+    },
+    {
+      "mode": "sat_fixed",
+      "route": "https://codex.opentransformers.online/agillm-stream",
+      "status": 200,
+      "wall_s": 0.522,
+      "response_bytes": 2326,
+      "editor_text": "",
+      "response_tail": ".\"}}\n{\"event\": \"stream_tok\", \"data\": {\"i\": 4, \"text\": \"2\"}}\n{\"event\": \"stream_tok\", \"data\": {\"i\": 5, \"text\": \" The\"}}\n{\"event\": \"stream_tok\", \"data\": {\"i\": 6, \"text\": \" It\"}}\n{\"event\": \"stream_tok\", \"data\": {\"i\": 7, \"text\": \" has\"}}\n{\"event\": \"sat_trace\", \"data\": {\"ar_realign\": 0, \"core_forwards\": 6, \"generated_tokens\": 8, \"mode\": \"sat-fixed\", \"stride_hist\": {\"1\": 0, \"2\": 4}, \"var_stride1\": 0}}\n{\"event\": \"generation_finish\", \"data\": {\"finish_reason\": \"length\", \"generated_tokens\": 8, \"max_new\": 8, \"eos_emitted\": false, \"source\": \"runtime-token-ids\"}}\n{\"event\": \"stats\", \"stats\": {\"seconds\": 0.461475133895874, \"tokens\": 8, \"tok_s\": 17.33571196450446, \"finish_reason\": \"length\", \"generation_finish\": {\"finish_reason\": \"length\", \"generated_tokens\": 8, \"max_new\": 8, \"eos_emitted\": false, \"source\": \"runtime-token-ids\"}, \"output_protocol\": \"agillm.generation-result.v1\", \"sat_trace\": {\"ar_realign\": 0, \"core_forwards\": 6, \"generated_tokens\": 8, \"mode\": \"sat-fixed\", \"stride_hist\": {\"1\": 0, \"2\": 4}, \"var_stride1\": 0}}}\n{\"event\": \"done\", \"ok\": true, \"text\": \"The capital of France is the  and.2 The It has\", \"stats\": {\"seconds\": 0.461475133895874, \"tokens\": 8, \"tok_s\": 17.33571196450446, \"finish_reason\": \"length\", \"generation_finish\": {\"finish_reason\": \"length\", \"generated_tokens\": 8, \"max_new\": 8, \"eos_emitted\": false, \"source\": \"runtime-token-ids\"}, \"output_protocol\": \"agillm.generation-result.v1\", \"sat_trace\": {\"ar_realign\": 0, \"core_forwards\": 6, \"generated_tokens\": 8, \"mode\": \"sat-fixed\", \"stride_hist\": {\"1\": 0, \"2\": 4}, \"var_stride1\": 0}}, \"wall_s\": 0.464, \"button_tok_s\": 17.24, \"ckpt\": \"REDACTED.pt\", \"host\": \"geth-cpu\", \"dtype\": \"fp32\", \"slot\": 1, \"threads\": 8, \"request_id\": \"req-2594a6ff-d4df-41a4-98a1-e4b774b4f3d1\", \"queue_wait_s\": 0.0}\n"
+    },
+    {
+      "mode": "sat_variable",
+      "route": "https://codex.opentransformers.online/agillm-stream",
+      "status": 200,
+      "wall_s": 0.782,
+      "response_bytes": 3058,
+      "editor_text": "",
+      "response_tail": "_new\": 8, \"eos_emitted\": false, \"source\": \"runtime-token-ids\"}}\n{\"event\": \"stats\", \"stats\": {\"seconds\": 0.7148995399475098, \"tokens\": 8, \"tok_s\": 11.19038347763853, \"finish_reason\": \"length\", \"generation_finish\": {\"finish_reason\": \"length\", \"generated_tokens\": 8, \"max_new\": 8, \"eos_emitted\": false, \"source\": \"runtime-token-ids\"}, \"output_protocol\": \"agillm.generation-result.v1\", \"sat_trace\": {\"ar_realign\": 0, \"core_forwards\": 6, \"effective_device\": \"cpu\", \"effective_head_dtype\": \"torch.float32\", \"generated_tokens\": 8, \"lambda\": 1.0, \"merge_suppressed\": 0, \"merges\": 0, \"mode\": \"sat-var\", \"policy\": \"regret\", \"readout_revision\": \"learned-singleton-horizon2-v1-20260914\", \"regret_updates\": 257672, \"singleton_stride2\": 1, \"stride_hist\": {\"1\": 4, \"2\": 2}, \"var_stride1\": 4}}}\n{\"event\": \"done\", \"ok\": true, \"text\": \"The capital of France is the () 2. The,\", \"stats\": {\"seconds\": 0.7148995399475098, \"tokens\": 8, \"tok_s\": 11.19038347763853, \"finish_reason\": \"length\", \"generation_finish\": {\"finish_reason\": \"length\", \"generated_tokens\": 8, \"max_new\": 8, \"eos_emitted\": false, \"source\": \"runtime-token-ids\"}, \"output_protocol\": \"agillm.generation-result.v1\", \"sat_trace\": {\"ar_realign\": 0, \"core_forwards\": 6, \"effective_device\": \"cpu\", \"effective_head_dtype\": \"torch.float32\", \"generated_tokens\": 8, \"lambda\": 1.0, \"merge_suppressed\": 0, \"merges\": 0, \"mode\": \"sat-var\", \"policy\": \"regret\", \"readout_revision\": \"REDACTED\", \"regret_updates\": 257672, \"singleton_stride2\": 1, \"stride_hist\": {\"1\": 4, \"2\": 2}, \"var_stride1\": 4}}, \"wall_s\": 0.721, \"button_tok_s\": 11.1, \"ckpt\": \"pretrain_step03558989_from03514490_20261008T1246Z.pt\", \"host\": \"geth-cpu\", \"dtype\": \"fp32\", \"slot\": 1, \"threads\": 8, \"request_id\": \"req-0addf047-4b52-497d-9172-125da2700e34\", \"queue_wait_s\": 0.0}\n"
+    },
+    {
+      "mode": "nat",
+      "route": "https://codex.opentransformers.online/agillm-gen",
+      "status": 200,
+      "wall_s": 0.449,
+      "response_bytes": 617,
+      "editor_text": "",
+      "response_tail": "{\"ok\": true, \"text\": \"The capital of France is theUk,. .\\n\\n and (\", \"stats\": {\"seconds\": 0.34131860733032227, \"tokens\": 8, \"tok_s\": 23.438511198007255, \"finish_reason\": \"length\", \"generation_finish\": {\"finish_reason\": \"length\", \"generated_tokens\": 8, \"max_new\": 8, \"eos_emitted\": false, \"source\": \"runtime-token-ids\"}, \"output_protocol\": \"agillm.generation-result.v1\"}, \"wall_s\": 0.345, \"button_tok_s\": 23.22, \"ckpt\": \"REDACTED.pt\", \"host\": \"geth-cpu\", \"dtype\": \"fp32\", \"slot\": 1, \"threads\": 8, \"request_id\": \"req-228fcf70-1c34-43c5-b16d-2cdf571a2d9a\", \"queue_wait_s\": 0.001}"
+    }
+  ],
+  "page_errors": [],
+  "ok": true,
+  "finished_at": 1791471610.4490333
+}

@@ -1,0 +1,1 @@
+SG write route verified by chatgpt-gpt56pro-ui-repair on 2026-09-25. Safe canary only; no service state changed.

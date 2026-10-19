@@ -1,0 +1,164 @@
+{
+  "bridge_pid": 168857,
+  "candidate": "/mnt/geth-vol1/agillm43/ckpts/artifacts/full/final_step02118972__sha256_465dcbf9a5d0e7c9/final.pt",
+  "finished_at": "2026-07-15T21:00:16Z",
+  "health": {
+    "busy": 0,
+    "ckpt": "final.pt",
+    "concurrency": 1,
+    "dtype": "fp32",
+    "live_slots": 1,
+    "loads": 1,
+    "ok": true,
+    "ready": true,
+    "slot_dtypes": [
+      "fp32"
+    ],
+    "slot_threads": [
+      16
+    ],
+    "uptime_s": 80,
+    "warming": false
+  },
+  "quality": {
+    "fast nat": {
+      "cases": [
+        {
+          "button_tok_s": 19.80424539855575,
+          "case": "math",
+          "continuation": "-3 x.  to is, of",
+          "gen_tok_s": 20.3,
+          "hit": false,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 22.35798027826845,
+          "case": "fact",
+          "continuation": ".  the? Paris, Answer and:",
+          "gen_tok_s": 22.7,
+          "hit": true,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 40.19168722899648,
+          "case": "code",
+          "continuation": "returnhello\")  greet for3 =)  \"print is  : ,.",
+          "gen_tok_s": 40.7,
+          "hit": true,
+          "tokens": 16
+        },
+        {
+          "button_tok_s": 31.936689632241993,
+          "case": "language",
+          "continuation": ". , of hi a. to and: GoodHello short",
+          "gen_tok_s": 32.4,
+          "hit": true,
+          "tokens": 12
+        }
+      ],
+      "hits": 3,
+      "median_button_tok_s": 27.14733495525522,
+      "median_gen_tok_s": 27.549999999999997,
+      "total": 4
+    },
+    "quality ar": {
+      "cases": [
+        {
+          "button_tok_s": 7.197724661081284,
+          "case": "math",
+          "continuation": ". print, and of the form",
+          "gen_tok_s": 7.2,
+          "hit": false,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 7.1814371421527,
+          "case": "fact",
+          "continuation": "Paris. Question? Answer: what -",
+          "gen_tok_s": 7.2,
+          "hit": true,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 7.120261566615626,
+          "case": "code",
+          "continuation": ". print: \") ) ') \" hello is, = \" greeting - b",
+          "gen_tok_s": 7.1,
+          "hit": true,
+          "tokens": 16
+        },
+        {
+          "button_tok_s": 7.847972917661664,
+          "case": "language",
+          "continuation": ". Hello, to hi print: Python) hello\"",
+          "gen_tok_s": 7.9,
+          "hit": true,
+          "tokens": 12
+        }
+      ],
+      "hits": 3,
+      "median_button_tok_s": 7.189580901616992,
+      "median_gen_tok_s": 7.2,
+      "total": 4
+    },
+    "quality sat var": {
+      "cases": [
+        {
+          "button_tok_s": 9.849413985905604,
+          "case": "math",
+          "continuation": ".  is x , to3:",
+          "gen_tok_s": 9.9,
+          "hit": false,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 9.868608089483953,
+          "case": "fact",
+          "continuation": ". ? the to on Answer Question",
+          "gen_tok_s": 9.9,
+          "hit": false,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 13.60153062879009,
+          "case": "code",
+          "continuation": ". :  ,  \") print for = and is of a.  \"",
+          "gen_tok_s": 13.7,
+          "hit": true,
+          "tokens": 16
+        },
+        {
+          "button_tok_s": 13.693309297596771,
+          "case": "language",
+          "continuation": ".  hiprintHello:  good, GoodPython morning",
+          "gen_tok_s": 13.8,
+          "hit": true,
+          "tokens": 12
+        }
+      ],
+      "hits": 2,
+      "median_button_tok_s": 11.735069359137022,
+      "median_gen_tok_s": 11.8,
+      "total": 4
+    }
+  },
+  "speed": {
+    "ar": {
+      "median_button_tok_s": 7.455402589587372,
+      "median_gen_tok_s": 7.45
+    },
+    "nat": {
+      "median_button_tok_s": 73.05818699158209,
+      "median_gen_tok_s": 73.8
+    },
+    "sat fixed": {
+      "median_button_tok_s": 12.477631422210358,
+      "median_gen_tok_s": 12.5
+    },
+    "sat var": {
+      "median_button_tok_s": 12.923854158810784,
+      "median_gen_tok_s": 12.95
+    }
+  },
+  "started_at": "2026-07-15T20:58:25Z"
+}

@@ -1,0 +1,362 @@
+{
+  "request_id": "ui-latest-20260930-cache-reclaim",
+  "at": 1790745529.9277813,
+  "kind": "obsolete-derived-cpu-shards-only",
+  "serving_before": {
+    "name": "AGILLM-GB10-1PF RPV16",
+    "parameters": 1990168066,
+    "step": 246907,
+    "seen_tokens": 12136488960,
+    "source_checkpoint_sha256": "ba68ad3e6ff6533f13941e394ed85bcac8d9ccdb6d3d8931a962750e84345ee6",
+    "serving_snapshot_sha256": "ba68ad3e6ff6533f13941e394ed85bcac8d9ccdb6d3d8931a962750e84345ee6",
+    "source_schema": "agillm.gb10.1pf.recovery.v6",
+    "target_alignment": "next_token_shifted_labels_fullseq_v1",
+    "loaded_s": 71.93859481811523,
+    "classifier": "tied_full_vocab",
+    "objective_counts": {
+      "ar": 5167,
+      "sat": 34,
+      "nat": 42
+    },
+    "regret_updates": 34
+  },
+  "preserved": [
+    "current246907",
+    "fallback241096",
+    "autopromote221366",
+    "autopromote210432",
+    "all raw training checkpoints"
+  ],
+  "manifests": [
+    {
+      "root": "/srv/agillm-rpv16-1pf/step15360/cpu_int8",
+      "manifest": {
+        "schema": "agillm.rpv16.cpu-int8-cache.v1",
+        "source_schema": "agillm.gb10.1pf.recovery.v5",
+        "source_sha256": "167a610d6ff153471195cdc198dc0a871f341c04647a9fe03a08b1a7ebee3ffd",
+        "step": 15360,
+        "seen_tokens": 754974720,
+        "target_alignment": "next_token_shifted_labels_fullseq_v1",
+        "parameter_count": 1990038784,
+        "quantization": "dynamic-int8-per-tensor-linear; fp32 activations; bf16 embedding; fp32 norms/router/mix"
+      },
+      "manifest_sha256": "a51db64e3d09fa655467b1cfa716af22c40850e1578b81cc393ba9fd1dfc34fd",
+      "checksums": "017a605e66c59b544bdcc910fd18cd4900f1b1ffa3b858c1e0316c84afac5df8  shared.pt\n9fbe3f8d1dac8269e5eaa2a5be8478adefb7d41f849c0abcb9017c8f26369516  stage00.pt\n7a67f94b9ded1f9fe3f7aa60de317c84c7c44347dd34bb7c1a8684e4d5f6464e  stage01.pt\na234fbbf65c87ea1f7590cb555f8cac8ef38575585dbee88cfecb70044f60868  stage02.pt\n6c77fbfceeabcbdcfb68b34387cf36d7a5fb98162b80047556b4176ec0684d2c  stage03.pt\n53096c3ddba1d7a7c542318e9dffe0e88fbf8e4a1f8ea9542f1a41fd489936d1  stage04.pt\n70bb2255886436a651e33f821203a76ee080b13f0257ce725409a5dc853dada0  stage05.pt\n0710a4393bdb8a3076fe2797d24c086311a34a3e5b9c4dd8c027993d117d5165  stage06.pt\nfe2fbac16899d54691874501468e0d7d7f7af13079147788b757cf6f78321db5  stage07.pt\n8ffb8a686d59c5b0ced8e8810a5eec291548678e033f4ee14b9440098a48e86d  stage08.pt\n5070a20f3b9f3d8df38f42ef92e9c7aee30c13f24e87e6c0048dc749a1ed06f9  stage09.pt\n996bd9c69dacd81661e118122b24b70a1108d415f7a044fece635facbd9fe5dc  stage10.pt\n5a8e83872e01a7dc27b80ef213752f7aba1d364cc3688f979e1635ebb6afca33  stage11.pt\n01827aee49a08717735decdc8e4d14645f5f83bbf9bb307e10c5cd346f2a33b1  stage12.pt\n97f487582894057c23fd914877253098d5f6a735372b9157afbfa79a191fd7a5  stage13.pt\n8851a0e1cbd939ae8abf0db9d18f14ea3e3948eb2598139c8d1011dc3d7c30c7  stage14.pt\n61ef924cb7b9b54b7fe6d627c3869de396211d754dfb1cb4ebb052a2d274cce8  stage15.pt\n"
+    },
+    {
+      "root": "/srv/agillm-rpv16-1pf/step201728-candidate/cpu_int8",
+      "manifest": {
+        "schema": "agillm.rpv16.cpu-int8-cache.v1",
+        "source_schema": "agillm.gb10.1pf.recovery.v6",
+        "source_sha256": "dbd6ab41d8a0410f5b7cb8ab57d1abc05857d3d23a976e851ac2b5ba9f7600c5",
+        "step": 201728,
+        "seen_tokens": 9915334656,
+        "target_alignment": "next_token_shifted_labels_fullseq_v1",
+        "parameter_count": 1990038784,
+        "quantization": "dynamic-int8-per-tensor-linear; fp32 activations; bf16 embedding; fp32 norms/router/mix",
+        "allheads_export": {
+          "present": true,
+          "policy_weights_retained": true,
+          "regret_updates": 2782,
+          "objective_counts": {
+            "ar": 24065,
+            "sat": 2782,
+            "nat": 2849
+          },
+          "policy_quantization": "none; exact-fp32",
+          "runtime_availability": "export metadata is not proof of serving-mode availability"
+        }
+      },
+      "manifest_sha256": "9198ca3dbfbd16df3775fc0d97441f337079950e151eb925c09001bfd437ad5a",
+      "checksums": "82edc428124e5c77ed7505fccd5d0a8c55c12e385a8fdec7e84dd4db687400d0  shared.pt\na3eb310f2de37f5ffb6ceb1866345cba9abc68631d8f1b6505cc414e49606c72  stage00.pt\n721799916a8303252972028a6a0ae2c7693445a9d4196c59a02018b9780debe8  stage01.pt\nbeaf62a5366c6420b6f8b3d8f014f1cfda5ada393e9ef02e9de4df159890a8bf  stage02.pt\n93f9d4550fab5cbb59f8a2861e308070b727a56290f3916ae42bd2815bfa3a9d  stage03.pt\n0ec04f04a3fcf8770bb9ceecaed85eb9352c5f9e07819361575f86f7fbf2bde1  stage04.pt\n9657be8acabaeba00ea8adc5187e756531bad0999d1b28e8a128f05309d9f674  stage05.pt\n0daf295df6e99faf54388c1d6d7f556b5711c75bbaa68463c1fe1e4384048a95  stage06.pt\nc748624258e30c2276e900dc16546abbd4b498c101870d8a1a48d332ca443169  stage07.pt\n9ebcc961af7ff9c096698c29793507fc7c0371e57cac8452a2082209e8e6941e  stage08.pt\nf6b03815a0f6d11450be16c8536b3fff6846e9c97217a11a502330d23a5133ba  stage09.pt\n6ce0be3fc55e34e427571d7cbefb7160ff311ecf5a3bdbbb4e41b2b9ba993c85  stage10.pt\n82b642a310116c78fd7dc00166113b041929c28b4af6b4ef364fc582e07fc227  stage11.pt\n2a6f6461b1279f2178046f534d71722eb80151b917bd471b6079b5e43880e6de  stage12.pt\n27da5a0001ae7ec78ff930438a462d581b8106af8458b3d913ef3b012f8fb9d4  stage13.pt\n9d533c65f9cf02901da33cb2c81fddf77ccb045197cf39c4fc8ae63e237091fd  stage14.pt\n3a2d1ea17b9e283607def146cb051406c3d5dfdcf22ca1d515140498c43471dd  stage15.pt\n"
+    },
+    {
+      "root": "/srv/agillm-rpv16-1pf/step204303-candidate/cpu_int8",
+      "manifest": {
+        "schema": "agillm.rpv16.cpu-int8-cache.v1",
+        "source_schema": "agillm.gb10.1pf.recovery.v6",
+        "source_sha256": "9c6e4c08d0c17fe9be999e7279a116fc4fc15a50b8e00c129adf06ff8c5a01f0",
+        "step": 204303,
+        "seen_tokens": 10041901056,
+        "target_alignment": "next_token_shifted_labels_fullseq_v1",
+        "parameter_count": 1990038784,
+        "quantization": "dynamic-int8-per-tensor-linear; fp32 activations; bf16 embedding; fp32 norms/router/mix",
+        "allheads_export": {
+          "present": true,
+          "policy_weights_retained": true,
+          "regret_updates": 3020,
+          "objective_counts": {
+            "ar": 26160,
+            "sat": 3020,
+            "nat": 3091
+          },
+          "policy_quantization": "none; exact-fp32",
+          "runtime_availability": "export metadata is not proof of serving-mode availability"
+        }
+      },
+      "manifest_sha256": "8af788a0b80f94d906a93f44f75a4c1517d48b0ec707054c3388dfcd759f8333",
+      "checksums": "9828a07b82e3d0416ca5c302aed9251928aa4cc3e7a8c03c9b784dd1db073ce3  shared.pt\n7572d40582a60a28e5b5a7fa953ba3dabd9a326751320c709c0f4163e6e64084  stage00.pt\n9fc585c30db9e7acbd1b3077d4891c374e955a4cccb45cc253b6f0e496039c6f  stage01.pt\n1d59bd762d2c126781c9d9a115935c4662a0f4fc8efda7de519295a5af139c55  stage02.pt\n05ec7ff0fe5f825a52f49f3cccb3516be277ce3b29f9acad54984238f038289d  stage03.pt\n2f3f0958d19f2ad0673a780acec70f7197fa4fe2061af71323fe7243bdb970d4  stage04.pt\n5e8fae6ca9c414f0e9b4fb5333f3c67c1660db487605772ff1ae6d1b68738cda  stage05.pt\n942350f59c06c89b0a53698b867d1e245c1bdc593abcb4b723a4a65bccc46d92  stage06.pt\n2802457f0b0992942d9720682b4ba6d24c651d26f0b778169d1ff22ef923d851  stage07.pt\n747aca027825a6a81a5ac8fdc21110fa0acb954d3dbcf50d0bf0c4f369c44954  stage08.pt\na652471eab08307b28676679be1759d9fb19e8e54db695a299797166265fc19a  stage09.pt\n460ae1852f999d9f68036862850e8d8de64d53f39e712bd89998f005460489e1  stage10.pt\n6b7120dd5de9b4dab84c3d0ba95f3af83bf152146d1bac0cb15fadf7f26c7c42  stage11.pt\nc1c8193133b14b494619f3f04b32bf8f49f201c4eee4eb66344bcdc639b5eaa9  stage12.pt\nf436d9a21dc018ec47db6d9f956e166a7a10e830bab94d8ca37a321ae35043f3  stage13.pt\n18c82f7048e119262cdb9fdaa6d499e97a31899837441d65a9aa28fc47aeb7f9  stage14.pt\nfc43be55650077d60f7b955555ec1df0f0f9e3adb14e0344f6c358d8cb8c9da6  stage15.pt\n"
+    }
+  ],
+  "files": [
+    {
+      "path": "/srv/agillm-rpv16-1pf/step15360/cpu_int8/shared.pt",
+      "size": 70017097,
+      "inode": 3998295
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step15360/cpu_int8/stage00.pt",
+      "size": 122110232,
+      "inode": 3998296
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step15360/cpu_int8/stage01.pt",
+      "size": 122110232,
+      "inode": 3998297
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step15360/cpu_int8/stage02.pt",
+      "size": 122110232,
+      "inode": 3998298
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step15360/cpu_int8/stage03.pt",
+      "size": 122110232,
+      "inode": 3998299
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step15360/cpu_int8/stage04.pt",
+      "size": 122110232,
+      "inode": 3998300
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step15360/cpu_int8/stage05.pt",
+      "size": 122110232,
+      "inode": 3998301
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step15360/cpu_int8/stage06.pt",
+      "size": 122110232,
+      "inode": 3998302
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step15360/cpu_int8/stage07.pt",
+      "size": 122110232,
+      "inode": 3998303
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step15360/cpu_int8/stage08.pt",
+      "size": 122110232,
+      "inode": 3998312
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step15360/cpu_int8/stage09.pt",
+      "size": 122110232,
+      "inode": 3998323
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step15360/cpu_int8/stage10.pt",
+      "size": 122110232,
+      "inode": 3998287
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step15360/cpu_int8/stage11.pt",
+      "size": 122110232,
+      "inode": 3998324
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step15360/cpu_int8/stage12.pt",
+      "size": 122110232,
+      "inode": 3998326
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step15360/cpu_int8/stage13.pt",
+      "size": 122110232,
+      "inode": 3998328
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step15360/cpu_int8/stage14.pt",
+      "size": 122110232,
+      "inode": 3998329
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step15360/cpu_int8/stage15.pt",
+      "size": 122110232,
+      "inode": 3998330
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step201728-candidate/cpu_int8/shared.pt",
+      "size": 70287341,
+      "inode": 4868089
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step201728-candidate/cpu_int8/stage00.pt",
+      "size": 122110552,
+      "inode": 4867977
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step201728-candidate/cpu_int8/stage01.pt",
+      "size": 122110552,
+      "inode": 4867982
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step201728-candidate/cpu_int8/stage02.pt",
+      "size": 122110552,
+      "inode": 4867986
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step201728-candidate/cpu_int8/stage03.pt",
+      "size": 122110552,
+      "inode": 4867978
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step201728-candidate/cpu_int8/stage04.pt",
+      "size": 122110552,
+      "inode": 4867995
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step201728-candidate/cpu_int8/stage05.pt",
+      "size": 122110552,
+      "inode": 4867997
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step201728-candidate/cpu_int8/stage06.pt",
+      "size": 122110552,
+      "inode": 4868001
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step201728-candidate/cpu_int8/stage07.pt",
+      "size": 122110552,
+      "inode": 4867990
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step201728-candidate/cpu_int8/stage08.pt",
+      "size": 122110552,
+      "inode": 4868011
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step201728-candidate/cpu_int8/stage09.pt",
+      "size": 122110552,
+      "inode": 4868010
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step201728-candidate/cpu_int8/stage10.pt",
+      "size": 122110552,
+      "inode": 4867991
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step201728-candidate/cpu_int8/stage11.pt",
+      "size": 122110552,
+      "inode": 4868018
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step201728-candidate/cpu_int8/stage12.pt",
+      "size": 122110552,
+      "inode": 4868009
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step201728-candidate/cpu_int8/stage13.pt",
+      "size": 122110552,
+      "inode": 4868029
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step201728-candidate/cpu_int8/stage14.pt",
+      "size": 122110552,
+      "inode": 4868032
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step201728-candidate/cpu_int8/stage15.pt",
+      "size": 122110552,
+      "inode": 4868031
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step204303-candidate/cpu_int8/shared.pt",
+      "size": 70287341,
+      "inode": 4128753
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step204303-candidate/cpu_int8/stage00.pt",
+      "size": 122110552,
+      "inode": 4128754
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step204303-candidate/cpu_int8/stage01.pt",
+      "size": 122110552,
+      "inode": 4128755
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step204303-candidate/cpu_int8/stage02.pt",
+      "size": 122110552,
+      "inode": 4128756
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step204303-candidate/cpu_int8/stage03.pt",
+      "size": 122110552,
+      "inode": 4128757
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step204303-candidate/cpu_int8/stage04.pt",
+      "size": 122110552,
+      "inode": 4128758
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step204303-candidate/cpu_int8/stage05.pt",
+      "size": 122110552,
+      "inode": 4128759
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step204303-candidate/cpu_int8/stage06.pt",
+      "size": 122110552,
+      "inode": 4128760
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step204303-candidate/cpu_int8/stage07.pt",
+      "size": 122110552,
+      "inode": 4128761
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step204303-candidate/cpu_int8/stage08.pt",
+      "size": 122110552,
+      "inode": 4128762
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step204303-candidate/cpu_int8/stage09.pt",
+      "size": 122110552,
+      "inode": 4128763
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step204303-candidate/cpu_int8/stage10.pt",
+      "size": 122110552,
+      "inode": 4128764
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step204303-candidate/cpu_int8/stage11.pt",
+      "size": 122110552,
+      "inode": 4128765
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step204303-candidate/cpu_int8/stage12.pt",
+      "size": 122110552,
+      "inode": 4128766
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step204303-candidate/cpu_int8/stage13.pt",
+      "size": 122110552,
+      "inode": 4128767
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step204303-candidate/cpu_int8/stage14.pt",
+      "size": 122110552,
+      "inode": 4128768
+    },
+    {
+      "path": "/srv/agillm-rpv16-1pf/step204303-candidate/cpu_int8/stage15.pt",
+      "size": 122110552,
+      "inode": 4128769
+    }
+  ],
+  "before_free": 1406992384,
+  "status": "complete",
+  "after_free": 7479255040,
+  "reclaimed_logical_bytes": 6071893155
+}

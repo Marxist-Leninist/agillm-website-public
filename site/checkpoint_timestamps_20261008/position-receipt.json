@@ -1,0 +1,6 @@
+{
+  "ui_sha256": "89722660c054d46bfcb16f72c5d511cc16d5e37690bcaac3678619167565bf11",
+  "addon_sha256": "3a42f2b2cfff8200216c87875036c87cb11457b00405abd5d71b46aaa0461acb",
+  "change": "Latest saved timestamp placed immediately after trainer metrics, before serving row, to fit compact telemetry rail",
+  "backup": "/opt/agillm43_netserve/checkpoint_timestamps_20261008/before-position"
+}

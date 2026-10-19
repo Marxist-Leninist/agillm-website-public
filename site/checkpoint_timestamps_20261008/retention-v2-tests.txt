@@ -1,0 +1,21 @@
+PASS empty state does not invent timestamps
+PASS known seconds timestamp becomes ISO-compatible milliseconds
+PASS missing event retains paired step/time with last-known label
+PASS failed request retains timestamp but loses current confirmation
+PASS three models cannot borrow one another's timestamp
+PASS page reload restores cache explicitly as last known
+PASS changed step without time does not inherit an old timestamp
+PASS lower-step rollback replaces newer-step metadata
+PASS same step with different hash cannot inherit old time
+PASS same checkpoint with missing time is explicitly last known
+PASS new lineage without a checkpoint clears old lineage cache
+PASS refresh time is never substituted for checkpoint time
+PASS invalid/null/zero/boolean time is not displayed as epoch
+PASS invalid steps do not pollute stored metadata
+PASS zero-step checkpoint remains valid
+PASS disabled storage safely falls back to memory
+PASS corrupt storage is ignored
+PASS cache expires after seven days without confirmation
+PASS persistent cache has only bounded model metadata, no file paths
+PASS UK time formatting includes date and timezone
+{"passed":20,"failed":0}

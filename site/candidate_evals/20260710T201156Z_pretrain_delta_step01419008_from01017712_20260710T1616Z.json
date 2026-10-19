@@ -1,0 +1,164 @@
+{
+  "bridge_pid": 3288498,
+  "candidate": "/opt/agillm43_offload/ckpts/pretrain_delta_step01419008_from01017712_20260710T1616Z.pt",
+  "finished_at": "2026-07-10T20:13:09Z",
+  "health": {
+    "busy": 0,
+    "ckpt": "pretrain_delta_step01419008_from01017712_20260710T1616Z.pt",
+    "concurrency": 1,
+    "dtype": "fp32",
+    "live_slots": 1,
+    "loads": 1,
+    "ok": true,
+    "ready": true,
+    "slot_dtypes": [
+      "fp32"
+    ],
+    "slot_threads": [
+      16
+    ],
+    "uptime_s": 40,
+    "warming": false
+  },
+  "quality": {
+    "fast nat": {
+      "cases": [
+        {
+          "button_tok_s": 23.7405259158529,
+          "case": "math",
+          "continuation": ".  is to4 3:  of",
+          "gen_tok_s": 24.2,
+          "hit": true,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 25.540976244320643,
+          "case": "fact",
+          "continuation": ".  the?Paris and Paris Answer:",
+          "gen_tok_s": 25.9,
+          "hit": true,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 41.53956105106587,
+          "case": "code",
+          "continuation": "3hello\")  add for two, \" that)  is print.  :",
+          "gen_tok_s": 42.0,
+          "hit": true,
+          "tokens": 16
+        },
+        {
+          "button_tok_s": 35.31359027052285,
+          "case": "language",
+          "continuation": ".  short hi morning:   and to a of withprint",
+          "gen_tok_s": 35.7,
+          "hit": true,
+          "tokens": 12
+        }
+      ],
+      "hits": 4,
+      "median_button_tok_s": 30.42728325742175,
+      "median_gen_tok_s": 30.8,
+      "total": 4
+    },
+    "quality ar": {
+      "cases": [
+        {
+          "button_tok_s": 6.994110090469527,
+          "case": "math",
+          "continuation": ". print: Python, is to print",
+          "gen_tok_s": 7.0,
+          "hit": false,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 6.701946004030623,
+          "case": "fact",
+          "continuation": ". Paris? Answer print)",
+          "gen_tok_s": 6.7,
+          "hit": true,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 4.971712691039312,
+          "case": "code",
+          "continuation": ". print is a \"hello: values, = \"hi\") ') )",
+          "gen_tok_s": 5.0,
+          "hit": true,
+          "tokens": 16
+        },
+        {
+          "button_tok_s": 8.345762247581293,
+          "case": "language",
+          "continuation": ". Hi: print hi Python) hello\") Paris -",
+          "gen_tok_s": 8.4,
+          "hit": true,
+          "tokens": 12
+        }
+      ],
+      "hits": 3,
+      "median_button_tok_s": 6.848028047250075,
+      "median_gen_tok_s": 6.85,
+      "total": 4
+    },
+    "quality sat var": {
+      "cases": [
+        {
+          "button_tok_s": 10.252841082703679,
+          "case": "math",
+          "continuation": ".  is32:  to, 52",
+          "gen_tok_s": 10.3,
+          "hit": false,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 10.126408569401402,
+          "case": "fact",
+          "continuation": ". ? to.   and Answer onParis",
+          "gen_tok_s": 10.2,
+          "hit": true,
+          "tokens": 8
+        },
+        {
+          "button_tok_s": 12.439696111115746,
+          "case": "code",
+          "continuation": ": . print for  that greet is add,  two.  ) 3\")",
+          "gen_tok_s": 12.5,
+          "hit": true,
+          "tokens": 16
+        },
+        {
+          "button_tok_s": 8.271447087725907,
+          "case": "language",
+          "continuation": ". :  hi morningprint hello \"Python short print)",
+          "gen_tok_s": 8.3,
+          "hit": true,
+          "tokens": 12
+        }
+      ],
+      "hits": 3,
+      "median_button_tok_s": 10.18962482605254,
+      "median_gen_tok_s": 10.25,
+      "total": 4
+    }
+  },
+  "speed": {
+    "ar": {
+      "median_button_tok_s": 7.515843617672491,
+      "median_gen_tok_s": 7.550000000000001
+    },
+    "nat": {
+      "median_button_tok_s": 73.35599569151208,
+      "median_gen_tok_s": 74.1
+    },
+    "sat fixed": {
+      "median_button_tok_s": 12.913192138939594,
+      "median_gen_tok_s": 12.95
+    },
+    "sat var": {
+      "median_button_tok_s": 11.088336746612956,
+      "median_gen_tok_s": 11.1
+    }
+  },
+  "started_at": "2026-07-10T20:11:56Z"
+}

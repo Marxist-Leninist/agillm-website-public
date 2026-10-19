@@ -1,0 +1,87 @@
+{
+  "status": "DEPLOYED_AND_VERIFIED",
+  "completed_at": 1790958208.928983,
+  "checkpoint_step": 3253490,
+  "weights_changed": false,
+  "dynamic_sat_var_preserved": true,
+  "unit_tests_passed": 9,
+  "live_generation_modes": [
+    "ar",
+    "sat_fixed",
+    "sat_variable",
+    "nat"
+  ],
+  "explicit_stop_to_idle_s": 0.313,
+  "disconnect_to_idle_s": 0.62,
+  "same_worker_preserved_both": true,
+  "public_AR_8_tokens_s": 1.484,
+  "ui_deployed": {
+    "deployed_at_utc": "20261002T162212Z",
+    "path": "/opt/agillm43_netserve/agillm_completion.html",
+    "sha256": "782e5cac29a7c7a8a23792d0a33aa29cbce2826f246bde966ccffd7456108914",
+    "backup": "/opt/agillm43_netserve/agillm_completion.html.bak-token-ui-20261002T162212Z",
+    "syntax": "pass",
+    "browser_fixture_tests": "pass",
+    "model_settings_changed": false,
+    "service_restart": false,
+    "http_status": 200,
+    "served_sha256": "782e5cac29a7c7a8a23792d0a33aa29cbce2826f246bde966ccffd7456108914",
+    "served_matches": true
+  },
+  "ui_test_scope": {
+    "url": "https://codex.opentransformers.online/agillm-ui",
+    "browser": "existing Playwright Chromium; Browser plugin not listed",
+    "responses": "synthetic UI fixtures, no model inference"
+  },
+  "evidence_files": [
+    "manifest.json",
+    "unit_tests.json",
+    "live_tests.json",
+    "public_test.json"
+  ],
+  "service": "agillm43-bridge.service",
+  "live_health": {
+    "ok": true,
+    "ready": true,
+    "warming": false,
+    "ckpt": "pretrain_step03253490_from03247198_20261002T1347Z.pt",
+    "uptime_s": 288,
+    "model_identity_verified": true,
+    "model": {
+      "name": "AGILLM 4.4 Standard 1.1B",
+      "step": 3253490,
+      "seen_tokens": 458921381888,
+      "source_checkpoint_sha256": "ca5c83c6d4df8eed4b2d9e64424168e7a08a6ec6e7e092cca426da5e98cfbb93",
+      "tokenizer_sha256": "REDACTED"
+    },
+    "checkpoint_step": 3253490,
+    "step": 3253490,
+    "canonical_modes": [
+      "ar",
+      "sat_fixed",
+      "sat_variable",
+      "nat"
+    ],
+    "loads": 1,
+    "concurrency": 1,
+    "request_timeout_s": 1800.0,
+    "queue_timeout_s": 240.0,
+    "dtype": "fp32",
+    "live_slots": 1,
+    "busy": 0,
+    "draining_slots": 0,
+    "active_request_count": 0,
+    "pending_request_count": 0,
+    "slot_threads": [
+      8
+    ],
+    "slot_dtypes": [
+      "fp32"
+    ],
+    "cancel_preserves_worker": true,
+    "target_ckpt": "pretrain_step03253490_from03247198_20261002T1347Z.pt",
+    "reliability_patch": "cooperative-cancel-20261002",
+    "host": "geth-cpu",
+    "device": "cpu"
+  }
+}

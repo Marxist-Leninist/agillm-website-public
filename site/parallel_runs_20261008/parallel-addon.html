@@ -1,0 +1,104 @@
+<!-- AGILLM_PARALLEL_RUNS_V1: isolated views; existing single-run decoder stays unchanged. -->
+<style id="agillm-parallel-style">
+#agiAddParallel{border-color:#526b81;background:#14202b;color:#d9e8f6;white-space:nowrap;min-height:38px;font-size:12px}
+#agiParallelShell{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;background:var(--bg,#0b0f14)}
+.agi-parallel-toolbar{flex:0 0 auto;min-height:46px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 12px;border-bottom:1px solid var(--line,#293544);background:#101820;font:13px/1.3 system-ui,sans-serif}
+.agi-parallel-toolbar strong{color:#e6edf3}.agi-parallel-toolbar small{color:#a5b4c2;flex:1;min-width:120px}
+.agi-parallel-toolbar button,.agi-run-heading button{border:1px solid #405365;background:#192733;color:#e6edf3;border-radius:8px;min-height:32px;padding:5px 11px;font:600 12px/1.2 system-ui,sans-serif;cursor:pointer}
+.agi-parallel-toolbar button:disabled,.agi-run-heading button:disabled{opacity:.45;cursor:not-allowed}
+#agiParallelGrid{min-height:0;flex:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:8px;padding:8px;overflow:auto}
+#agiParallelGrid.agi-many{grid-auto-rows:minmax(550px,1fr)}
+.agi-run-panel{min-height:0;min-width:0;display:flex;flex-direction:column;border:1px solid #354757;border-radius:10px;overflow:hidden;background:#0b0f14}
+.agi-run-heading{flex:0 0 auto;display:flex;align-items:center;gap:8px;min-height:40px;padding:6px 10px;border-bottom:1px solid #2c3946;background:#15212b;font:12px/1.3 system-ui,sans-serif;color:#e6edf3}
+.agi-run-heading strong{white-space:nowrap}.agi-run-state{flex:1;min-width:0;color:#a5b4c2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.agi-run-state[data-active="true"]{color:#85dda4}
+.agi-run-panel>iframe{border:0;display:block;flex:1;min-height:0;width:100%;background:#0b0f14}
+body.agi-parallel-open #workspace{flex:1;min-height:0;width:100%!important;max-width:none;height:auto!important;border:0}
+body.agi-parallel-open #app{height:100%!important;min-width:0}
+body.agi-parallel-open #sidebar,body.agi-parallel-open #sidebarBackdrop,body.agi-parallel-open #menuToggle,
+html.agi-parallel-child #sidebar,html.agi-parallel-child #sidebarBackdrop,html.agi-parallel-child #menuToggle{display:none!important}
+body.agi-parallel-open #app>header .nav,html.agi-parallel-child #app>header .nav,
+body.agi-parallel-open #helpNote,html.agi-parallel-child #helpNote,
+body.agi-parallel-open #agillmTelemetry,html.agi-parallel-child #agillmTelemetry,
+body.agi-parallel-open #hdrTelemetryHide,html.agi-parallel-child #hdrTelemetryHide{display:none!important}
+body.agi-parallel-open #app>header,html.agi-parallel-child #app>header{padding:7px 10px;gap:6px}
+body.agi-parallel-open #app>.controls{max-height:48%;overflow:auto;min-height:0;padding-inline:10px}
+body.agi-parallel-open .ctlrow{flex-wrap:wrap;min-width:0}
+body.agi-parallel-open #agiAddParallel,html.agi-parallel-child #agiAddParallel{display:none!important}
+@media(max-width:960px){#agiParallelGrid{grid-template-columns:minmax(0,1fr);grid-auto-rows:max(680px,calc(100dvh - 76px))}#agiParallelGrid.agi-many{grid-auto-rows:max(680px,calc(100dvh - 76px))}.agi-parallel-toolbar{gap:6px}.agi-parallel-toolbar small{font-size:11px}}
+</style>
+<script id="agillm-parallel-script">
+(function(){
+'use strict';
+const childId=new URLSearchParams(location.search).get('agi_parallel_run');
+const isChild=!!childId && /^[a-zA-Z0-9_-]{1,96}$/.test(childId);
+const limit=4;
+const bridge={
+ state(){return {busy:!!(streaming||recovering||benchmarking),streaming:!!streaming,recovering:!!recovering,model:modelKey,requestId:activeRequestId,stats:lastRunStats,status:document.getElementById('status')?.textContent||''};},
+ snapshot(){return {text:doc.value,model:modelKey,modeKey:currentModeKey(),maxNew:+lenEl.value,parscale:binaryParScaleStreams,decode:dec,temperature:+tempEl.value,topP:+toppEl.value,topK:+topkEl.value,minP:+minpEl.value};},
+ seed(s){
+  if(historyBusy()||!s)return false;
+  switchModel(s.model);
+  if(profileModeKeys(modelKey).includes(s.modeKey))setModeKey(s.modeKey);
+  if(Number.isFinite(s.maxNew))lenEl.value=String(s.maxNew);
+  if([1,2,3,4,5,8].includes(s.parscale))binaryParScaleStreams=s.parscale;
+  doc.value=String(s.text||'');
+  applyModelUi(true);doc.dispatchEvent(new Event('input',{bubbles:true}));saveActive();renderHL(false);
+  return true;
+ }
+};
+window.AGILLMParallelView=bridge;
+if(isChild){document.documentElement.classList.add('agi-parallel-child');return;}
+let shell=null,grid=null,timer=null,serial=1;
+const panels=[];
+const baseWorkspace=document.getElementById('workspace');
+const add=document.createElement('button');add.id='agiAddParallel';add.type='button';add.className='act';add.textContent='+ Parallel run';add.title='Keep this run going and open another independent generation';
+const goButton=document.getElementById('go');
+(goButton?.parentElement||document.querySelector('#app>header')).appendChild(add);
+function el(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text)n.textContent=text;return n;}
+function panelState(p){try{return p.main?bridge.state():p.frame.contentWindow.AGILLMParallelView?.state()||null;}catch(_){return null;}}
+function notice(text){if(shell)shell.querySelector('#agiParallelNotice').textContent=text;}
+function refresh(){
+ if(!shell)return;
+ let active=0;
+ for(const p of panels){const s=panelState(p);if(s?.busy)active++;p.label.dataset.active=String(!!s?.busy);p.label.textContent=s?(s.busy?(s.recovering?'Stopping only this run':'Running'):(s.stats?'Done · '+s.stats.tokS.toFixed(2)+' tok/s button-to-done':'Ready'))+' · '+({standard:'1.1B',rpv16:'2B',bintf4b:'4B',popout:'Popout'}[s.model]||s.model):'Loading controls…';if(p.remove)p.remove.disabled=!s||s.busy;}
+ shell.querySelector('#agiParallelCount').textContent=panels.length+' panels · '+active+' active';
+ const more=shell.querySelector('#agiParallelMore');more.disabled=panels.length>=limit;
+ shell.querySelector('#agiParallelSingle').disabled=panels.some(p=>!p.main&&(!panelState(p)||panelState(p).busy));
+ grid.classList.toggle('agi-many',panels.length>2);
+}
+function heading(p){const h=el('div','agi-run-heading');h.appendChild(el('strong','', 'Run '+p.number));p.label=el('span','agi-run-state','Ready');p.label.setAttribute('aria-live','polite');h.appendChild(p.label);return h;}
+function createShell(){
+ if(shell)return;
+ shell=el('section');shell.id='agiParallelShell';shell.setAttribute('aria-label','Parallel generation workspace');
+ const tools=el('div','agi-parallel-toolbar');tools.appendChild(el('strong','','Parallel runs'));
+ const count=el('span');count.id='agiParallelCount';tools.appendChild(count);
+ const hint=el('small','','Each panel has its own output and Stop button.');hint.id='agiParallelNotice';tools.appendChild(hint);
+ const more=el('button','','+ Add run');more.id='agiParallelMore';more.type='button';more.onclick=addPanel;tools.appendChild(more);
+ const single=el('button','','Single view');single.id='agiParallelSingle';single.type='button';single.title='Finish or stop additional runs first; your original run stays intact';single.onclick=singleView;tools.appendChild(single);
+ grid=el('div');grid.id='agiParallelGrid';shell.append(tools,grid);document.body.appendChild(shell);
+ const p={main:true,number:1,node:el('section','agi-run-panel')};p.node.setAttribute('aria-label','Run 1');p.node.appendChild(heading(p));p.node.appendChild(baseWorkspace);grid.appendChild(p.node);panels.push(p);
+ document.body.classList.add('agi-parallel-open');timer=setInterval(refresh,400);refresh();
+}
+function addPanel(){
+ createShell();if(panels.length>=limit){notice('Four panels are open. Finish and remove one before adding another.');return;}
+ const snapshot=bridge.snapshot();
+ const p={main:false,number:++serial,node:el('section','agi-run-panel')};p.node.setAttribute('aria-label','Run '+p.number);
+ const h=heading(p);p.remove=el('button','','Remove');p.remove.type='button';p.remove.setAttribute('aria-label','Remove run '+p.number);p.remove.title='Stop this run before removing its panel';p.remove.onclick=()=>removePanel(p);h.appendChild(p.remove);p.node.appendChild(h);
+ p.frame=document.createElement('iframe');p.frame.title='AGILLM independent run '+p.number;p.frame.loading='eager';
+ const u=new URL(location.href);u.hash='';u.searchParams.set('agi_parallel_run','run_'+crypto.randomUUID().replaceAll('-',''));p.url=u.href;
+ p.frame.addEventListener('load',()=>{
+  let attempts=0;const initialize=()=>{if(!panels.includes(p))return;try{const api=p.frame.contentWindow.AGILLMParallelView;if(api){api.seed(snapshot);refresh();return;}}catch(_){}if(++attempts<80)setTimeout(initialize,250);else{p.label.textContent='Could not load this panel';p.remove.disabled=false;}};initialize();
+ });
+ p.frame.src=p.url;p.node.appendChild(p.frame);grid.appendChild(p.node);panels.push(p);refresh();
+}
+function removePanel(p){const s=panelState(p);if(s?.busy){notice('Use Stop inside Run '+p.number+' first. Other runs will continue.');return;}const i=panels.indexOf(p);if(i<0)return;panels.splice(i,1);p.node.remove();if(panels.length===1)singleView();else refresh();}
+function singleView(){
+ if(panels.some(p=>!p.main&&panelState(p)?.busy)){notice('Finish or stop the additional runs before returning to single view.');return;}
+ if(!shell)return;document.body.insertBefore(baseWorkspace,shell);shell.remove();shell=null;grid=null;panels.splice(0);clearInterval(timer);timer=null;document.body.classList.remove('agi-parallel-open');
+}
+add.onclick=addPanel;
+window.AGILLMParallelWorkspace={add:addPanel,state:()=>panels.map(p=>({number:p.number,main:p.main,...panelState(p)})),limit};
+})();
+</script>
+<!-- /AGILLM_PARALLEL_RUNS_V1 -->

@@ -1,0 +1,20 @@
+{
+  "archive_sha256": "a571ea71b7d84bb015684092bb6d14fe0bc5346009f9e85bba061a01508674fa",
+  "checkpoint": "/opt/agillm43_offload/ckpts/pretrain_step01050306_from00065064_20260728T1719Z.pt",
+  "huggingface_commit": "4651cda0a90dc88effe20aaf3dade80b7d2d53c1",
+  "huggingface_repo": "MarxistLeninist/AGILLM-4.3-repretrain-single-file-20260716T091441Z",
+  "loss": 9.870494842529297,
+  "previous_checkpoint": "/mnt/geth-vol1/agillm43/ckpts/artifacts/full/repretrain_v4_wip/pretrain_step01027722_from00065064_20260728T1119Z.pt",
+  "previous_env_backup": "/opt/agillm43_netserve/bridge.env.cutover-backup-20260728T182940Z",
+  "previous_sha256": "18ec712785ca77474e3eea9cbe670b9d4e309a01b6206890c2835ef00a126585",
+  "promoted_at": "2026-07-28T18:32:45Z",
+  "promoted_by": "Codex via SG1",
+  "schema": "agillm43.vast_promotion.v1",
+  "seen_tok": 51624640512,
+  "sha256": "fc2cf09ef91eef20b4b718772667bbfcaa1df390e59f4f9b334d7e60ec4f3e51",
+  "source": "vast.ai via verified Hugging Face archive",
+  "status": "promoted-and-smoke-tested",
+  "step": 1050306,
+  "vast_instance_id": 44137950,
+  "verification": "source manifest and exact 33-shard inventory; archive SHA-256; wrapper/provenance/tokenizer and every shard SHA-256; immutable env transactional swap; safe reload gate; NAT/AR/SAT local smoke"
+}

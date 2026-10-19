@@ -1,0 +1,56 @@
+{
+  "schema": "agillm.popout-runtime-config.v1",
+  "preflight_command": [
+    "/usr/bin/python3",
+    "/opt/agillm43_netserve/popup_multimode_next/agillm44_detachable_50m_multimode.py",
+    "--checkpoint",
+    "{checkpoint}",
+    "--expected-sha256",
+    "{checkpoint_sha256}",
+    "--expected-tokenizer-sha256",
+    "{tokenizer_sha256}",
+    "--verify-only"
+  ],
+  "preflight_timeout_s": 300,
+  "modes": {
+    "ar": {
+      "command": [
+        "/usr/bin/python3",
+        "-u",
+        "/opt/agillm43_netserve/runtime_derived/agillm41_runtime_938597eb7764_logits_intel_v24_arfast.py",
+        "infer",
+        "--server",
+        "--device",
+        "cpu",
+        "--cpu_threads",
+        "4",
+        "--ckpt",
+        "{checkpoint}",
+        "--mode",
+        "ar",
+        "--max_new",
+        "64",
+        "--min_new",
+        "0",
+        "--temperature",
+        "0.0",
+        "--top_p",
+        "1.0",
+        "--greedy",
+        "--plain-output",
+        "--infer_dtype",
+        "fp32"
+      ],
+      "env": {
+        "CUDA_VISIBLE_DEVICES": "",
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4",
+        "TRANSFORMERS_OFFLINE": "1",
+        "HF_HUB_OFFLINE": "1"
+      },
+      "startup_timeout_s": 600,
+      "request_timeout_s": 1800,
+      "queue_timeout_s": 30
+    }
+  }
+}

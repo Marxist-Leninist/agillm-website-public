@@ -1,0 +1,26 @@
+{
+  "standard": {
+    "status": "completed",
+    "step": 3133615,
+    "pid": null,
+    "observed_at": 1790745554.8451798,
+    "source_observed_at": 1790712217.0,
+    "fresh": true,
+    "ok": true,
+    "instance_id": 52631126,
+    "history_rows": 134,
+    "history_sha256": "868f2a61a73f553890efc553e40c2487e8fb65f949434592e764c8797e00522b"
+  },
+  "rpv16": {
+    "status": "training",
+    "step": 314231,
+    "pid": 6921,
+    "observed_at": 1790745553.2551336,
+    "source_observed_at": 1790745550.8585823,
+    "fresh": true,
+    "ok": true,
+    "instance_id": 53075549,
+    "history_rows": 1200,
+    "history_sha256": "2e7d9063651a8a6c291d4f6f45dddf24008ec29ba3093e80b3b317a13ec6268e"
+  }
+}

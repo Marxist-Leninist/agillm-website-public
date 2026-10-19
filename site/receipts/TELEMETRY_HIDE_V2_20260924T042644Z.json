@@ -1,0 +1,13 @@
+{
+  "marker": "TELEMETRY_HIDE_TOGGLE_V2_20260924",
+  "sha256": "88d88f05745585816b2caf0d999f3b1662b3ab52de59c05ce450b35af073cf48",
+  "backup": "/opt/agillm43_netserve/agillm_completion.html.bak-hide-v2-20260924T042644Z",
+  "file": "/opt/agillm43_netserve/agillm_completion.html",
+  "features": [
+    "header Hide training button",
+    "click Training heading to toggle",
+    "persisted localStorage agillm.telemetry.collapsed.v1",
+    "collapsed summary bar with Show"
+  ],
+  "utc": "2026-09-24T04:26:44Z"
+}

@@ -1,0 +1,270 @@
+{
+  "schema_version": 1,
+  "checkpoint_file": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt",
+  "runtime_file": "/opt/agillm43_netserve/runtime_derived/runtime_standard_modes_20261001_minimum.py",
+  "runtime_sha256": "2c5c6b99981de4578413c2dd32824475045f62fcf2e370df5ec3fdb5e435c9b6",
+  "tokenizer_file": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.tokenizer.json",
+  "checkpoint_files": [
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/agillm5_detachable_50m_bridge.pt",
+      "sha256": "e6996b78124a7dbd83649d6dddc116fc00c6e9b6f8439158bacde05825417f4c"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/agillm5_detachable_50m_counters.pt",
+      "sha256": "236e0ed038a2aa380a200c2d990bb504b24b956d55d4e7f8f2029051399d677a"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/agillm5_detachable_50m_opt.pt",
+      "sha256": "f0c7a845ec2c0b60919457313101d477d354cae3500e73e0d12733059448a07d"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/agillm5_detachable_50m_rng.pt",
+      "sha256": "08ac7a10576bd35963107f882de5166b638c7010fb67d2bdb7b9800329e05ca3"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/agillm5_detachable_50m_scaler.pt",
+      "sha256": "fdd145fe916a2aa28c6184e6dbf396cf8c8646b80cb17d90b321618468287e08"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/ar.pt",
+      "sha256": "f5d6e2ffa5fd90552559d2f99443ec378b8f1723a037a8b751b558b008ff582e"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_base.pt",
+      "sha256": "b1c77dc29f42234ac4aecadbb3fbbfd0bf1650332fe392ad942834d138fd929f"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0000.pt",
+      "sha256": "21fbec085828592f41fdc363a51ca344300edea05d9b89cd93e7a6b2303189c3"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0001.pt",
+      "sha256": "9f7ae480475bb42eacbf211e89fc792c6280a372d53c086a23f573ccb86a5fad"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0002.pt",
+      "sha256": "f728b233791f7a982cbdc0e2d77e8ce0c7a0288c5fdc27b6a118f78a671349f2"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0003.pt",
+      "sha256": "859bed3db0817dc618fbe3f73080198336c9bccae20cb1339202d43a4a0465d8"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0004.pt",
+      "sha256": "06a4a1ac778765a44434c7a0fb91c9e29ab5ab2f0de7a377a2bed9fba80e25c6"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0005.pt",
+      "sha256": "ed5688b3db6a30f69c45b8e14683184f04c93e4e1376a40b99ffe7d908a93972"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0006.pt",
+      "sha256": "dc01e50a76394d75f6eb2aeb98b7541d085e4f71b968ed723edd2bae0838909a"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0007.pt",
+      "sha256": "4c04253aaae1afa4985a4a93da58e12d5c9add98aa45b28dbdac7a8a618cb3c5"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0008.pt",
+      "sha256": "7a9fbadeb354e61351de6e8ad5bdbe6930cef5b53b48779e4b438c0030b99298"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0009.pt",
+      "sha256": "35a186118613c3104e057f0c54f633ec552de570e15a411c6550009ced7982b5"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0010.pt",
+      "sha256": "14b5f203927943ca9c3542add05109833d35f344c85a3b5ae3d579d0f19bc9cb"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0011.pt",
+      "sha256": "7a945b5ad63acabc35b10c5b80ca51dcbd1771e330d7e2e8112e496a8081a5aa"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0012.pt",
+      "sha256": "26e1ef0e91103156a4ac9daf8ac39aace8066235d71afdf6e6b215f55da811c2"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0013.pt",
+      "sha256": "3f41b4ef7cf638a70dc155da5df97a268601065344576fb8f8cfb8d7c83f3eac"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0014.pt",
+      "sha256": "526441fa18426856579a516f0217b08eb36972ab0d50de14f1be834955deef6d"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0015.pt",
+      "sha256": "0ef850289d8e766278e46f09599a64de2bd649768b2af66249f7c1df86a55a56"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0016.pt",
+      "sha256": "3fcf4616ea4049244f15545ab6ea38d3d3aa8533fb9423fa962d779ee826898c"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0017.pt",
+      "sha256": "8bf0d96ca502ba831a138bb1356b647447cddb4fd9ad5812dea30e1e1e597add"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0018.pt",
+      "sha256": "40ab7e75d1e5fb2f280aab771a1556783d40c87186edfac41c6083a66ec44f34"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0019.pt",
+      "sha256": "5b4215f61afc828ee0f6fd5f788288e0ec659ad5ec429aa57c94d5dfb065be3f"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0020.pt",
+      "sha256": "59c0b29e92669728e7490860bcef963359bd6890857e87c1af590757e3ba1c1f"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0021.pt",
+      "sha256": "13a6f837f9c8cd6386d87ca3e6707e2a501a1808ae6ec74129f45927944846d2"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0022.pt",
+      "sha256": "26657ecee333b2ad297a27cd9bc7b656fc4b1bc7007cd1fd5775f66b90f898b4"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0023.pt",
+      "sha256": "fefd28a7f4080cf3b0c75cbb4e689c0569be19fa5a6658f71ac3b23548b66241"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0024.pt",
+      "sha256": "a33e68397f83d5d6a8657c658552e5b19b0c1a411cdf747318e182eef305aff3"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0025.pt",
+      "sha256": "6a29cd7bd0bc9211b6ad31ddd9584d4b3fec7e84a7dc4779799feee558c7d40a"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0026.pt",
+      "sha256": "2908633a5e099d17b8a4011e2ff2de0ace688a3a4539fa9567d30a9096469888"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/core_block_0027.pt",
+      "sha256": "a7e388f23728bec5910baed3148955108fde4d225889b601afec3257aebebc5a"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/detachable_50m_base.pt",
+      "sha256": "ba80dfeeaa513c0fd025be7a5e9c0bcc665ac0f6c3f04902902276eed2af99c5"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/detachable_50m_block_0000.pt",
+      "sha256": "c0dcc93066bc90ad3c4cf7e7c89adfd9a6429078a7b52aae41874a94107ce5bf"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/detachable_50m_block_0001.pt",
+      "sha256": "75eeb1fa17ba060502768f53d8cf3d8a89b9529b85f65360a933e2b05163bd7e"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/detachable_50m_block_0002.pt",
+      "sha256": "d4d798b096182e939dfe246ee049e5e99066690f64f7ef584c6a31ee8ba95d26"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/detachable_50m_block_0003.pt",
+      "sha256": "8711030308e9474bd3488ad47586e57967a93c0456e6ec5151bfd25c04effda5"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/detachable_50m_block_0004.pt",
+      "sha256": "e583c9e573e6ecb7ac476904b8a383d6c3cf9e8e93478d3734a1bcb1a09ae4f7"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/detachable_50m_block_0005.pt",
+      "sha256": "e28d88038a86691f041c50d4f08c5b44ad0c99b061260dc2d8b29d3797bf496d"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/detachable_50m_block_0006.pt",
+      "sha256": "3434bc4ebb4143fb42ca77571b03365d47cf2425a02b331a51949227f08e40e0"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/detachable_50m_block_0007.pt",
+      "sha256": "f833a12a698db8f5d0dae3c79ffe2cd3132224046e553bf176751fa7792ff92d"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/detachable_50m_block_0008.pt",
+      "sha256": "1b678f2743b4f1eca3b34ea4aa4e5a29d810fb9276a3d06612d4f010d55801cf"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/detachable_50m_block_0009.pt",
+      "sha256": "8dbfc95ed58f29f0f497a80bd039f18b6b5aae8c0bea3cc52eaa9427f5459051"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/detachable_50m_block_0010.pt",
+      "sha256": "3e4c7bcfc6c1ef4a7b31b579f985ccfc91be55bd8a405a9d711cc0d9c7904b29"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/detachable_50m_block_0011.pt",
+      "sha256": "789c9e8e198bfcc1a08fc42c5837c2f7096ee42775b4643f81c99ca8fd111d4d"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/detachable_50m_block_0012.pt",
+      "sha256": "5b8dbd68a82337269ec11bdbb3367f44dba1a08cf5b2ca053f0e1954dc02a8e5"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/detachable_50m_block_0013.pt",
+      "sha256": "df30b88a25669c537e040705319bd9920ba3cdf378a8d4d25d5ae185ce8fa739"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/detachable_50m_block_0014.pt",
+      "sha256": "cd018d87c4b09e359e06f46de843aa542bf646e2a64ad6bd6cb7a6ae4c90bfd5"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/detachable_50m_block_0015.pt",
+      "sha256": "b7ecf82709287af6bd86e91d6acad8adad81b52fd2423d83060aab0bb9c9141d"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/detachable_50m_block_0016.pt",
+      "sha256": "607044737b236436c3e139204c129c2ceb3931278a113b95401b3004988b04a4"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/detachable_50m_block_0017.pt",
+      "sha256": "d645e43914c86c790ff1de8dfed617b2472934c3f839ba0047e7bcf387bdd389"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/detachable_50m_block_0018.pt",
+      "sha256": "a7659d7610e3563137ad7e81970eae83ba128ac16f282b306897ecd224f4d6b6"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/detachable_50m_block_0019.pt",
+      "sha256": "e703e5c73323477ce6c80b46d718a04dde6c117f5ec229803f6f15a8ebb2b10f"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/detachable_50m_block_0020.pt",
+      "sha256": "2711fbdee46715b66047724598cdfcb6dd4d70923a19ec37a4e216af722daacf"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/detachable_50m_block_0021.pt",
+      "sha256": "b5c219bd7eff7c3136d5b5439501213e97397f3a483ac7f19fa54b6db8f06f5d"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/nat.pt",
+      "sha256": "856645eff5043753035271fdcd7715628332a416ba90df026b2931ff12d5f9d7"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/opt.pt",
+      "sha256": "cb8621037d2aca05888d40f8f62491bee1ae106ca64cd7a26aa9af12dcaaed60"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/sat.pt",
+      "sha256": "25fd61226937163401c8071d0802f74f7053865bfe73b83ae1db25718bdde964"
+    },
+    {
+      "path": "/opt/agillm43_offload/ckpts/step3253490_20261002/pretrain_step03253490_from03247198_20261002T1347Z.pt.shards/scaler.pt",
+      "sha256": "7613c65d067b0b93e3ed2e939f4f26a497062c1c1b2b5b96a9dcdacdf282b075"
+    }
+  ],
+  "canonical_modes": [
+    "ar",
+    "sat_fixed",
+    "sat_variable",
+    "nat"
+  ],
+  "model": {
+    "name": "AGILLM 4.4 Standard 1.1B",
+    "step": 3253490,
+    "seen_tokens": 458921381888,
+    "source_checkpoint_sha256": "ca5c83c6d4df8eed4b2d9e64424168e7a08a6ec6e7e092cca426da5e98cfbb93",
+    "tokenizer_sha256": "REDACTED"
+  }
+}

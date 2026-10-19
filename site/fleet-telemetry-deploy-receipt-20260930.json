@@ -1,0 +1,145 @@
+{
+  "applied_at": 1790745521.4947174,
+  "files": [
+    {
+      "path": "/root/agillm41_codex_monitor/agillm_ext.py",
+      "before": "92c2732ff2ee9ce1b48765f2ac202a0683118282931da13a3e9b14157c16f86c",
+      "after": "b9b8855cfbede516ebfd8c208f6b85e7f321cc6ccf03a8833f3175ad2195afeb",
+      "backup": "/root/agillm41_codex_monitor/agillm_ext.py.bak-20260930T0519-fleet"
+    },
+    {
+      "path": "/root/agillm41_codex_monitor/server.py",
+      "before": "e310adbdf3d9ea149221c84b64af864c70d74ea26e96f8800320a9ff5dacdd59",
+      "after": "00e78567a90d4b6f224f79bd393e9a6c104f4f00b5dfce33703e273a5816034d",
+      "backup": "/root/agillm41_codex_monitor/server.py.bak-20260930T0519-fleet"
+    },
+    {
+      "path": "/etc/systemd/system/agillm-rpv16-status.service.d/90-fleet.conf",
+      "after": "25b24983d6c02b5430dad0e992a06a3f3a728e60554392a8c96aaf63fba50622",
+      "rollback": "remove only this drop-in then daemon-reload"
+    },
+    {
+      "path": "/opt/agillm43_netserve/update_vast_live_status.py",
+      "before": "6b4acb931e22bb9611a3b731e32637368a566a8145bd9846204ce7784754a4f1",
+      "after": "15ca366cdd3a71d1939e3252ded0f22edb43a3516b917537f63232a9d701dc64",
+      "backup": "/opt/agillm43_netserve/update_vast_live_status.py.bak-fleet-20260930T0523Z"
+    },
+    {
+      "path": "/opt/agillm43_netserve/update_vast_live_status.py",
+      "before": "15ca366cdd3a71d1939e3252ded0f22edb43a3516b917537f63232a9d701dc64",
+      "after": "2342747e82a67be06cb1c22143d77733dabd601ea967f8a3b648667dd9f87c93",
+      "backup": "/opt/agillm43_netserve/update_vast_live_status.py.bak-checkpoint-sha-20260930T0526Z",
+      "reason": "Weights hash is checkpoint provenance, not a repository commit."
+    },
+    {
+      "path": "/opt/agillm43_netserve/update_vast_live_status.py",
+      "before": "2342747e82a67be06cb1c22143d77733dabd601ea967f8a3b648667dd9f87c93",
+      "after": "450d28bb5973d3a3d764807205c74f56f4148c0b18248d97cd71ad42906fc0a6",
+      "backup": "/opt/agillm43_netserve/update_vast_live_status.py.bak-final-receipt-20260930T0530Z",
+      "reason": "Exact Standard final receipt verification with current public/tunnel/runtime identities; legacy receipt checks preserved"
+    }
+  ],
+  "monitor_restarted": true,
+  "fleet_module_sha256": "0fb325bb13fb4c3806bc56863190109ab7a19c090455a174e69fd7888379b4e3",
+  "monitor_pid": 267760,
+  "verified_at": 1790746258.3090117,
+  "verification": {
+    "gateways": [
+      "SG1-OB",
+      "SG2"
+    ],
+    "bases": [
+      "http://127.0.0.1:8793",
+      "https://codex.opentransformers.online"
+    ],
+    "paths": [
+      "/api/training?history=0",
+      "/api/checkpoint",
+      "/api/live",
+      "/api/health",
+      "/api/training.png"
+    ],
+    "all_http_200": true,
+    "png_visual_check": "two separately labelled model/objective curves; no overlap or clipping",
+    "source_samples": [
+      "fleet-verification-sample1-20260930.json",
+      "fleet-verification-sample2-20260930.json"
+    ],
+    "trainer_pid_preserved": 6921,
+    "source_freshness_semantics": "completed Standard retains old source timestamp; live RPV source timestamp must advance",
+    "legacy_latest": {
+      "checked_via": [
+        "SG1-OB",
+        "SG2"
+      ],
+      "step": 3133615,
+      "file": "pretrain_final.pt",
+      "checkpoint_sha256": "53aba5977671b7d588227f5de3206bef9822d659d59bf87c77d086bcda17a1c4",
+      "trainer_status": "completed",
+      "serving_step_at_check": 3021281,
+      "promotion_scope": "actual_serving_checkpoint",
+      "status_service_result": "success",
+      "updater_sha256": "450d28bb5973d3a3d764807205c74f56f4148c0b18248d97cd71ad42906fc0a6",
+      "package_path": "only reported if supplied by actual serving health; never synthesized from step",
+      "content_commit": null,
+      "training_checkpoint_sha256": "53aba5977671b7d588227f5de3206bef9822d659d59bf87c77d086bcda17a1c4"
+    },
+    "standard_final_promotion": {
+      "verified_at": 1790746275.0970767,
+      "gateways": [
+        "SG1-OB",
+        "SG2"
+      ],
+      "promotion_verification": {
+        "checkpoint": "pretrain_final.pt",
+        "ok": true,
+        "reason": "matching_standard_final_receipt_and_current_public_tunnel_runtime_identity",
+        "scope": "actual_serving_checkpoint",
+        "step": 3133615
+      },
+      "deployment_receipt": {
+        "completed_at": "2026-09-30T05:25:36Z",
+        "path": "/opt/agillm43_netserve/receipts/standard-final-20260930/promotion.json",
+        "sha256": "d3434fbd3439b2caf1624487f497c738a74549d7698370e2a3dcc72a1b8fa56a",
+        "status": "complete",
+        "step": 3133615,
+        "verification": {
+          "pinned_artifacts": {
+            "checkpoint_hash_verification.json": "c7e5b51716332f37c413df3732e90872479edf7b2b87632d6e023e705f551283",
+            "launch.json": "625e21f635304a9ce5fd7e6aaf7b561e1d4b7ea8c7be0415739fcd4da902de99",
+            "promotion.json": "d3434fbd3439b2caf1624487f497c738a74549d7698370e2a3dcc72a1b8fa56a",
+            "public_stream_verification.json": "f86eaf78040f5d144f379803f5160cee35f9edd51f561980103212be0b83106e",
+            "smoke_verified.json": "d439f798e026ed06f41fd6478a3f0703561474079e9a0034e7a22c58512df381"
+          },
+          "public_health_observed_at": 1790746251.5970068,
+          "runtime_attestation": {
+            "bridge_pid": 1741556,
+            "bridge_sha256": "d6c9c5c1d3d3785ce15d1ae67f696555bc3e081ecc5c9d6dd4f7d8993a922f5d",
+            "checkpoint_sha256": "53aba5977671b7d588227f5de3206bef9822d659d59bf87c77d086bcda17a1c4",
+            "observed_at": 1790746261.0220745,
+            "runtime_sha256": "790cd4719a8d2837b5be45bf72432ac953dbb2688896dae5f3c1881631c4d9aa",
+            "tokenizer_sha256": "REDACTED",
+            "worker_pid": 1741558
+          },
+          "scope": "actual_serving_checkpoint",
+          "standard_upstream_sha256": "1a2b15895e7e73aa29ef8d264d557038be3fc831014be2a66ad210dcab1b9d56",
+          "tunnel_unit_sha256": "132d0a490cc7d4350fb2444539e202daa954b578c506c2ab7d6e0666a98c80c4"
+        }
+      },
+      "negative_tests": [
+        "wrong checkpoint",
+        "wrong step",
+        "wrong host",
+        "stale health",
+        "failed stream"
+      ],
+      "legacy_verifier_regression": "old3021281 receipt still passes original unchanged checks"
+    }
+  },
+  "source_hashes": {
+    "/root/agillm41_codex_monitor/fleet_live.py": "0fb325bb13fb4c3806bc56863190109ab7a19c090455a174e69fd7888379b4e3",
+    "/usr/local/libexec/agillm-fleet-status-collector-20260930.py": "51f813801f2a228123d20989697db1efcd9948e19ae101c431f673d12599c41b",
+    "/usr/local/libexec/agillm-fleet-probe-20260930.py": "d5629b485729d941242c10ea6ff7184dd19e610c26e21f2bb69663e636d6a707",
+    "/opt/agillm43_netserve/verify_standard_final_promotion.py": "4f1b3f952c784264b4bab00a999beab5826c05042ef543403061108ea669a79c"
+  }
+}

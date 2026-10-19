@@ -1,0 +1,20 @@
+{
+  "health_http": 200,
+  "health_s": 0.099,
+  "ready": true,
+  "busy": 0,
+  "checkpoint_step": 3253490,
+  "cancel_preserves_worker": true,
+  "generation": {
+    "ok": true,
+    "http": 200,
+    "wall_s": 1.484,
+    "stats": {
+      "seconds": 1.46,
+      "tokens": 8,
+      "tok_s": 5.5
+    },
+    "queue_wait_s": 0.0,
+    "ckpt": "pretrain_step03253490_from03247198_20261002T1347Z.pt"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "checkpoint_main_sha256": "cc8801545ddd81b6fcc95e3f1d770598b86c0510aca2a187e4ff8e461a5c88ac",
+  "checkpoint_name": "pretrain_step02885561_from02884117_20260915T151117_1789485077864386579_3214824_000001.pt",
+  "path": "/workspace/gb10_nvfp4_openai_20260915/live_canary/pretrain_step02885561_from02884117_20260915T151117_1789485077864386579_3214824_000001.pt",
+  "saved_at": "2026-09-15T15:11:44Z",
+  "seen_tok": 293350807552,
+  "step": 2885561
+}

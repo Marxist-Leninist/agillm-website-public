@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AGILLM 4.3 · SFT chat (not suitable)</title>
+<link rel="icon" href="data:,">
+<style>
+  :root {
+    --bg:#0b0f14; --panel:#141b22; --user:#5a3d12; --bot:#222c36;
+    --text:#e6edf3; --muted:#8b98a5; --faint:#5d6b78; --warn:#e0a852; --line:#222c36;
+    --danger:#7a2233; --raw:#1a2129;
+  }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { margin:0; height:100%; background:var(--bg); color:var(--text);
+    font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  #app { display:flex; flex-direction:column; height:100dvh; max-width:900px; margin:0 auto; }
+
+  header { padding:10px 14px; border-bottom:1px solid var(--line); display:flex;
+    align-items:center; gap:9px; flex-wrap:wrap; }
+  header h1 { font-size:15px; margin:0; font-weight:600; white-space:nowrap; }
+  header .dot { width:9px; height:9px; border-radius:50%; background:var(--warn);
+    box-shadow:0 0 8px var(--warn); flex:none; }
+  header .tag { font-size:11px; color:var(--warn); border:1px solid var(--warn);
+    border-radius:6px; padding:1px 6px; white-space:nowrap; }
+  header .spacer { flex:1 1 auto; }
+  .nav, .btn {
+    font-size:12px; color:var(--muted); background:transparent; text-decoration:none;
+    border:1px solid var(--line); border-radius:8px; padding:4px 9px; cursor:pointer;
+    font-family:inherit; white-space:nowrap;
+  }
+  .nav:hover, .btn:hover { color:var(--text); border-color:#33424f; }
+  .btn:disabled { opacity:.4; cursor:default; }
+  #ckpt { font-size:11px; color:var(--faint); font-variant-numeric:tabular-nums; }
+
+  .banner { margin:0; padding:9px 14px; background:#21180c; color:#f4d7a1;
+    font-size:12.5px; line-height:1.45; border-bottom:1px solid #5a3d12; }
+  .banner b { color:#ffd789; }
+  .banner code { font-size:12px; }
+
+  #log { flex:1; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:6px; }
+  .turn { display:flex; flex-direction:column; gap:3px; max-width:90%; }
+  .turn.user { align-self:flex-end; align-items:flex-end; }
+  .turn.bot  { align-self:flex-start; align-items:flex-start; }
+  .msg { padding:10px 13px; border-radius:14px; white-space:pre-line; word-wrap:break-word;
+    overflow-wrap:anywhere; min-width:0; max-width:100%; overflow-x:hidden; }
+  .turn.user .msg { background:var(--user); border-bottom-right-radius:4px; }
+  .turn.bot  .msg { background:var(--bot); border-bottom-left-radius:4px; }
+  .msg.empty { color:var(--faint); font-style:italic; }
+  .sys { align-self:center; color:var(--muted); font-size:12.5px; text-align:center;
+    max-width:100%; padding:2px 8px; }
+  .blink::after { content:"\25AE"; animation:b 1s steps(2) infinite; margin-left:1px; }
+  @keyframes b { 0%,50%{opacity:1} 50.1%,100%{opacity:0} }
+
+  .meta { display:flex; gap:8px; align-items:center; font-size:11px; color:var(--faint);
+    padding:0 4px; flex-wrap:wrap; }
+  .meta button { background:none; border:0; color:var(--faint); font:inherit; cursor:pointer;
+    padding:1px 3px; border-radius:4px; }
+  .meta button:hover { color:var(--text); background:#1b232c; }
+  .trimmed { color:var(--warn); }
+
+  details.raw { width:100%; }
+  details.raw > summary { font-size:11px; color:var(--faint); cursor:pointer; padding:2px 4px;
+    list-style:none; }
+  details.raw > summary::-webkit-details-marker { display:none; }
+  details.raw > summary:before { content:"\25B8  "; }
+  details.raw[open] > summary:before { content:"\25BE  "; }
+  details.raw > summary:hover { color:var(--text); }
+  .rawbox { background:var(--raw); border:1px solid var(--line); border-radius:10px;
+    padding:9px 11px; margin-top:4px; font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;
+    white-space:pre-wrap; overflow-wrap:anywhere; color:#b9c6d2; max-height:340px; overflow:auto; }
+  .rawbox .lbl { display:block; color:var(--faint); font-size:10.5px; letter-spacing:.06em;
+    text-transform:uppercase; margin:6px 0 2px; }
+  .rawbox .lbl:first-child { margin-top:0; }
+
+  .dock { border-top:1px solid var(--line); background:var(--panel); padding:9px 10px;
+    display:flex; flex-direction:column; gap:7px;
+    padding-bottom:max(9px,env(safe-area-inset-bottom)); }
+  .ctlrow { display:flex; gap:11px; align-items:center; flex-wrap:wrap;
+    color:var(--muted); font-size:12px; }
+  .ctlrow label { display:flex; align-items:center; gap:5px; white-space:nowrap; }
+  .ctlrow input[type=range] { width:92px; accent-color:var(--warn); }
+  .ctlrow input[type=checkbox] { accent-color:var(--warn); }
+  .ctlrow select { background:#0b0f14; color:var(--text); border:1px solid #2a3742;
+    border-radius:7px; padding:2px 5px; font:inherit; font-size:12px; }
+  .ctlrow b { color:var(--text); font-variant-numeric:tabular-nums; min-width:26px; }
+  .sep { width:1px; height:14px; background:var(--line); }
+  #status { color:var(--muted); font-size:12px; font-variant-numeric:tabular-nums;
+    margin-left:auto; text-align:right; }
+  #status.err { color:#e08a8a; }
+
+  form { display:flex; gap:8px; align-items:flex-end; }
+  textarea { flex:1; resize:none; background:#0b0f14; color:var(--text); border:1px solid #2a3742;
+    border-radius:12px; padding:11px 13px; font:inherit; max-height:160px; min-height:44px; }
+  textarea:focus { outline:none; border-color:#3c5162; }
+  form button { background:var(--warn); color:#1a1206; border:0; border-radius:12px;
+    padding:0 18px; height:44px; font:inherit; font-weight:600; cursor:pointer; }
+  form button.stop { background:var(--danger); color:#ffd9d0; }
+  form button:disabled { opacity:.5; cursor:default; }
+
+  @media (max-width:620px) {
+    .turn { max-width:96%; }
+    .ctlrow input[type=range] { width:74px; }
+    header h1 { font-size:14px; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <span class="dot"></span>
+    <h1>AGILLM 4.3 &middot; SFT chat</h1>
+    <span class="tag">not suitable</span>
+    <span id="ckpt"></span>
+    <span class="spacer"></span>
+    <button class="btn" id="newchat" type="button" title="Clear the transcript (Ctrl+Shift+N)">new chat</button>
+    <button class="btn" id="export" type="button" title="Download transcript as JSON">export</button>
+    <a class="nav" href="/agillm-ui">base playground</a>
+    <a class="nav" href="/models">hub</a>
+  </header>
+
+  <p class="banner">
+    <b>Experimental SFT only</b> &mdash; <code>final.pt</code> 2026-08-18 05:56 UTC, step 4341, 200M tok.
+    Two GPU smokes were word salad. This is not the main playground and is not suitable for real use.
+    Quality is expected to be poor.
+  </p>
+
+  <div id="log"></div>
+
+  <div class="dock">
+    <div class="ctlrow">
+      <label title="Max new tokens to sample">max <input id="maxn" type="range" min="64" max="256" step="8" value="192"><b id="maxnv">192</b></label>
+      <label title="Sampling temperature">temp <input id="temp" type="range" min="0.1" max="1.5" step="0.05" value="0.7"><b id="tempv">0.70</b></label>
+      <label title="How many prior turns to include in the prompt. Lower means less context pollution.">ctx <input id="ctxn" type="range" min="0" max="16" step="1" value="6"><b id="ctxnv">6</b></label>
+      <span class="sep"></span>
+      <label title="Decoding objective. Final SFT committed 4,303 AR, 391 SAT, and 391 NAT objective updates; AR is autoregressive.">mode
+        <select id="mode">
+          <option value="ar" selected>ar</option>
+          <option value="sat">sat</option>
+          <option value="nat">nat</option>
+        </select>
+      </label>
+      <label title="Cut the reply at the first fake User:/Assistant: turn the model emits"><input id="dostop" type="checkbox"> stop-seq</label>
+      <label title="Auto-expand the raw model output on every reply"><input id="showraw" type="checkbox"> raw</label>
+      <span id="status">idle</span>
+    </div>
+    <form id="f">
+      <textarea id="in" rows="1" placeholder="Message SFT chat&hellip;" autofocus></textarea>
+      <button id="send" type="submit">Send</button>
+      <button id="stop" class="stop" type="button" hidden>Stop</button>
+    </form>
+  </div>
+</div>
+
+<script>
+"use strict";
+var STREAM = "/agillm-chat-stream";
+var GEN    = "/agillm-chat-gen";
+var CANCEL = "/agillm-chat-cancel";
+var LSKEY  = "agillm_sft_chat_v3";
+
+function $(id) { return document.getElementById(id); }
+var log = $("log"), input = $("in"), form = $("f");
+var sendBtn = $("send"), stopBtn = $("stop"), statusEl = $("status"), ckptEl = $("ckpt");
+var maxn = $("maxn"), maxnv = $("maxnv"), temp = $("temp"), tempv = $("tempv");
+var ctxn = $("ctxn"), ctxnv = $("ctxnv"), dostop = $("dostop"), showraw = $("showraw");
+var modeSel = $("mode");
+
+var convo = [];
+var abortCtl = null;
+var activeRequestId = null;
+
+/* ---------- settings persistence ---------- */
+function saveSettings() {
+  try {
+    localStorage.setItem(LSKEY, JSON.stringify({
+      maxn: maxn.value, temp: temp.value, ctxn: ctxn.value,
+      dostop: dostop.checked, showraw: showraw.checked, mode: modeSel.value
+    }));
+  } catch (e) {}
+}
+function loadSettings() {
+  try {
+    var s = JSON.parse(localStorage.getItem(LSKEY) || "{}");
+    if (s.maxn) maxn.value = s.maxn;
+    if (s.temp) temp.value = s.temp;
+    if (s.ctxn !== undefined) ctxn.value = s.ctxn;
+    if (s.dostop !== undefined) dostop.checked = !!s.dostop;
+    if (s.showraw !== undefined) showraw.checked = !!s.showraw;
+    if (s.mode) modeSel.value = s.mode;
+  } catch (e) {}
+}
+loadSettings();
+
+function syncLabels() {
+  maxnv.textContent = maxn.value;
+  tempv.textContent = (+temp.value).toFixed(2);
+  ctxnv.textContent = (+ctxn.value === 0) ? "off" : ctxn.value;
+}
+syncLabels();
+[maxn, temp, ctxn].forEach(function (el2) {
+  el2.addEventListener("input", function () { syncLabels(); saveSettings(); updateCtxNote(); });
+});
+[dostop, showraw, modeSel].forEach(function (el2) {
+  el2.addEventListener("change", saveSettings);
+});
+
+/* ---------- prompt construction ---------- */
+function wrapChat(turns) {
+  var parts = [];
+  for (var i = 0; i < turns.length; i++) {
+    var t = turns[i];
+    if (t.role === "user") parts.push("User: " + t.content);
+    else if (t.role === "assistant") parts.push("Assistant: " + t.content);
+  }
+  return parts.join("\n") + "\nAssistant:";
+}
+/* Only the last N turns enter the prompt, so one bad reply cannot poison the
+   context forever. ctx = 0 means "this message only". */
+function contextTurns() {
+  var n = +ctxn.value;
+  if (n <= 0) {
+    for (var i = convo.length - 1; i >= 0; i--) {
+      if (convo[i].role === "user") return [convo[i]];
+    }
+    return [];
+  }
+  return convo.slice(-(n * 2 + 1));
+}
+
+/* ---------- output cleaning ----------
+   The backend returns prompt+completion in both done.text and the buffered
+   .text field. Strip the echoed prompt, then cut at any fake turn marker. */
+function stripPromptPrefix(full, prompt) {
+  if (typeof full !== "string" || !full) return "";
+  if (!prompt) return full;
+  if (full.indexOf(prompt) === 0) return full.slice(prompt.length);
+  var squash = function (s) { return s.replace(/\s+/g, ""); };
+  var sp = squash(prompt);
+  if (!sp) return full;
+  var seen = 0;
+  for (var i = 0; i < full.length; i++) {
+    if (!/\s/.test(full.charAt(i))) {
+      seen++;
+      if (seen === sp.length) {
+        var head = full.slice(0, i + 1);
+        if (squash(head) === sp) return full.slice(i + 1);
+        break;
+      }
+    }
+  }
+  return full;
+}
+var TURN_RE = /\n\s*(?:User|Assistant|USER|ASSISTANT|user|assistant)\s*:/;
+function cleanReply(full, prompt) {
+  var s = stripPromptPrefix(full, prompt);
+  var trimmed = false;
+  s = s.replace(/^[ \t]*(?:Assistant|ASSISTANT|assistant)\s*:[ \t]*/, "");
+  var stripped = s;
+  if (dostop.checked) {
+    var m = s.match(TURN_RE);
+    if (m && m.index > 0) {
+      var kept = s.slice(0, m.index).replace(/^\s+|\s+$/g, "");
+      if (kept) { s = kept; trimmed = true; }
+    }
+  }
+  s = s.replace(/^\s+|\s+$/g, "");
+  if (!s) s = stripped.replace(/^\s+|\s+$/g, "");
+  return { text: s, trimmed: trimmed };
+}
+
+/* ---------- rendering ---------- */
+function el(tag, cls, text) {
+  var d = document.createElement(tag);
+  if (cls) d.className = cls;
+  if (text !== undefined) d.textContent = text;
+  return d;
+}
+function scrollLog() { log.scrollTop = log.scrollHeight; }
+function addSys(text) { var d = el("div", "sys", text); log.appendChild(d); scrollLog(); return d; }
+function addTurn(role) {
+  var wrap = el("div", "turn " + (role === "user" ? "user" : "bot"));
+  var msg = el("div", "msg");
+  wrap.appendChild(msg);
+  log.appendChild(wrap);
+  scrollLog();
+  return { wrap: wrap, msg: msg };
+}
+function copyText(t, btn) {
+  var done = function () {
+    var o = btn.textContent; btn.textContent = "copied";
+    setTimeout(function () { btn.textContent = o; }, 1100);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(t).then(done, function () {});
+  } else {
+    var ta = document.createElement("textarea");
+    ta.value = t; document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); done(); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+}
+function decorateBot(view, rec, canRegen) {
+  var meta = el("div", "meta");
+  if (rec.stats) {
+    var bits = [];
+    if (rec.stats.seconds !== undefined) bits.push(rec.stats.seconds + "s");
+    if (rec.stats.tokens !== undefined) bits.push(rec.stats.tokens + " tok");
+    if (rec.stats.tok_s !== undefined) bits.push(rec.stats.tok_s + " tok/s");
+    if (rec.mode) bits.push(rec.mode);
+    if (bits.length) meta.appendChild(el("span", null, bits.join(" · ")));
+  }
+  if (rec.trimmed) {
+    var t = el("span", "trimmed", "trimmed at fake turn");
+    t.title = "The model kept going and started writing another User:/Assistant: turn. Cut there.";
+    meta.appendChild(t);
+  }
+  var copyBtn = el("button", null, "copy");
+  copyBtn.addEventListener("click", function () { copyText(rec.content, copyBtn); });
+  meta.appendChild(copyBtn);
+  if (canRegen) {
+    var rb = el("button", null, "regenerate");
+    rb.addEventListener("click", function () { regenerate(); });
+    meta.appendChild(rb);
+  }
+  view.wrap.appendChild(meta);
+
+  if (rec.raw !== undefined && rec.raw !== null) {
+    var det = el("details", "raw");
+    if (showraw.checked) det.open = true;
+    det.appendChild(el("summary", null, "raw + prompt"));
+    var box = el("div", "rawbox");
+    box.appendChild(el("span", "lbl", "prompt sent (" + rec.prompt.length + " chars)"));
+    box.appendChild(document.createTextNode(rec.prompt));
+    box.appendChild(el("span", "lbl", "raw output (" + rec.raw.length + " chars, includes prompt echo)"));
+    box.appendChild(document.createTextNode(rec.raw));
+    det.appendChild(box);
+    view.wrap.appendChild(det);
+  }
+  scrollLog();
+}
+
+/* ---------- request ---------- */
+function makeRequestId() {
+  return "sft-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10);
+}
+function buildBody(prompt, requestId) {
+  return {
+    prompt: prompt, request_id: requestId,
+    max_new: +maxn.value, min_new: 8, ignore_eos: false,
+    mode: modeSel.value, sampler: "dblock", greedy: false,
+    temperature: +temp.value, top_p: 0.9,
+    repetition_penalty: 1.05, presence_penalty: 0, frequency_penalty: 0,
+    penalty_last_n: 128, infer_dtype: "fp32"
+  };
+}
+function readNdjson(res, botMsg, prompt) {
+  var reader = res.body.getReader();
+  var dec = new TextDecoder();
+  var buf = "", live = "", finalText = null, stats = null, err = null;
+  function pump() {
+    return reader.read().then(function (r) {
+      if (r.done) return;
+      buf += dec.decode(r.value, { stream: true });
+      var nl;
+      while ((nl = buf.indexOf("\n")) >= 0) {
+        var line = buf.slice(0, nl).replace(/^\s+|\s+$/g, "");
+        buf = buf.slice(nl + 1);
+        if (!line) continue;
+        var ev;
+        try { ev = JSON.parse(line); } catch (e) { continue; }
+        if (ev.event === "start") {
+          if (ev.request_id) activeRequestId = ev.request_id;
+          if (ev.ckpt) ckptEl.textContent = ev.ckpt + (ev.dtype ? " · " + ev.dtype : "");
+        } else if (ev.event === "stream_tok") {
+          var data = (ev.data && typeof ev.data === "object") ? ev.data : {};
+          var piece = (typeof data.text === "string") ? data.text : "";
+          if (piece) {
+            live += piece;
+            botMsg.textContent = live;
+            scrollLog();
+          }
+        } else if (ev.event === "done") {
+          if (typeof ev.text === "string") finalText = ev.text;
+          if (ev.stats) stats = ev.stats;
+          if (ev.ckpt) ckptEl.textContent = ev.ckpt + (ev.dtype ? " · " + ev.dtype : "");
+        } else if (ev.event === "error") {
+          err = ev.error || "stream error";
+        }
+      }
+      return pump();
+    });
+  }
+  return pump().then(function () {
+    if (err) throw new Error(err);
+    return { raw: (finalText !== null) ? finalText : (prompt + live), stats: stats };
+  });
+}
+function bufferedGen(body, signal) {
+  return fetch(GEN, {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body), signal: signal
+  }).then(function (res) {
+    return res.text().then(function (txt) {
+      var j;
+      try { j = txt ? JSON.parse(txt) : {}; }
+      catch (e) { throw new Error("gen HTTP " + res.status); }
+      if (!res.ok || j.ok === false) throw new Error(j.error || ("HTTP " + res.status));
+      if (j.ckpt) ckptEl.textContent = j.ckpt + (j.dtype ? " · " + j.dtype : "");
+      return { raw: (typeof j.text === "string") ? j.text : "", stats: j.stats || null };
+    });
+  });
+}
+function stopActive() {
+  if (abortCtl) abortCtl.abort();
+  if (!activeRequestId) return;
+  fetch(CANCEL, {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ request_id: activeRequestId })
+  }).catch(function () {});
+}
+
+/* ---------- main turn ---------- */
+function runTurn() {
+  var turns = contextTurns();
+  var prompt = wrapChat(turns);
+  var requestId = makeRequestId();
+  activeRequestId = requestId;
+  var body = buildBody(prompt, requestId);
+
+  var view = addTurn("assistant");
+  view.msg.classList.add("blink");
+  sendBtn.hidden = true; stopBtn.hidden = false;
+  var controller = new AbortController();
+  abortCtl = controller;
+  var t0 = (window.performance && performance.now) ? performance.now() : Date.now();
+  statusEl.className = "";
+  statusEl.textContent = "streaming…";
+
+  return fetch(STREAM, {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body), signal: controller.signal
+  }).then(function (res) {
+    if (!res.ok || !res.body) throw new Error("stream HTTP " + res.status);
+    return readNdjson(res, view.msg, prompt);
+  }).catch(function (streamErr) {
+    if (streamErr && streamErr.name === "AbortError") throw streamErr;
+    statusEl.textContent = "stream failed; buffered…";
+    return bufferedGen(body, controller.signal);
+  }).then(function (out) {
+    var cleaned = cleanReply(out.raw, prompt);
+    var rec = {
+      role: "assistant", content: cleaned.text, raw: out.raw, mode: body.mode,
+      prompt: prompt, stats: out.stats, trimmed: cleaned.trimmed
+    };
+    if (!rec.content) {
+      var fallback = stripPromptPrefix(out.raw || "", prompt).replace(/^\s+|\s+$/g, "");
+      rec.content = fallback;
+      rec.trimmed = false;
+    }
+    if (!rec.content) {
+      view.msg.textContent = "(model emitted nothing after Assistant:)";
+      view.msg.classList.add("empty");
+    } else {
+      view.msg.textContent = rec.content;
+      view.msg.classList.remove("empty");
+    }
+    convo.push(rec);
+    decorateBot(view, rec, true);
+    var now = (window.performance && performance.now) ? performance.now() : Date.now();
+    var dt = ((now - t0) / 1000).toFixed(1);
+    var ts = (out.stats && out.stats.tok_s !== undefined) ? " · " + out.stats.tok_s + " tok/s" : "";
+    statusEl.textContent = "done · " + dt + "s" + ts;
+  }).catch(function (err) {
+    if (err && err.name === "AbortError") {
+      var partial = view.msg.textContent || "";
+      view.msg.textContent = partial || "(stopped)";
+      if (!partial) view.msg.classList.add("empty");
+      if (partial) {
+        convo.push({ role: "assistant", content: partial, raw: null,
+                       prompt: prompt, stats: null, trimmed: false });
+      }
+      statusEl.textContent = "stopped";
+    } else {
+      var m = (err && err.message) ? err.message : String(err);
+      view.msg.textContent = "⚠ " + m + (/\b403\b/.test(m) ? " — your IP is off the allow-list." : "");
+      view.msg.classList.add("empty");
+      statusEl.className = "err";
+      statusEl.textContent = "error";
+    }
+  }).then(function () {
+    view.msg.classList.remove("blink");
+    abortCtl = null; activeRequestId = null;
+    sendBtn.hidden = false; stopBtn.hidden = true; sendBtn.disabled = false;
+    updateCtxNote();
+    input.focus();
+  });
+}
+
+function regenerate() {
+  if (abortCtl) return;
+  while (convo.length && convo[convo.length - 1].role === "assistant") convo.pop();
+  if (!convo.length) return;
+  var turnEls = log.querySelectorAll(".turn");
+  for (var i = turnEls.length - 1; i >= 0; i--) {
+    if (turnEls[i].classList.contains("bot")) turnEls[i].parentNode.removeChild(turnEls[i]);
+    else break;
+  }
+  runTurn();
+}
+
+function updateCtxNote() {
+  var p = wrapChat(contextTurns());
+  var n = +ctxn.value;
+  var scope = (n <= 0) ? "last message only" : "last " + n + " turn" + (n === 1 ? "" : "s");
+  statusEl.title = "prompt: " + p.length + " chars · " + scope;
+}
+
+/* ---------- events ---------- */
+input.addEventListener("input", function () {
+  input.style.height = "auto";
+  input.style.height = Math.min(input.scrollHeight, 160) + "px";
+});
+input.addEventListener("keydown", function (e) {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }
+});
+stopBtn.addEventListener("click", stopActive);
+
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+  var text = input.value.replace(/^\s+|\s+$/g, "");
+  if (!text || abortCtl) return;
+  input.value = ""; input.style.height = "auto";
+  var uv = addTurn("user");
+  uv.msg.textContent = text;
+  convo.push({ role: "user", content: text });
+  var meta = el("div", "meta");
+  var cb = el("button", null, "copy");
+  cb.addEventListener("click", function () { copyText(text, cb); });
+  meta.appendChild(cb);
+  uv.wrap.appendChild(meta);
+  runTurn();
+});
+
+$("newchat").addEventListener("click", function () {
+  if (abortCtl) return;
+  convo = [];
+  log.innerHTML = "";
+  greet();
+  statusEl.className = "";
+  statusEl.textContent = "idle";
+  input.focus();
+});
+
+$("export").addEventListener("click", function () {
+  var payload = {
+    page: "agillm-chat",
+    exported: new Date().toISOString(),
+    settings: {
+      max_new: +maxn.value, temperature: +temp.value,
+      ctx_turns: +ctxn.value, stop_seq: dostop.checked
+    },
+    turns: convo
+  };
+  var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url;
+  a.download = "agillm-sft-chat-" + new Date().toISOString().replace(/[:.]/g, "-") + ".json";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+});
+
+document.addEventListener("keydown", function (e) {
+  if (e.ctrlKey && e.shiftKey && (e.key === "N" || e.key === "n")) {
+    e.preventDefault(); $("newchat").click();
+  }
+  if (e.key === "Escape" && abortCtl) { e.preventDefault(); stopActive(); }
+});
+
+function greet() {
+  addSys("Chat wrap is  User: / Assistant:  — replies are expected to be word salad at this "
+       + "checkpoint. Open “raw + prompt” under any reply to see the exact prompt sent and "
+       + "the untrimmed output.");
+  updateCtxNote();
+}
+greet();
+</script>
+</body>
+</html>

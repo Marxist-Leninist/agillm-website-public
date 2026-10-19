@@ -1,0 +1,179 @@
+{
+  "schema": "opentransformers.agillm.pitch-facts.v1",
+  "generated_at_utc": "2026-09-02T15:55:22Z",
+  "canonical_url": "https://codex.opentransformers.online/pitch/",
+  "project": {
+    "name": "AGILLM",
+    "programme": "OpenTransformers",
+    "stage": "live pretraining research programme",
+    "purpose": "Develop and test capital-efficient transformer training, multi-mode generation objectives, and a detachable small student.",
+    "claim_policy": "Measured, configured, experimental, and planned facts are labelled separately.",
+    "research_thesis": "Transformer neural networks are treated by the project as a general-intelligence substrate; AGILLM focuses on making that substrate more efficient, flexible, auditable, and deployable."
+  },
+  "live_training_snapshot": {
+    "source_kind": "live Vast.ai training state",
+    "source_path": "/workspace/agillm43_production_v14/production_quality_v18_hard_spike_gates/checkpoints_continue400B_from200B/run_state.json",
+    "vast_instance_id": 47086549,
+    "snapshot_at_utc": "2026-09-02T15:55:22Z",
+    "status": "running at snapshot time",
+    "global_step": 2647328,
+    "tokens_seen": 259019878400,
+    "target_tokens": 400000000000,
+    "progress_percent": 64.75497,
+    "latest_training_loss": 9.220006942749023,
+    "latest_loss_caveat": "A single training-loss sample is noisy and is not a capability score.",
+    "attempted_science_steps": 656599,
+    "committed_science_steps": 656599,
+    "rejected_science_steps": 0,
+    "commit_rate": 1.0,
+    "ema_raw_tokens_per_second": 58959.37740302232,
+    "objective_commit_counters": {
+      "ar": 916872,
+      "sat": 83360,
+      "nat": 83359
+    }
+  },
+  "model": {
+    "parameter_count": 1221580802,
+    "transformer_layers": 28,
+    "context_tokens": 2048,
+    "vocabulary_size": 129280,
+    "mixture_of_experts": {
+      "routed_experts": 2,
+      "top_k": 1,
+      "shared_experts": 1
+    },
+    "precision_and_backend": {
+      "attention_backend": "PyTorch SDPA",
+      "optimizer": "8-bit AdamW",
+      "positional_method": "corrected ALiBi"
+    }
+  },
+  "diffusion_blocks": {
+    "status": "experimental live training method",
+    "blocks": 14,
+    "schedule": "round-robin",
+    "selected_transformer_layers_per_local_update": 2,
+    "total_transformer_layers": 28,
+    "trainable_block_parameters": 1056097280,
+    "selected_block_parameters": 75435520,
+    "selected_block_parameter_fraction": 0.07142857142857142,
+    "full_stack_anchor": "A small full-stack anchor pass accompanies the local block update in the current run.",
+    "claim_limit": "The design reduces the main local-update footprint. End-to-end efficiency versus a controlled dense baseline still needs an ablation."
+  },
+  "generation_objectives": {
+    "status": "co-trained objectives; complete public inference support is still experimental",
+    "configured_probabilities": {
+      "ar": 0.8,
+      "sat": 0.1,
+      "nat": 0.1
+    },
+    "ar": "Autoregressive: generates sequentially.",
+    "sat": "Semi-autoregressive: trains grouped-token generation, including fixed and variable forms in the experimental student path.",
+    "nat": "Non-autoregressive: trains parallel-token prediction.",
+    "router": {
+      "mode": "shadow",
+      "heads": 4,
+      "layers": 2
+    }
+  },
+  "detachable_student": {
+    "status": "experimental",
+    "label": "49.1M pocket model",
+    "standalone_export_parameter_count": 49097218,
+    "training_method": "teacher-output knowledge distillation during the parent training programme",
+    "strict_parameter_subset": false,
+    "important_wording": "It is detachable and Matryoshka-inspired, but the live contract reports that it is not a literal strict parameter subset of the parent.",
+    "student_training_modes": [
+      "ar",
+      "sat_fixed",
+      "sat_variable",
+      "nat"
+    ],
+    "standalone_export_modes_at_snapshot": [
+      "ar"
+    ],
+    "export_status_caveat": "The serving team is actively upgrading the standalone export; check the current runtime before describing available modes."
+  },
+  "validation": {
+    "status": "measured fixed held-out cross-entropy training signal",
+    "fixed_heldout_path": "/workspace/agillm43_heldout_v3/token_ids.json",
+    "fixed_heldout_sha256": "513b30203ffd18167655deb2d9cd610541df87d1ea0b8a0f9241c58e68703d21",
+    "evaluation_block_tokens": 256,
+    "baseline_cross_entropy": 10.309207439422607,
+    "baseline_step": 2289585,
+    "best_cross_entropy": 9.100567519664764,
+    "best_step": 2646087,
+    "cross_entropy_improvement": 1.208639919757843,
+    "interpretation": "Lower held-out cross-entropy shows improved performance on the fixed evaluation block; broader capability, reasoning, and safety are evaluated with separate suites."
+  },
+  "data": {
+    "mixture_source_specs": 15,
+    "repository_revision_records": 13,
+    "provenance_schema": "agillm.dataset_provenance.v1",
+    "caveat": "A source count is not a data-quality or licensing audit. Full dataset documentation remains a required milestone."
+  },
+  "hardware_and_cost": {
+    "status": "measured rental listing at snapshot time",
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "gpu_memory_gb": 24,
+    "gpu_count": 1,
+    "vast_price_usd_per_hour": 0.18166666666666667,
+    "estimated_usd_per_24_hours_at_same_rate": 4.36,
+    "cost_caveat": "This is the current GPU rental price only. It excludes prior experiments, storage, bandwidth, hosting, labour, and future evaluation costs."
+  },
+  "claim_ledger": [
+    {
+      "id": "training-running",
+      "claim": "The checkpoint was actively training on one RTX 3090 at the snapshot time.",
+      "class": "measured",
+      "confidence": "high"
+    },
+    {
+      "id": "block-selection",
+      "claim": "The main local update selected 2 of 28 transformer layers, or 7.14% of trainable block parameters.",
+      "class": "measured configuration",
+      "confidence": "high"
+    },
+    {
+      "id": "heldout-improvement",
+      "claim": "Fixed-block held-out cross-entropy improved from 10.3092 to 9.1006.",
+      "class": "measured training signal",
+      "confidence": "high"
+    },
+    {
+      "id": "multi-mode",
+      "claim": "The live trainer co-trains AR, SAT, and NAT objectives.",
+      "class": "measured configuration",
+      "confidence": "high"
+    },
+    {
+      "id": "capital-efficiency",
+      "claim": "The approach may lower the cost of serious independent model research.",
+      "class": "research hypothesis",
+      "confidence": "unproven until controlled ablations"
+    }
+  ],
+  "known_limitations": [
+    "Publish a standardized capability evaluation suite for the live checkpoint.",
+    "Complete a controlled dense-baseline ablation for end-to-end DiffusionBlocks efficiency.",
+    "Verify every intended standalone mode in the 49.1M export runtime.",
+    "Complete independent reproduction of the training and evaluation path.",
+    "Complete safety, bias, memorization, data-rights, and deployment-risk evaluations."
+  ],
+  "next_milestones": [
+    "Complete the planned 400B-token pretraining leg.",
+    "Run and publish standardized capability, efficiency, safety, and memorization evaluations.",
+    "Complete controlled ablations for block-wise training and multi-objective decoding.",
+    "Stabilize and verify the detachable student's standalone multi-mode inference.",
+    "Publish a reproducible technical report, model card, data statement, and independent-review package."
+  ],
+  "links": {
+    "human_pitch": "https://codex.opentransformers.online/pitch/",
+    "machine_facts": "https://codex.opentransformers.online/pitch/facts.json",
+    "llm_brief": "https://codex.opentransformers.online/pitch/llms.txt",
+    "public_model_card": "https://huggingface.co/OpenTransformer/AGILLM-4.3",
+    "public_checkpoint_archive": "https://huggingface.co/MarxistLeninist/AGILLM-4.3-sft-completion-single-file-20260819T1103Z",
+    "public_profile": "https://huggingface.co/OpenTransformer"
+  }
+}

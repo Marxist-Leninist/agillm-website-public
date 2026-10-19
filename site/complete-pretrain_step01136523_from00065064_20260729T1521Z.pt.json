@@ -1,0 +1,15 @@
+{
+  "base": "pretrain_step01136523_from00065064_20260729T1521Z.pt",
+  "completed_at": "2026-07-29T16:10:45Z",
+  "path": "/mnt/geth-vol1/agillm43/ckpts/artifacts/full/repretrain_v4_wip/pretrain_step01136523_from00065064_20260729T1521Z.pt",
+  "schema": "agillm43.full_package.v1",
+  "status": "complete",
+  "verify": {
+    "bytes": 6744846181,
+    "entries": 33,
+    "errors": [],
+    "main_sha256": "30d3e403f98798c760f38f3ebabda318ed8068b4aee9053758b74707337c2e85",
+    "ok": true,
+    "provenance_step": 1136523
+  }
+}

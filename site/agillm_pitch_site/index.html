@@ -1,0 +1,869 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071018">
+  <meta name="description" content="AGILLM is an independent OpenTransformers research programme testing capital-efficient language-model training, multi-mode generation and a detachable pocket model.">
+  <meta property="og:title" content="AGILLM — serious model research on one rented GPU">
+  <meta property="og:description" content="A multi-audience pitch for families, investors, researchers, founders and AI agents.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://codex.opentransformers.online/pitch/">
+  <title>AGILLM — OpenTransformers research pitch</title>
+  <link rel="canonical" href="https://codex.opentransformers.online/pitch/">
+  <link rel="alternate" type="application/json" href="facts.json" title="AGILLM machine facts">
+  <link rel="alternate" type="text/plain" href="llms.txt" title="AGILLM LLM brief">
+  <style>
+    :root {
+      --bg: #071018;
+      --bg-soft: #0b1621;
+      --surface: #101f2c;
+      --surface-2: #132736;
+      --text: #f3f7f7;
+      --muted: #a8b8bc;
+      --line: rgba(205, 235, 230, .16);
+      --line-strong: rgba(205, 235, 230, .3);
+      --mint: #74f0c2;
+      --mint-deep: #20b889;
+      --blue: #9bbaff;
+      --amber: #ffd484;
+      --red: #ff9d9d;
+      --max: 1180px;
+      --shadow: 0 24px 80px rgba(0,0,0,.34);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 82% 7%, rgba(116,240,194,.10), transparent 30rem),
+        radial-gradient(circle at 18% 26%, rgba(155,186,255,.08), transparent 28rem),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { font: inherit; }
+
+    .skip-link {
+      position: fixed; left: 1rem; top: -10rem; z-index: 1000;
+      padding: .75rem 1rem; color: #06100d; background: var(--mint);
+    }
+    .skip-link:focus { top: 1rem; }
+
+    .shell { width: min(var(--max), calc(100% - 40px)); margin-inline: auto; }
+
+    .site-header {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(16px);
+      background: rgba(7,16,24,.82);
+      border-bottom: 1px solid var(--line);
+    }
+    .header-inner {
+      min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    }
+    .brand {
+      display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
+      font-weight: 760; letter-spacing: -.02em;
+    }
+    .brand-mark {
+      width: 30px; height: 30px; position: relative; display: inline-grid; place-items: center;
+    }
+    .brand-mark::before, .brand-mark::after {
+      content: ""; position: absolute; inset: 3px; border: 1px solid var(--mint); transform: rotate(45deg);
+    }
+    .brand-mark::after { inset: 9px; border-color: var(--blue); }
+    .brand small { color: var(--muted); font-weight: 560; }
+
+    .nav { display: flex; align-items: center; gap: 24px; }
+    .nav a {
+      color: var(--muted); text-decoration: none; font-size: .9rem;
+    }
+    .nav a:hover, .nav a:focus-visible { color: var(--text); }
+    .status-chip {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: .78rem; font-weight: 760; letter-spacing: .04em; text-transform: uppercase;
+      color: var(--mint);
+    }
+    .status-dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--mint);
+      box-shadow: 0 0 0 5px rgba(116,240,194,.10);
+    }
+
+    .hero {
+      min-height: 760px; display: grid; grid-template-columns: 1.08fr .92fr; gap: 64px;
+      align-items: center; padding: 96px 0 76px;
+    }
+    .eyebrow {
+      display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center;
+      color: var(--mint); font-size: .78rem; font-weight: 780; letter-spacing: .12em; text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .eyebrow .honesty { color: var(--amber); }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 850px; margin-bottom: 26px;
+      font-size: clamp(3.15rem, 7.2vw, 6.9rem);
+      line-height: .94; letter-spacing: -.067em; font-weight: 820;
+    }
+    .hero .lead {
+      max-width: 700px; color: #c4d1d3; font-size: clamp(1.08rem, 1.8vw, 1.32rem);
+      line-height: 1.55; margin-bottom: 34px;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    .button {
+      min-height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 0 19px; border: 1px solid var(--line-strong); text-decoration: none; cursor: pointer;
+      color: var(--text); background: transparent; font-weight: 720;
+    }
+    .button.primary { color: #06120e; background: var(--mint); border-color: var(--mint); }
+    .button:hover, .button:focus-visible { transform: translateY(-1px); border-color: var(--mint); }
+    .button.primary:hover, .button.primary:focus-visible { background: #9bf7d5; }
+    .micro-note { margin-top: 18px; color: var(--muted); font-size: .86rem; }
+
+    .hero-visual { position: relative; min-height: 540px; display: grid; place-items: center; }
+    .model-field {
+      width: min(100%, 510px); aspect-ratio: 1; position: relative; display: grid; place-items: center;
+      isolation: isolate;
+    }
+    .model-field::before {
+      content: ""; position: absolute; inset: 4%;
+      background: radial-gradient(circle, rgba(116,240,194,.16), transparent 62%);
+      filter: blur(18px); z-index: -1;
+    }
+    .orbit {
+      position: absolute; border: 1px solid rgba(116,240,194,.24); border-radius: 50%;
+      animation: spin 22s linear infinite;
+    }
+    .orbit.one { inset: 6%; }
+    .orbit.two { inset: 18%; border-style: dashed; animation-direction: reverse; animation-duration: 31s; }
+    .orbit.three { inset: 31%; border-color: rgba(155,186,255,.35); animation-duration: 18s; }
+    .orbit-node {
+      position: absolute; top: 50%; left: -5px; width: 10px; height: 10px; border-radius: 50%;
+      background: var(--mint); box-shadow: 0 0 18px var(--mint);
+    }
+    .orbit.two .orbit-node { background: var(--blue); box-shadow: 0 0 18px var(--blue); }
+    .core {
+      width: 45%; aspect-ratio: 1; border: 1px solid rgba(116,240,194,.45);
+      background: linear-gradient(145deg, rgba(19,39,54,.95), rgba(7,16,24,.95));
+      display: grid; place-items: center; text-align: center; position: relative; transform: rotate(45deg);
+      box-shadow: var(--shadow);
+    }
+    .core-content { transform: rotate(-45deg); }
+    .core strong { display: block; font-size: clamp(2.1rem,5vw,3.35rem); letter-spacing: -.06em; }
+    .core span { color: var(--muted); font-size: .82rem; text-transform: uppercase; letter-spacing: .1em; }
+    .block-label, .student-label {
+      position: absolute; background: rgba(7,16,24,.9); border-left: 2px solid var(--mint);
+      padding: 10px 14px; font-size: .82rem; color: var(--muted);
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
+    }
+    .block-label { left: -1%; bottom: 12%; }
+    .student-label { right: -2%; top: 12%; border-color: var(--blue); }
+    .block-label strong, .student-label strong { display: block; color: var(--text); font-size: 1rem; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .metric-band {
+      border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+      background: rgba(11,22,33,.65);
+    }
+    .metrics {
+      display: grid; grid-template-columns: repeat(5, 1fr);
+    }
+    .metric { padding: 25px 22px; border-right: 1px solid var(--line); }
+    .metric:first-child { border-left: 1px solid var(--line); }
+    .metric strong { display: block; font-size: clamp(1.4rem,2.4vw,2rem); letter-spacing: -.04em; }
+    .metric span { color: var(--muted); font-size: .78rem; letter-spacing: .03em; }
+
+    section { padding: 108px 0; }
+    .section-head {
+      display: grid; grid-template-columns: .82fr 1.18fr; gap: 60px; align-items: start; margin-bottom: 52px;
+    }
+    .kicker { color: var(--mint); font-size: .76rem; letter-spacing: .13em; text-transform: uppercase; font-weight: 800; }
+    h2 { font-size: clamp(2.25rem, 5vw, 4.55rem); line-height: 1.02; letter-spacing: -.055em; margin-bottom: 0; }
+    .section-intro { color: #bdcacc; font-size: 1.08rem; max-width: 650px; }
+
+    .audience-shell {
+      border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong);
+      padding: 26px 0 42px;
+    }
+    .audience-tabs {
+      display: flex; gap: 8px; overflow-x: auto; padding: 0 0 26px; scrollbar-width: thin;
+    }
+    .audience-tab {
+      flex: 0 0 auto; border: 1px solid var(--line); border-radius: 999px;
+      padding: 9px 14px; color: var(--muted); background: transparent; cursor: pointer;
+      font-size: .86rem; font-weight: 700;
+    }
+    .audience-tab[aria-selected="true"] { color: #06120e; background: var(--mint); border-color: var(--mint); }
+    .audience-tab:focus-visible { outline: 3px solid rgba(155,186,255,.55); outline-offset: 2px; }
+
+    .audience-content {
+      display: grid; grid-template-columns: 1.08fr .92fr; gap: 64px; min-height: 390px; align-items: start;
+    }
+    .audience-copy h3 { font-size: clamp(2rem,4vw,3.4rem); line-height: 1.05; letter-spacing: -.045em; margin-bottom: 22px; }
+    .audience-copy p { color: #c3ced0; font-size: 1.08rem; max-width: 680px; }
+    .audience-points { display: grid; gap: 0; border-top: 1px solid var(--line); }
+    .audience-point { padding: 18px 0; border-bottom: 1px solid var(--line); }
+    .audience-point span { display: block; color: var(--mint); font-size: .72rem; text-transform: uppercase; letter-spacing: .11em; font-weight: 800; margin-bottom: 5px; }
+    .audience-point p { margin: 0; color: #d3dcdd; font-size: .96rem; }
+
+    .method-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--line-strong);
+    }
+    .method {
+      padding: 34px 34px 38px 0; border-bottom: 1px solid var(--line-strong);
+      position: relative;
+    }
+    .method + .method { padding-left: 34px; border-left: 1px solid var(--line-strong); }
+    .method-index { color: var(--mint); font-weight: 800; font-size: .8rem; letter-spacing: .13em; }
+    .method h3 { font-size: 1.45rem; letter-spacing: -.025em; margin: 28px 0 12px; }
+    .method p { color: var(--muted); margin-bottom: 0; }
+    .method .method-proof { color: var(--text); margin-top: 18px; font-size: .86rem; }
+    .method .method-limit { color: var(--amber); margin-top: 10px; font-size: .82rem; }
+
+    .truth-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .truth-column { border-top: 3px solid var(--mint); padding-top: 20px; }
+    .truth-column.not-yet { border-color: var(--amber); }
+    .truth-column h3 { font-size: 1.55rem; margin-bottom: 8px; }
+    .truth-list { list-style: none; padding: 0; margin: 0; }
+    .truth-list li { position: relative; padding: 17px 0 17px 28px; border-bottom: 1px solid var(--line); color: #c6d1d3; }
+    .truth-list li::before { content: "✓"; position: absolute; left: 0; color: var(--mint); font-weight: 900; }
+    .not-yet .truth-list li::before { content: "→"; color: var(--amber); }
+
+    .evidence-wrap { overflow-x: auto; border-top: 1px solid var(--line-strong); }
+    .evidence-table { width: 100%; border-collapse: collapse; min-width: 780px; }
+    .evidence-table th, .evidence-table td { padding: 17px 14px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+    .evidence-table th { color: var(--muted); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; }
+    .evidence-table td { color: #cbd5d7; font-size: .92rem; }
+    .evidence-table td:first-child { color: var(--text); font-weight: 720; }
+    .tag {
+      display: inline-flex; align-items: center; border: 1px solid var(--line-strong); border-radius: 999px;
+      padding: 4px 9px; font-size: .69rem; font-weight: 820; letter-spacing: .06em; text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .tag.verified { color: var(--mint); }
+    .tag.experimental { color: var(--amber); }
+
+    .ask-grid { display: grid; grid-template-columns: .82fr 1.18fr; gap: 80px; align-items: start; }
+    .ask-statement {
+      position: sticky; top: 104px; padding-left: 20px; border-left: 3px solid var(--mint);
+    }
+    .ask-statement strong { display: block; font-size: clamp(2rem,4vw,3.6rem); line-height: 1.05; letter-spacing: -.05em; margin-bottom: 20px; }
+    .ask-statement p { color: var(--muted); }
+    .milestones { counter-reset: milestone; border-top: 1px solid var(--line-strong); }
+    .milestone {
+      counter-increment: milestone; display: grid; grid-template-columns: 62px 1fr; gap: 20px;
+      padding: 25px 0; border-bottom: 1px solid var(--line);
+    }
+    .milestone::before { content: counter(milestone, decimal-leading-zero); color: var(--mint); font-weight: 820; }
+    .milestone h3 { margin-bottom: 7px; font-size: 1.18rem; }
+    .milestone p { color: var(--muted); margin-bottom: 0; }
+
+    .machine-panel {
+      background: linear-gradient(145deg, rgba(19,39,54,.8), rgba(8,18,27,.92));
+      border: 1px solid var(--line-strong); box-shadow: var(--shadow);
+      display: grid; grid-template-columns: 1fr .95fr; gap: 48px; padding: 44px;
+    }
+    .machine-panel h2 { font-size: clamp(2rem,4vw,3.6rem); margin-bottom: 18px; }
+    .machine-panel p { color: #c1cdcf; }
+    .machine-links { display: grid; gap: 12px; margin-top: 26px; }
+    .machine-link {
+      display: flex; justify-content: space-between; gap: 14px; padding: 15px 0;
+      border-bottom: 1px solid var(--line); text-decoration: none;
+    }
+    .machine-link span { color: var(--muted); font-size: .85rem; }
+    .agent-brief {
+      margin: 0; min-height: 300px; max-height: 360px; overflow: auto;
+      padding: 22px; border: 1px solid var(--line); background: #050b10; color: #bad5ce;
+      font: .78rem/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      white-space: pre-wrap;
+    }
+    .copy-row { display: flex; justify-content: flex-end; margin-top: 10px; }
+    .copy-button { min-height: 38px; padding: 0 12px; font-size: .78rem; }
+
+    .founder-note {
+      display: grid; grid-template-columns: .75fr 1.25fr; gap: 68px; padding: 70px 0;
+      border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong);
+    }
+    .founder-note blockquote {
+      margin: 0; font-size: clamp(1.65rem,3.3vw,2.9rem); line-height: 1.18; letter-spacing: -.035em;
+    }
+    .founder-note p { color: var(--muted); }
+
+    footer { padding: 42px 0 60px; color: var(--muted); font-size: .85rem; }
+    .footer-inner { display: flex; justify-content: space-between; gap: 28px; align-items: flex-start; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 18px; }
+    .footer-links a { text-decoration: none; }
+    .footer-links a:hover { color: var(--text); }
+
+    .snapshot-time { font-variant-numeric: tabular-nums; }
+    .progress-track {
+      height: 7px; background: rgba(255,255,255,.07); margin-top: 10px; overflow: hidden;
+    }
+    .progress-fill { height: 100%; width: 64.755%; background: linear-gradient(90deg, var(--mint-deep), var(--mint)); }
+
+    :focus-visible { outline: 3px solid rgba(116,240,194,.55); outline-offset: 3px; }
+
+    @media (max-width: 960px) {
+      .nav a:not(.status-chip) { display: none; }
+      .hero { grid-template-columns: 1fr; gap: 34px; min-height: auto; padding-top: 78px; }
+      .hero-visual { min-height: 420px; }
+      .model-field { max-width: 440px; }
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+      .metric:nth-child(odd) { border-left: 1px solid var(--line); }
+      .metric:last-child { grid-column: 1 / -1; }
+      .section-head, .audience-content, .ask-grid, .machine-panel, .founder-note { grid-template-columns: 1fr; gap: 36px; }
+      .method-grid { grid-template-columns: 1fr; }
+      .method, .method + .method { padding: 28px 0; border-left: 0; }
+      .ask-statement { position: static; }
+    }
+
+    @media (max-width: 620px) {
+      .shell { width: min(100% - 28px, var(--max)); }
+      .header-inner { min-height: 60px; }
+      .brand small { display: none; }
+      .status-chip { font-size: .68rem; }
+      .hero { padding: 62px 0 48px; }
+      h1 { font-size: clamp(3rem, 15vw, 4.7rem); }
+      .hero-visual { min-height: 345px; }
+      .model-field { width: 330px; max-width: 100%; }
+      .block-label { left: 0; bottom: 2%; }
+      .student-label { right: 0; top: 2%; }
+      .metrics { grid-template-columns: 1fr 1fr; }
+      .metric { padding: 20px 14px; }
+      .metric:last-child { grid-column: 1 / -1; }
+      section { padding: 78px 0; }
+      .section-head { margin-bottom: 36px; }
+      .truth-grid { grid-template-columns: 1fr; }
+      .machine-panel { padding: 24px 18px; }
+      .footer-inner { flex-direction: column; }
+      .hero-actions .button { width: 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+    }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Project",
+    "name": "AGILLM",
+    "alternateName": "OpenTransformers AGILLM",
+    "description": "Independent language-model research programme testing block-wise training, multi-mode generation objectives and a detachable small student.",
+    "url": "https://codex.opentransformers.online/pitch/",
+    "sameAs": [
+      "https://huggingface.co/OpenTransformer/AGILLM-4.3",
+      "https://huggingface.co/OpenTransformer"
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to the pitch</a>
+
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="#top" aria-label="OpenTransformers AGILLM home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>AGILLM <small>/ OpenTransformers</small></span>
+      </a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="#explain">Choose an explanation</a>
+        <a href="#evidence">Evidence</a>
+        <a href="#roadmap">Roadmap</a>
+        <a class="status-chip" href="#truth"><span class="status-dot" aria-hidden="true"></span>Live AGI research</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero shell" id="top">
+      <div>
+        <div class="eyebrow">
+          <span>Independent model research</span>
+        </div>
+        <h1>Serious model research on one rented GPU.</h1>
+        <p class="lead">
+          AGILLM is a live OpenTransformers programme exploring block-wise training,
+          several ways to generate text, and a detachable pocket model—with the working
+          system instrumented so the research can be inspected as it evolves.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#explain">Explain it to me</a>
+          <a class="button" href="#evidence">Inspect the evidence</a>
+        </div>
+        <p class="micro-note">
+          Project thesis: transformer neural networks are a general-intelligence substrate; AGILLM explores how far that substrate can be made more efficient, flexible and deployable.
+        </p>
+      </div>
+
+      <div class="hero-visual" aria-label="Diagram of the 1.22 billion parameter parent model and detachable 49.1 million parameter student">
+        <div class="model-field">
+          <div class="orbit one"><span class="orbit-node"></span></div>
+          <div class="orbit two"><span class="orbit-node"></span></div>
+          <div class="orbit three"><span class="orbit-node"></span></div>
+          <div class="core">
+            <div class="core-content">
+              <strong>1.22B</strong>
+              <span>parent parameters</span>
+            </div>
+          </div>
+          <div class="block-label"><strong>2 of 28 layers</strong>selected in each main local update</div>
+          <div class="student-label"><strong>49.1M pocket model</strong>experimental detachable student</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="metric-band" aria-label="Verified snapshot metrics">
+      <div class="shell metrics">
+        <div class="metric"><strong id="metric-params">1.221B</strong><span>parent parameters</span></div>
+        <div class="metric">
+          <strong id="metric-tokens">259.0B</strong><span>tokens seen of 400B</span>
+          <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progress-fill"></div></div>
+        </div>
+        <div class="metric"><strong>1 × 3090</strong><span>current training GPU</span></div>
+        <div class="metric"><strong>$0.18/h</strong><span>GPU rental listing only</span></div>
+        <div class="metric"><strong>Live R&amp;D</strong><span>training, evaluation and deployment</span></div>
+      </div>
+    </div>
+
+    <section class="shell" id="explain">
+      <div class="section-head">
+        <div>
+          <div class="kicker">One project, six explanations</div>
+          <h2>Read the pitch in your language.</h2>
+        </div>
+        <p class="section-intro">
+          The facts stay fixed. The explanation changes depending on whether you are
+          family, an investor, a researcher, the founder, or another AI system.
+        </p>
+      </div>
+
+      <div class="audience-shell">
+        <div class="audience-tabs" role="tablist" aria-label="Choose an audience">
+          <button class="audience-tab" role="tab" aria-selected="true" aria-controls="audience-panel" id="tab-everyone" data-audience="everyone">Everyone</button>
+          <button class="audience-tab" role="tab" aria-selected="false" aria-controls="audience-panel" id="tab-family" data-audience="family">Family &amp; friends</button>
+          <button class="audience-tab" role="tab" aria-selected="false" aria-controls="audience-panel" id="tab-investors" data-audience="investors">Investors</button>
+          <button class="audience-tab" role="tab" aria-selected="false" aria-controls="audience-panel" id="tab-researchers" data-audience="researchers">Researchers</button>
+          <button class="audience-tab" role="tab" aria-selected="false" aria-controls="audience-panel" id="tab-founder" data-audience="founder">Founder</button>
+          <button class="audience-tab" role="tab" aria-selected="false" aria-controls="audience-panel" id="tab-agents" data-audience="agents">AI agents</button>
+        </div>
+
+        <div class="audience-content" role="tabpanel" id="audience-panel" tabindex="0" aria-labelledby="tab-everyone">
+          <div class="audience-copy">
+            <div class="kicker" id="audience-label">For everyone</div>
+            <h3 id="audience-title">A working laboratory for cheaper, more flexible language models.</h3>
+            <p id="audience-body">
+              A language model learns by reading text and repeatedly guessing what comes next.
+              AGILLM is testing whether that learning can be organised more efficiently:
+              focus the main update on a small part of the network, practise several generation
+              styles, and teach a much smaller model from the larger model’s answers.
+            </p>
+          </div>
+          <div class="audience-points" id="audience-points" aria-live="polite">
+            <div class="audience-point"><span>What is real</span><p>A 1.22B-parameter model is actively training, with its state, topology and validation signal recorded.</p></div>
+            <div class="audience-point"><span>Why it matters</span><p>Serious model experiments may become possible with less specialised hardware and more transparent evidence.</p></div>
+            <div class="audience-point"><span>What comes next</span><p>Capability evaluation, controlled comparisons, safety evaluation and independent reproduction.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell" id="method">
+      <div class="section-head">
+        <div>
+          <div class="kicker">The research idea</div>
+          <h2>Three experiments in one live training system.</h2>
+        </div>
+        <p class="section-intro">
+          Each idea has a measured implementation and a clear experimental question.
+        </p>
+      </div>
+
+      <div class="method-grid">
+        <article class="method">
+          <div class="method-index">01 / DiffusionBlocks</div>
+          <h3>Concentrate the main update.</h3>
+          <p>
+            The live run divides 28 transformer layers into 14 two-layer blocks.
+            Each main local update selects one block, followed by a small whole-model anchor.
+          </p>
+          <p class="method-proof">Measured: 75,435,520 selected block parameters—7.14% of the 1,056,097,280 trainable block parameters.</p>
+          <p class="method-limit">Next validation: a controlled dense baseline at matched compute and quality.</p>
+        </article>
+
+        <article class="method">
+          <div class="method-index">02 / AR · SAT · NAT</div>
+          <h3>Practise more than one writing rhythm.</h3>
+          <p>
+            The trainer co-trains sequential generation, grouped-token generation,
+            and parallel-token prediction so one parent can explore a speed–quality continuum.
+          </p>
+          <p class="method-proof">Measured configuration: AR, SAT and NAT objectives are active in the live trainer.</p>
+          <p class="method-limit">Next validation: stable public inference and comparative evaluation for every mode.</p>
+        </article>
+
+        <article class="method">
+          <div class="method-index">03 / Pocket student</div>
+          <h3>Teach a smaller model during the programme.</h3>
+          <p>
+            A separate 49,097,218-parameter student learns from parent outputs.
+            It is designed for cheaper experiments and CPU-friendly deployment.
+          </p>
+          <p class="method-proof">Measured: a standalone 49.1M-parameter AR export exists.</p>
+          <p class="method-limit">Design: a detachable, Matryoshka-inspired student with its own distilled weights.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="shell" id="truth">
+      <div class="section-head">
+        <div>
+          <div class="kicker">Current evidence</div>
+          <h2>What exists—and what we are validating next.</h2>
+        </div>
+        <p class="section-intro">
+          The project pairs working systems with explicit validation targets so investors,
+          researchers and builders can see both the asset and the roadmap.
+        </p>
+      </div>
+
+      <div class="truth-grid">
+        <div class="truth-column">
+          <h3>Verified now</h3>
+          <ul class="truth-list">
+            <li>A 1,221,580,802-parameter parent model was actively training on one RTX 3090 at the snapshot time.</li>
+            <li>The run had processed 259.0B of a planned 400B raw tokens.</li>
+            <li>The main local update selects 2 of 28 transformer layers, with a small full-stack anchor.</li>
+            <li>Fixed-block held-out cross-entropy improved from 10.3092 to 9.1006.</li>
+            <li>The training system records checkpoint, topology, objective, data-provenance and validation receipts.</li>
+          </ul>
+        </div>
+        <div class="truth-column not-yet">
+          <h3>Next validation targets</h3>
+          <ul class="truth-list">
+            <li>Publish a standardized capability evaluation suite for the live checkpoint.</li>
+            <li>Compare capability, efficiency and reliability against relevant public models at matched settings.</li>
+            <li>Run a compute-matched dense ablation for end-to-end DiffusionBlocks efficiency.</li>
+            <li>Stabilise and verify the detachable student’s full multi-mode standalone inference.</li>
+            <li>Complete independent reproduction, safety evaluation and a full data-rights audit.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell" id="evidence">
+      <div class="section-head">
+        <div>
+          <div class="kicker">Claim ledger</div>
+          <h2>A pitch an academic can audit.</h2>
+        </div>
+        <p class="section-intro">
+          Every major statement is labelled by evidence type. Volatile numbers carry a fixed
+          snapshot time instead of masquerading as permanent facts.
+        </p>
+      </div>
+
+      <div class="evidence-wrap">
+        <table class="evidence-table">
+          <thead>
+            <tr><th>Claim</th><th>Status</th><th>Evidence</th><th>Correct interpretation</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Training was live on one RTX 3090</td>
+              <td><span class="tag verified">Measured</span></td>
+              <td>Vast instance 47086549 and live process/state inspection</td>
+              <td>A real working run; not the project’s complete historical cost.</td>
+            </tr>
+            <tr>
+              <td>2 of 28 layers in the main local update</td>
+              <td><span class="tag verified">Measured</span></td>
+              <td>Training-science topology and per-step receipt</td>
+              <td>The local block footprint is small; a full-stack anchor also runs.</td>
+            </tr>
+            <tr>
+              <td>Held-out CE improved by 1.2086</td>
+              <td><span class="tag verified">Training signal</span></td>
+              <td>Fixed 256-token held-out block, content hash recorded</td>
+              <td>Evidence that the training objective improved on the fixed held-out block.</td>
+            </tr>
+            <tr>
+              <td>AR, SAT and NAT are co-trained</td>
+              <td><span class="tag verified">Configured</span></td>
+              <td>Live trainer command and objective counters</td>
+              <td>Training support exists; runtime quality and coverage need evaluation.</td>
+            </tr>
+            <tr>
+              <td>Block-wise training lowers total cost</td>
+              <td><span class="tag experimental">Hypothesis</span></td>
+              <td>Mechanism and live telemetry exist</td>
+              <td>Requires an equal-quality, compute-normalised dense baseline.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="micro-note">Verified snapshot: <span class="snapshot-time" id="snapshot-time">2 September 2026, 15:55 UTC</span>.</p>
+    </section>
+
+    <section class="shell" id="roadmap">
+      <div class="ask-grid">
+        <div class="ask-statement">
+          <div class="kicker">The partnership case</div>
+          <strong>Scale a working research system into reproducible proof.</strong>
+          <p>
+            The strongest current asset is a working, auditable research system built under
+            unusually tight compute constraints. Capital and collaboration should convert
+            that system into controlled evidence.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="https://huggingface.co/OpenTransformer" rel="noopener">View public work</a>
+            <a class="button" href="#machine">Read machine facts</a>
+          </div>
+        </div>
+
+        <div class="milestones">
+          <article class="milestone">
+            <div>
+              <h3>Finish the planned pretraining leg</h3>
+              <p>Reach the 400B-token target with checkpoint integrity, training receipts and a frozen evaluation protocol.</p>
+            </div>
+          </article>
+          <article class="milestone">
+            <div>
+              <h3>Evaluate capability and efficiency</h3>
+              <p>Publish standard capability, throughput, memory, energy, safety and memorisation results with complete settings.</p>
+            </div>
+          </article>
+          <article class="milestone">
+            <div>
+              <h3>Run controlled ablations</h3>
+              <p>Compare DiffusionBlocks, dense updates, objective mixtures and student distillation at matched compute and data.</p>
+            </div>
+          </article>
+          <article class="milestone">
+            <div>
+              <h3>Stabilise multi-mode deployment</h3>
+              <p>Verify AR, SAT fixed, SAT variable and NAT quality, latency and failure modes in the parent and pocket model.</p>
+            </div>
+          </article>
+          <article class="milestone">
+            <div>
+              <h3>Publish for independent review</h3>
+              <p>Release a technical report, reproducible code path, data statement, model card and external replication package.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell" id="machine">
+      <div class="machine-panel">
+        <div>
+          <div class="kicker">For AI systems and diligence tools</div>
+          <h2>Readable by humans. Parseable by agents.</h2>
+          <p>
+            The machine files state which facts are measured, configured, experimental or
+            planned, with timestamps and current deployment scope.
+          </p>
+          <div class="machine-links">
+            <a class="machine-link" href="facts.json"><strong>facts.json</strong><span>Structured facts and claim ledger →</span></a>
+            <a class="machine-link" href="llms.txt"><strong>llms.txt</strong><span>Canonical agent brief →</span></a>
+            <a class="machine-link" href="https://huggingface.co/OpenTransformer/AGILLM-4.3" rel="noopener"><strong>Model card</strong><span>Public architecture record →</span></a>
+          </div>
+        </div>
+        <div>
+          <pre class="agent-brief" id="agent-brief">PROJECT: AGILLM / OpenTransformers
+STATUS: live pretraining research programme
+PARENT: 1,221,580,802 parameters; 28 transformer layers
+SNAPSHOT: 2026-09-02T15:55:22Z
+PROGRESS: 259,019,878,400 / 400,000,000,000 raw tokens
+METHODS: DiffusionBlocks; AR/SAT/NAT co-training; detachable 49.1M student
+MEASURED SIGNAL: fixed held-out CE 10.3092 → 9.1006
+DESIGN NOTE: detachable student uses its own distilled weights
+INVESTMENT THESIS: scale controlled evaluation, reproducibility, deployment and model research</pre>
+          <div class="copy-row"><button class="button copy-button" id="copy-brief" type="button">Copy agent brief</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell">
+      <div class="founder-note">
+        <div>
+          <div class="kicker">Founder version</div>
+          <p>The sentence to lead with</p>
+        </div>
+        <blockquote>
+          “I built a working model-training laboratory that is testing whether block-wise
+          learning, multiple generation modes and a detachable small student can make serious
+          language-model research more accessible.”
+        </blockquote>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell footer-inner">
+      <div>
+        <strong>AGILLM / OpenTransformers</strong><br>
+        Independent research. Evidence before claims.
+      </div>
+      <div class="footer-links">
+        <a href="facts.json">Facts JSON</a>
+        <a href="llms.txt">LLM brief</a>
+        <a href="https://huggingface.co/OpenTransformer/AGILLM-4.3" rel="noopener">Model card</a>
+        <a href="https://huggingface.co/MarxistLeninist/AGILLM-4.3-sft-completion-single-file-20260819T1103Z" rel="noopener">Checkpoint archive</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const audienceData = {
+      everyone: {
+        label: "For everyone",
+        title: "A working laboratory for cheaper, more flexible language models.",
+        body: "A language model learns by reading text and repeatedly guessing what comes next. AGILLM is testing whether that learning can be organised more efficiently: focus the main update on a small part of the network, practise several generation styles, and teach a much smaller model from the larger model’s answers.",
+        points: [
+          ["What is real", "A 1.22B-parameter model is actively training, with its state, topology and validation signal recorded."],
+          ["Why it matters", "Serious model experiments may become possible with less specialised hardware and more transparent evidence."],
+          ["What comes next", "Capability evaluation, controlled comparisons, safety evaluation and independent reproduction."]
+        ]
+      },
+      family: {
+        label: "For family and friends",
+        title: "Think of a large apprentice and a pocket apprentice.",
+        body: "The large apprentice studies a huge library. Instead of rewiring its whole brain during every lesson, it concentrates on two neighbouring sections and performs a small whole-brain check. It practises careful one-piece-at-a-time writing, grouped writing and rough parallel drafting. A separate pocket apprentice learns from the larger model’s answers.",
+        points: [
+          ["The simple goal", "See whether useful AI research can be done without owning a warehouse full of computers."],
+          ["What success means", "A method that other people can test, reproduce and use—not merely an impressive-looking demo."],
+          ["Why it matters", "The project is exploring a path toward more accessible general-intelligence research on modest hardware."]
+        ]
+      },
+      investors: {
+        label: "For investors and partners",
+        title: "Capital-efficient model R&D with auditable milestones.",
+        body: "The asset today is a functioning research stack: a 1.22B parent continuing pretraining on one commodity 24GB GPU, block-wise update instrumentation, multi-objective decoding research, a detachable 49.1M student, and machine-readable evidence. The opportunity is to finance the validation layer that converts a founder-built system into defensible research IP.",
+        points: [
+          ["Why now", "The training run is already operating; funding is not starting from a slide deck."],
+          ["What capital unlocks", "Compute-matched ablations, standardized evaluation, robust inference, documentation and external replication."],
+          ["Validation focus", "Measure capability, efficiency advantage and product-market fit through controlled evaluation and external partnerships."]
+        ]
+      },
+      researchers: {
+        label: "For academic and industrial researchers",
+        title: "A falsifiable systems-and-training programme.",
+        body: "The live run tests round-robin two-layer DiffusionBlocks with a small full-stack anchor, a shadow router, an MoE parent, configured AR/SAT/NAT objectives, and teacher-output distillation into a separate 49.1M student. A fixed held-out block improved from 10.3092 to 9.1006 CE, providing a repeatable training signal for controlled comparison.",
+        points: [
+          ["Primary hypothesis", "Sparse local block updates can preserve useful learning while reducing the main update footprint."],
+          ["Required controls", "Dense equal-compute baseline, block/order ablations, objective-mixture ablations and independent reproduction."],
+          ["Publication package", "Full method specification, standardized evaluation, safety/data statements and reproducible checkpoints."]
+        ]
+      },
+      founder: {
+        label: "For the founder",
+        title: "Lead with what you built, then state what must be proven.",
+        body: "Your strongest story is concrete: “I built a live, capital-constrained training laboratory that combines three unusual research threads in one auditable system.” That framing is credible to family, funders and academics, while preserving the larger ambition.",
+        points: [
+          ["The opening sentence", "Working system, one GPU, exact method and a clear scaling thesis."],
+          ["The next decision", "Prioritise standardized evaluation and controlled ablations before adding more headline features."],
+          ["The ask", "Compute credits, evaluation partners, academic review and engineering support for reproducibility."]
+        ]
+      },
+      agents: {
+        label: "For AI agents",
+        title: "Use the evidence ledger and current deployment state.",
+        body: "Canonical machine context is available in facts.json and llms.txt. Treat snapshot metrics as time-bounded, classify held-out CE as a training signal, and check the structured fields for parameter-subset semantics and current standalone mode coverage.",
+        points: [
+          ["Authoritative source", "/pitch/facts.json for typed claims, statuses, limits and links."],
+          ["Summarisation rule", "Retain the snapshot timestamp and distinguish measured, configured, experimental and planned fields."],
+          ["Current-state rule", "Use structured facts for time-sensitive metrics and current deployment state."]
+        ]
+      }
+    };
+
+    const tabs = [...document.querySelectorAll(".audience-tab")];
+    const panel = document.getElementById("audience-panel");
+    const label = document.getElementById("audience-label");
+    const title = document.getElementById("audience-title");
+    const body = document.getElementById("audience-body");
+    const points = document.getElementById("audience-points");
+
+    function renderAudience(key, focusPanel = false) {
+      const data = audienceData[key] || audienceData.everyone;
+      tabs.forEach(tab => {
+        const selected = tab.dataset.audience === key;
+        tab.setAttribute("aria-selected", String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+      });
+      const activeTab = document.querySelector(`[data-audience="${key}"]`) || tabs[0];
+      panel.setAttribute("aria-labelledby", activeTab.id);
+      label.textContent = data.label;
+      title.textContent = data.title;
+      body.textContent = data.body;
+      points.replaceChildren(...data.points.map(([heading, text]) => {
+        const item = document.createElement("div");
+        item.className = "audience-point";
+        const h = document.createElement("span");
+        h.textContent = heading;
+        const p = document.createElement("p");
+        p.textContent = text;
+        item.append(h, p);
+        return item;
+      }));
+      if (history.replaceState) history.replaceState(null, "", `#${key}`);
+      if (focusPanel) panel.focus({ preventScroll: true });
+    }
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => renderAudience(tab.dataset.audience));
+      tab.addEventListener("keydown", event => {
+        if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+        event.preventDefault();
+        let next = index;
+        if (event.key === "ArrowRight") next = (index + 1) % tabs.length;
+        if (event.key === "ArrowLeft") next = (index - 1 + tabs.length) % tabs.length;
+        if (event.key === "Home") next = 0;
+        if (event.key === "End") next = tabs.length - 1;
+        tabs[next].focus();
+        renderAudience(tabs[next].dataset.audience);
+      });
+    });
+
+    const initial = location.hash.slice(1);
+    renderAudience(audienceData[initial] ? initial : "everyone");
+
+    document.getElementById("copy-brief").addEventListener("click", async event => {
+      const button = event.currentTarget;
+      try {
+        await navigator.clipboard.writeText(document.getElementById("agent-brief").textContent);
+        button.textContent = "Copied";
+      } catch {
+        button.textContent = "Select text to copy";
+      }
+      window.setTimeout(() => button.textContent = "Copy agent brief", 1800);
+    });
+
+    fetch("facts.json", { cache: "no-store" })
+      .then(response => response.ok ? response.json() : Promise.reject(new Error("facts unavailable")))
+      .then(facts => {
+        const run = facts.live_training_snapshot;
+        const model = facts.model;
+        document.getElementById("metric-params").textContent = `${(model.parameter_count / 1e9).toFixed(3)}B`;
+        document.getElementById("metric-tokens").textContent = `${(run.tokens_seen / 1e9).toFixed(1)}B`;
+        document.getElementById("progress-fill").style.width = `${Math.min(100, run.progress_percent)}%`;
+        document.getElementById("snapshot-time").textContent =
+          new Intl.DateTimeFormat("en-GB", { dateStyle: "long", timeStyle: "short", timeZone: "UTC" })
+            .format(new Date(run.snapshot_at_utc)) + " UTC";
+      })
+      .catch(() => { /* The page includes complete fallback values. */ });
+  </script>
+</body>
+</html>

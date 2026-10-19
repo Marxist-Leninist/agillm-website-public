@@ -1,0 +1,28 @@
+{
+  "checkpoint": "pretrain_step01136523_from00065064_20260729T1521Z.pt",
+  "checkpoint_path": "/mnt/geth-vol1/agillm43/ckpts/artifacts/full/repretrain_v4_wip/pretrain_step01136523_from00065064_20260729T1521Z.pt",
+  "env_backup": "/opt/agillm43_netserve/bridge.env.backup-step1136523-20260729T161916Z",
+  "health": {
+    "busy": 0,
+    "ckpt": "pretrain_step01136523_from00065064_20260729T1521Z.pt",
+    "concurrency": 1,
+    "dtype": "fp32",
+    "live_slots": 1,
+    "loads": 3,
+    "ok": true,
+    "ready": true,
+    "slot_dtypes": [
+      "fp32"
+    ],
+    "slot_threads": [
+      16
+    ],
+    "uptime_s": 34797,
+    "warming": false
+  },
+  "previous_checkpoint": "pretrain_step01071146_from00065064_20260728T2220Z.pt",
+  "promoted_at": "2026-07-29T16:20:46Z",
+  "schema": "agillm43.promotion.v1",
+  "sha256": "30d3e403f98798c760f38f3ebabda318ed8068b4aee9053758b74707337c2e85",
+  "status": "promoted"
+}

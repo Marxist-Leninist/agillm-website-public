@@ -1,0 +1,25 @@
+{
+  "schema": "agillm.network.diagnostic.v1",
+  "checked_utc": "2026-09-13T15:09:33Z",
+  "instance_id": 47086549,
+  "verdict": "not_resolved",
+  "read_only_checks": true,
+  "network_settings_changed": false,
+  "measurements": {
+    "vast_direct_hf_config": {"http_status": 0, "bytes": 0, "error": "DNS resolution timeout", "total_seconds": 10.076012},
+    "vast_direct_hf_config_external_dns": {"http_status": 0, "bytes": 0, "tcp_connect_seconds": 0.222812, "error": "TLS connection timeout", "total_seconds": 3.999716},
+    "vast_hf_config_via_geth_relay": {"http_status": 200, "bytes": 665, "total_seconds": 2.467367},
+    "vast_hf_range_via_geth_relay": {"http_status": 206, "requested_bytes": 1048576, "received_bytes": 81920, "total_seconds": 15.000776, "average_bytes_per_second": 5461, "error": "transfer timeout"},
+    "geth_same_hf_range_direct": {"http_status": 206, "requested_bytes": 1048576, "received_bytes": 1048576, "total_seconds": 0.283246, "average_bytes_per_second": 3701997, "completed": true},
+    "public_inference_health": {"ready": true, "checkpoint_step": 2940970, "total_seconds": 8.348820}
+  },
+  "canonical_checkpoint_uploader": {
+    "last_observed_log_utc": "2026-09-13T15:05:21Z",
+    "state": "deferring_upload",
+    "free_gib": 21.8,
+    "required_free_gib": 30.0,
+    "source_log": "/workspace/agillm43_live_infer/hf_uploader_v4.log"
+  },
+  "interpretation": "The relay provides connectivity but bulk transfer remains severely degraded on the Vast-to-relay path. GETH completed the same Hugging Face byte range quickly. Exact cause within the Vast host, tunnel or transit route is not isolated. A separate disk-space preflight currently prevents the canonical uploader from attempting checkpoint uploads.",
+  "limits": "Small bounded downloads and one public health request; not an upload bandwidth benchmark, not proof of a platform-wide Vast.ai outage, and not a completed checkpoint-upload receipt."
+}

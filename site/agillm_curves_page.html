@@ -1,0 +1,1092 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AGILLM — training curves</title>
+<style>
+:root{color-scheme:dark}
+body{margin:0;background:#0b0e14;color:#e6edf3;font:14px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px 0;flex-wrap:wrap}
+.top h1{font-size:19px;margin:0;letter-spacing:-.01em}
+.top a{color:#58a6ff;text-decoration:none;font-size:13px;margin-left:14px}
+.top .sub{color:#8b98ab;font-size:12.5px}
+/* the shared panel, but static + full width + tall canvas */
+#agi44-curves{position:static!important;max-width:none!important;padding:8px 18px 20px}
+#agi44-curves-pill{display:none!important}
+#agi44-curves-body{display:flex!important;flex-direction:column;width:100%!important;max-height:none!important;box-shadow:none!important;background:transparent!important;border:0!important;padding:0 3px!important;overflow:visible!important;backdrop-filter:none!important}
+#agi44-curves canvas{height:min(64vh,720px)!important;min-height:300px}
+#agi44-curves h4 a[href="/agillm-curves"]{display:none}
+#agi44-curves .telemetry-close{display:none}
+.det{padding:0 18px 30px;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.det .card{background:#111624;border:1px solid #2a3346;border-radius:12px;padding:12px 14px}
+.det h3{margin:0 0 8px;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:#8b98ab;display:flex;align-items:center;gap:8px}
+.det h3 i{width:8px;height:8px;border-radius:50%;display:inline-block;background:#8b98ab}
+.det .ok i{background:#3fb950}.det .maintenance i{background:#58a6ff}.det .warn i{background:#d29922}.det .bad i{background:#f85149}
+.det dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:12px}
+.det dt{color:#8b98ab;white-space:nowrap}.det dd{margin:0;text-align:right;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+.det .flag{font-size:12px;margin-top:6px}.det .flag.warn{color:#d29922}.det .flag.bad{color:#f85149}
+.foot{padding:0 18px 24px;color:#8b98ab;font-size:12px}
+.foot code{background:#080b11;border:1px solid #2a3346;border-radius:6px;padding:1px 6px}
+</style></head><body>
+<div class="top"><div><h1>AGILLM training curves</h1><div class="sub">RPV16 2.0B and Standard 1.1B · current fleet cards refresh every minute · separate archived history per model · AR full-stack, AR block-local, SAT var, NAT · drag archives to zoom</div></div>
+<div><a href="/agillm-ui">← model UI</a><a href="/api/training.png" target="_blank" rel="noopener">PNG</a><a href="/api/health" target="_blank" rel="noopener">health JSON</a><a href="/api/training" target="_blank" rel="noopener">data JSON</a></div></div>
+<style>
+#agi44-curves{position:fixed;left:14px;bottom:14px;z-index:99998;
+ font:12px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+ max-width:min(720px,calc(100vw - 28px))}
+#agi44-curves-pill{display:inline-flex;align-items:center;gap:7px;cursor:pointer;
+ background:#111624ee;border:1px solid #2a3346;border-radius:999px;padding:6px 13px;
+ color:#e6edf3;backdrop-filter:blur(6px);user-select:none;box-shadow:0 3px 14px #0008;
+ font-variant-numeric:tabular-nums}
+#agi44-curves-pill:hover{border-color:#58a6ff}
+#agi44-curves-pill svg{width:34px;height:14px;display:block}
+#agi44-curves-body{display:none;box-sizing:border-box;margin-top:8px;background:#111624f7;border:1px solid #2a3346;
+ border-radius:12px;padding:12px 14px 10px;color:#e6edf3;backdrop-filter:blur(8px);
+ box-shadow:0 8px 30px #000a;width:min(720px,calc(100vw - 28px));max-height:80vh;overflow:auto}
+#agi44-curves.open #agi44-curves-body{display:block}
+#agi44-curves h4{margin:0;font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+ color:#8b98ab;font-weight:600;display:flex;justify-content:space-between;gap:10px;align-items:center}
+#agi44-curves h4 span{letter-spacing:0;text-transform:none;font-weight:400}
+#agi44-curves .bar{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin:9px 0 6px}
+#agi44-curves .bar b{color:#8b98ab;font-weight:600;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;margin-right:2px}
+#agi44-curves button.rg{background:#0b0e14;border:1px solid #2a3346;color:#c9d1d9;border-radius:999px;
+ padding:3px 10px;font:inherit;font-size:11.5px;cursor:pointer}
+#agi44-curves button.rg.on{border-color:#58a6ff;color:#e6edf3;background:#16263d}
+#agi44-curves button.sr{background:transparent;border:0;padding:0;font:inherit;text-align:left}
+#agi44-curves button.sr:focus-visible{outline:2px solid #58a6ff;outline-offset:3px}
+#agi44-curves button.sr{display:inline-flex;align-items:center;gap:5px;cursor:pointer;color:#c9d1d9;font-size:11.5px;user-select:none}
+#agi44-curves button.sr i{display:inline-block;width:14px;height:3px;border-radius:2px}
+#agi44-curves button.sr.off{opacity:.42}
+#agi44-curves canvas{display:block;box-sizing:border-box;width:100%;height:290px;border-radius:8px;background:#0b0e14;
+ border:1px solid #2a3346;touch-action:pan-y}
+#agi44-curves .tip{position:absolute;pointer-events:none;background:#0b0e14f2;border:1px solid #2a3346;
+ border-radius:8px;padding:7px 9px;font-size:11px;line-height:1.45;color:#e6edf3;white-space:nowrap;
+ display:none;font-variant-numeric:tabular-nums;box-shadow:0 4px 16px #0009}
+#agi44-curves .wrap{position:relative}
+#agi44-curves *{box-sizing:border-box}
+#agi44-curves .foot{margin-top:8px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:4px 14px;
+ font-size:11.5px;color:#c9d1d9;font-variant-numeric:tabular-nums}
+#agi44-curves .foot em{color:#8b98ab;font-style:normal}
+#agi44-curves .modegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:8px;margin:10px 0}
+#agi44-curves .modecard{min-width:0;border:1px solid #2a3346;border-radius:8px;padding:9px 10px;background:#0b0e14;overflow-wrap:anywhere}
+#agi44-curves .modecard strong{display:block;font-size:12px;color:#e6edf3}
+#agi44-curves .modecard .value{font-size:17px;font-weight:650;font-variant-numeric:tabular-nums;margin:3px 0}
+#agi44-curves .modecard .meta{color:#aab6c8;font-size:10.5px;line-height:1.45}
+#agi44-curves .modecard .status{font-size:10px;text-transform:uppercase;letter-spacing:.04em}
+#agi44-curves .modecard .detail{display:block;margin-top:4px}
+@media(max-width:620px){#agi44-curves .modegrid{grid-template-columns:1fr}#agi44-curves .tip{white-space:normal;max-width:calc(100% - 8px)}}
+#agi44-curves .qf{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0 2px}
+#agi44-curves .qf b{font-size:11px;color:#8b98ab;font-weight:600;margin-right:2px}
+#agi44-curves .qfb{font-size:12px;padding:6px 11px;min-height:32px;border-radius:999px;border:1px solid #2a3346;background:#111624;color:#c9d1d9;cursor:pointer}
+#agi44-curves .qfb:active{background:#1b2436}
+@media(max-width:560px){
+  #agi44-curves canvas{height:360px}
+  #agi44-curves .hs .ch,#agi44-curves button.sr{font-size:12px;padding:6px 10px;min-height:32px}
+  #agi44-curves .bar{display:flex;flex-wrap:wrap;gap:6px}
+  #agi44-curves,#agi44-curves *{max-width:100%}
+  #agi44-curves .note,#agi44-curves .foot{font-size:11px}
+}
+#agi44-curves .note{margin-top:7px;font-size:10.5px;color:#8b98ab;line-height:1.4}
+#agi44-curves h4 a{color:#58a6ff;text-decoration:none;font-weight:600;letter-spacing:0;text-transform:none;margin-left:8px;white-space:nowrap}
+#agi44-curves h4>span:last-child{white-space:nowrap;text-align:right}
+#agi44-curves h4 a:hover{text-decoration:underline}
+#agi44-curves .hs{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:9px}
+#agi44-curves .hs .ov{font-weight:700;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:999px;border:1px solid}
+#agi44-curves .hs .ch{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#c9d1d9;padding:2px 9px;border-radius:999px;border:1px solid #2a3346;background:#0b0e14;cursor:default}
+#agi44-curves .hs .ch i{width:7px;height:7px;border-radius:50%;display:inline-block}
+#agi44-curves .fl{margin-top:6px;font-size:11px;line-height:1.45}
+#agi44-curves .fl div{padding-left:10px;text-indent:-10px}
+#agi44-curves .ok{color:#3fb950;border-color:#3fb950}#agi44-curves .maintenance{color:#58a6ff;border-color:#58a6ff}#agi44-curves .warn{color:#d29922;border-color:#d29922}#agi44-curves .bad{color:#f85149;border-color:#f85149}
+#agi44-curves .hs .ch.ok i{background:#3fb950}#agi44-curves .hs .ch.maintenance i{background:#58a6ff}#agi44-curves .hs .ch.warn i{background:#d29922}#agi44-curves .hs .ch.bad i{background:#f85149}#agi44-curves .hs .ch i{background:#8b98ab}
+#agi44-curves .nowgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0 8px}
+#agi44-curves .nowcard{border:1px solid #2a3346;border-radius:9px;background:#0b0e14;padding:9px 10px;min-height:74px;overflow-wrap:anywhere}
+#agi44-curves .nowcard .k{color:#8b98ab;font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+#agi44-curves .nowcard strong{display:block;margin-top:2px;font-size:13px;line-height:1.25}
+#agi44-curves .nowcard .m{display:block;margin-top:4px;color:#aab6c8;font-size:10.5px;line-height:1.35;font-variant-numeric:tabular-nums}
+#agi44-curves .nowcard.ok{border-left:3px solid #3fb950}#agi44-curves .nowcard.maintenance{border-left:3px solid #58a6ff}#agi44-curves .nowcard.warn{border-left:3px solid #d29922}#agi44-curves .nowcard.bad{border-left:3px solid #f85149}
+@media(max-width:720px){#agi44-curves .nowgrid{grid-template-columns:1fr}}
+#agi44-curves .progress-note{margin:9px 0;padding:9px 11px;border:1px solid #2a3346;border-left:3px solid #58a6ff;border-radius:6px;background:#111624;color:#c9d1d9;font-size:12px;line-height:1.55;overflow-wrap:anywhere}
+#agi44-curves .progress-note[data-status="stale"],#agi44-curves .progress-note[data-status="review"],#agi44-curves .progress-note[data-status="unavailable"]{border-left-color:#d29922}
+</style>
+<style id="agi44-chart-v2-css">
+/* AGILLM loss chart v2 (2026-09-23): chart first, full rail width, taller canvas. */
+#agillmTelemetry #agi44-curves-body{width:100%;max-height:var(--telemetry-detail-height,62dvh)}
+#agi44-curves.open #agi44-curves-body{display:flex;flex-direction:column}
+#agi44-curves-body>*{flex:0 0 auto;min-width:0}
+#agi44-curves-body>.telemetry-close{order:0}
+#agillmTelemetry #agi44-curves-body>.telemetry-close{position:absolute;top:8px;right:8px;margin:0;min-height:30px;padding:0 10px;z-index:3}
+#agi44-curves-body>h4{order:1}
+#agillmTelemetry #agi44-curves-body>h4{padding-right:86px;min-height:30px}
+#agi44-sum{order:2}
+#agi44-ranges{order:3}
+#agi44-curves-body>.qf{order:4}
+#agi44-series{order:5}
+#agi44-curves-body>.wrap{order:6}
+#agi44-foot{order:7}
+#agi44-mode-loss{order:8}
+#agi44-now{order:9}
+#agi44-health{order:10}
+#agi44-flags{order:11}
+#agi44-progress{order:12}
+#agi44-curves-body>.note{order:13}
+#agi44-curves-body>.note[hidden]{display:none}
+#agi44-curves canvas{height:clamp(230px,calc(var(--telemetry-detail-height,600px) - 215px),560px);cursor:crosshair;touch-action:pan-y}
+#agi44-sum{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}
+#agi44-sum .t{flex:1 1 104px;min-width:92px;border:1px solid #2a3346;border-radius:8px;padding:5px 8px 4px;background:#0b0e14}
+#agi44-sum .t small{display:block;color:#8b98ab;font-size:9.5px;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#agi44-sum .t b{display:block;font-size:15px;line-height:1.25;font-weight:650;font-variant-numeric:tabular-nums;color:#e6edf3;white-space:nowrap}
+#agi44-sum .t i{display:block;font-style:normal;font-size:10.5px;color:#8b98ab;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+#agi44-sum .t i.dn{color:#3fb950}
+#agi44-sum .t i.up{color:#f0883e}
+#agi44-sum .t .sw{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px;vertical-align:0}
+#agi44-curves .seg2{display:inline-flex;border:1px solid #2a3346;border-radius:999px;overflow:hidden;margin-right:4px}
+#agi44-curves .seg2 button{background:#0b0e14;border:0;color:#c9d1d9;padding:3px 11px;font:inherit;font-size:11.5px;cursor:pointer;min-height:28px}
+#agi44-curves .seg2 button+button{border-left:1px solid #2a3346}
+#agi44-curves .seg2 button.on{background:#16263d;color:#e6edf3;box-shadow:inset 0 0 0 1px #58a6ff}
+#agi44-curves button.sr b.v{font-weight:600;color:#e6edf3;font-variant-numeric:tabular-nums}
+#agi44-curves .sr.na{opacity:.6;cursor:default;font-style:italic;font-size:11px;color:#8b98ab}
+#agi44-curves .sel{position:absolute;display:none;background:rgba(88,166,255,.13);border-left:1px solid rgba(88,166,255,.6);border-right:1px solid rgba(88,166,255,.6);pointer-events:none}
+#agi44-curves .xh{position:absolute;display:none;width:1px;background:rgba(201,209,217,.28);pointer-events:none}
+#agi44-curves .tip{z-index:2;line-height:1.5}
+#agi44-ranges .qf{display:inline-flex;flex-wrap:wrap;gap:5px;align-items:center;margin:0 0 0 auto}
+#agi44-ranges .qf b{margin-right:0}
+#agi44-ranges .qfb{min-height:28px;padding:3px 10px;font-size:11.5px}
+#agi44-series{margin-top:2px}
+#agi44-curves #agi44-ranges{gap:5px 6px}
+#agi44-ranges button.rg{padding:3px 9px;min-height:28px}
+@media(max-width:620px){
+ /* phone: tiles, controls and legend are single swipeable rows so the chart stays in view */
+ #agi44-curves #agi44-sum,#agi44-curves #agi44-ranges,#agi44-curves #agi44-series{flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+ #agi44-sum::-webkit-scrollbar,#agi44-ranges::-webkit-scrollbar,#agi44-series::-webkit-scrollbar{display:none}
+ #agi44-sum>*,#agi44-ranges>*,#agi44-series>*{flex:0 0 auto}
+ #agi44-sum{margin:6px 0 0;gap:5px}
+ #agi44-sum .t{min-width:88px;padding:4px 7px}
+ #agi44-sum .t b{font-size:14px}
+ #agi44-curves #agi44-ranges{margin:7px 0 4px}
+ #agi44-ranges .qf{flex-wrap:nowrap;margin-left:4px}
+ #agi44-curves #agi44-series{margin:2px 0 6px}
+ #agi44-series .sr{white-space:nowrap}
+ #agi44-curves canvas{height:clamp(220px,calc(var(--telemetry-detail-height,520px) - 190px),420px)}
+ #agi44-curves .seg2 button{padding:3px 8px}
+ #agillmTelemetry #agi44-curves-body>h4{font-size:9.5px}
+}
+</style>
+<div id="agi44-curves">
+  <button type="button" id="agi44-curves-pill" aria-expanded="false" aria-controls="agi44-curves-body"><svg id="agi44-spark" viewBox="0 0 34 14" aria-hidden="true"></svg><span id="agi44-curves-lbl">loss curve…</span></button>
+  <div id="agi44-curves-body" role="region" aria-label="Training curves">
+    <h4><span style="letter-spacing:.1em;text-transform:uppercase;font-weight:600">Training curves · heldout_v3 CE, lower is better</span><span><span id="agi44-upd">—</span><a href="/agillm-curves" target="_blank" rel="noopener" title="open the tracker on its own tab, full screen">⤢ full view</a><a href="/api/training.png" target="_blank" rel="noopener" title="chart as a PNG (also on the MCP: agillm_curves_image)">PNG</a></span></h4>
+    <div class="nowgrid" id="agi44-now"><div class="nowcard maintenance"><span class="k">Training</span><strong>Checking live trainer…</strong></div><div class="nowcard maintenance"><span class="k">Quality evidence</span><strong>Checking probe monitor…</strong></div><div class="nowcard maintenance"><span class="k">SAT-variable routing</span><strong>Checking gate…</strong></div></div>
+    <div class="hs" id="agi44-health"></div><div class="fl" id="agi44-flags"></div>
+    <div id="agi44-progress" class="progress-note" role="status" aria-live="polite">Checking fixed held-out progress...</div>
+    <div class="modegrid" id="agi44-mode-loss" aria-label="AR, SAT fixed, SAT variable and NAT telemetry" aria-live="polite"><div class="modecard"><strong>Mode telemetry</strong><span class="meta">Checking AR, SAT fixed, SAT var and NAT…</span></div></div>
+    <div class="note">SAT fixed and NAT validation use fixed-token checks. SAT var CE is a training objective; full-stack and local-block samples stay separate. Training span fractions describe sampled training blocks. Gate predictions are shown above. Missing samples remain gaps. Current and legacy CPU probes use different protocols and are separate curves.</div>
+    <div class="bar" id="agi44-ranges"><b>Range</b></div>
+    <div class="bar" id="agi44-series"><b>Series</b></div>
+    <div class="wrap"><canvas id="agi44-canvas" height="290"></canvas><div class="tip" id="agi44-tip"></div></div>
+    <div class="foot" id="agi44-foot"></div>
+    <div class="note">Held-out probes: frozen heldout_v3 (12,404 tokens) scored on CPU in fp32 every ~20 min on the full 28-layer stack — 257-token windows and 2048-token windows. Trainer val: the trainer's scheduled fixed-token check on the same tokens. Local train loss: one current-step mixed-objective sample per ~30 s heartbeat; EMA α=.03 per heartbeat (~11.4 min nominal half-life), without bias correction. Different batches and objectives are not comparable held-out evaluations. Judge progress from fixed held-out AR/SAT/NAT, not the EMA alone. Rollbacks are cut within the recorded archive; current-run telemetry is shown separately. Vertical marks are runtime hops.</div>
+  </div>
+</div>
+<script id="agillm-telemetry-values">
+(function(){
+  function number(v){if(v==null||v===''||typeof v==='boolean')return null;var n=Number(v);return Number.isFinite(n)?n:null;}
+  function timestamp(v){if(v==null||v===''||typeof v==='boolean')return null;var n=number(v);if(n===null){n=Date.parse(v);return Number.isFinite(n)?n/1000:null;}return n>1e11?n/1000:(n>0?n:null);}
+  function servingStep(h){if(!h)return null;var n=number((h.model||{}).step);if(n===null)n=number(h.serving_step);if(n===null)n=number(h.step);if(n!==null&&n>0)return n;var m=String(h.ckpt||(h.model||{}).ckpt||'').match(/step0*([0-9]+)/i);return m?Number(m[1]):null;}
+  function checkpoint(d,key,fleet){fleet=fleet||{};if(d&&d.model_id===key)return d;if(key!=='rpv16')return null;var live=fleet.rpv16_live||fleet.gb10_live,ck=live&&live.last_checkpoint_event;if(!live||!ck)return null;return {model_id:'rpv16',ok:live.ok,step:ck.step,checkpoint_name:ck.path,polled_at:live.observed_at,created_at_iso:timestamp(ck.ts)?new Date(timestamp(ck.ts)*1000).toISOString():null,health:(fleet.serving||{}).rpv16||{},instance:{id:live.instance_id,label:live.gpu_name}};}
+  function runSeries(history,key,live){
+    history=history||{};live=live||{};
+    if(!Array.isArray(history.rows)||!String(history.lineage||'').toLowerCase().startsWith(key)||(live.instance_id!=null&&String(live.instance_id)!==String(history.instance_id)))return {points:[],reason:'Current-run history unavailable'};
+    var rows=history.rows.filter(function(p){return p&&number(p.step)!==null&&number(p.loss)!==null&&typeof p.objective==='string'&&p.objective.trim();}).slice().sort(function(a,b){return a.step-b.step;});
+    var objective=String(live.objective||((rows[rows.length-1]||{}).objective)||'').toLowerCase(),seen={};
+    var matching=rows.filter(function(p){return p.objective.toLowerCase()===objective;}),last=matching[matching.length-1]||{},stage=number(last.train_stage),label=objective.toUpperCase();
+    if(objective==='ar')label=last.global_anchor===true?'AR full-stack':last.global_anchor===false?'AR block-local':'AR (scope unreported)';
+    if(objective==='ar'&&last.global_anchor===false&&stage!==null)label+=' · stage '+stage;
+    matching.forEach(function(p){var sameScope=objective!=='ar'||(p.global_anchor===last.global_anchor&&(last.global_anchor!==false||number(p.train_stage)===stage));if(sameScope)seen[p.step]={step:number(p.step),loss:number(p.loss),ts:timestamp(p.ts)};});
+    var points=Object.keys(seen).map(function(k){return seen[k];}).sort(function(a,b){return a.step-b.step;}).slice(-160);
+    return {points:points,objective:objective,label:label,lineage:history.lineage,instance_id:history.instance_id,source:timestamp(history.source_observed_at),reason:points.length<2?'Fewer than two measured samples for this objective and scope':''};
+  }
+  function state(d,now){d=d||{};now=now==null?Date.now()/1000:now;var t=timestamp(d.observed_at||d.polled_at||d.collected_at),age=t===null?null:now-t;
+    var fresh=d.ok===true&&d.fresh!==false&&age!==null&&age>=-5&&age<=150;
+    var status=!d.ok||d.status==='unavailable'?'unavailable':!fresh||d.status==='stale'?'stale':d.status==='completed'?'completed':d.status==='starting'?'starting':d.status==='training'||d.running===true?'training':'unavailable';
+    return {status:status,age:age,observed:t,fresh:fresh};
+  }
+  window.AGILLMTelemetryValues={number:number,timestamp:timestamp,servingStep:servingStep,state:state,checkpoint:checkpoint,runSeries:runSeries};
+})();
+</script>
+<script>
+/* Read-only, descriptive held-out progress. Never changes training or an LR. */
+(function (root) {
+  'use strict';
+  function finite(x) { return typeof x === 'number' && Number.isFinite(x); }
+  function median(a) {
+    var b = a.slice().sort(function(x,y){return x-y;});
+    var n = b.length; return n ? (n % 2 ? b[(n-1)/2] : (b[n/2-1]+b[n/2])/2) : null;
+  }
+  function lineageStart(d) {
+    var lo = finite(d.fix_step) ? d.fix_step : 0;
+    (d.markers || []).forEach(function(m){
+      if ((m.kind === 'launch' || m.kind === 'resume') && finite(m.step)) lo = Math.max(lo,m.step);
+    });
+    return lo;
+  }
+  function series(d, source, key, hours) {
+    var lo = lineageStart(d), raw = (d[source] || []).filter(function(p){
+      return finite(p.step) && p.step >= lo && finite(p.t) && finite(p[key]);
+    }).sort(function(a,b){return a.t-b.t || a.step-b.step;});
+    if (!raw.length) return {status:'insufficient', count:0};
+    // Do not silently reinterpret a rollback as forward progress.
+    var clean=[];
+    raw.forEach(function(p){
+      while(clean.length && clean[clean.length-1].step >= p.step) clean.pop();
+      clean.push(p);
+    });
+    var end = clean[clean.length-1].t;
+    var rows = clean.filter(function(p){return p.t >= end-hours*3600;});
+    var span = rows.length ? (end-rows[0].t)/3600 : 0;
+    if(rows.length<9 || span<hours*.70) return {status:'insufficient',count:rows.length,span_hours:span,last_t:end};
+    var start = median(rows.slice(0,3).map(function(p){return p[key];}));
+    var finish = median(rows.slice(-3).map(function(p){return p[key];}));
+    var delta = finish-start;
+    var x=rows.map(function(p){return (p.t-rows[0].t)/3600;});
+    var y=rows.map(function(p){return p[key];});
+    var mx=x.reduce(function(a,b){return a+b;},0)/x.length;
+    var my=y.reduce(function(a,b){return a+b;},0)/y.length;
+    var num=0,den=0;x.forEach(function(a,i){num+=(a-mx)*(y[i]-my);den+=(a-mx)*(a-mx);});
+    var slope=den?num/den:0;
+    // Operational descriptive threshold, not a statistical confidence interval.
+    var status=delta<-.01 && slope<0?'improving':delta>.01 && slope>0?'worsening':'flat_or_noisy';
+    return {status:status,count:rows.length,span_hours:span,start:start,end:finish,delta:delta,
+      slope_nat_per_hour:slope,last_t:end,first_step:rows[0].step,last_step:rows[rows.length-1].step};
+  }
+  function signed(x){return (x>=0?'+':'')+x.toFixed(4);}
+  function label(s){return {improving:'improving',worsening:'higher recently',flat_or_noisy:'flat/noisy',insufficient:'not enough comparable data'}[s]||s;}
+  function analyze(d, now, selectedLineage) {
+    if(d&&(d.live_history||d.source==='current-vast-fleet-with-preserved-historical-curves')){
+      var key=selectedLineage||((root.AGILLMCurves&&root.AGILLMCurves.lineage)?root.AGILLMCurves.lineage():(root.__AGILLM_MODEL_KEY==='standard'?'standard':'rpv16'));
+      var live=key==='standard'?d.standard_live:(d.rpv16_live||d.gb10_live),v=root.AGILLMTelemetryValues,st=v.state(live,now),name=key==='standard'?'Standard 1.1B':'RPV16 2.0B';
+      var step=v.number(live&&live.step),text=name+' · '+(st.status==='training'?'training live':st.status)+(step===null?'':' at step '+step.toLocaleString())+'. This chart preserves archived evidence; current-run samples are shown separately.';
+      var ce=v.number(live&&live.heldout_ce),ceStep=v.number(live&&live.heldout_step);
+      if(ce!==null)text+=' Latest reported held-out CE '+ce.toFixed(4)+(ceStep===null?'':' at step '+ceStep.toLocaleString())+'.';
+      text+=' The fixed-window monitor has not reported a comparable evaluation for this exact current checkpoint.';
+      return {status:st.status==='stale'||st.status==='unavailable'?st.status:'insufficient',text:text};
+    }
+    now=finite(now)?now:Date.now()/1000;
+    if(!d || !finite(d.generated_at)) return {status:'unavailable',text:'Progress unavailable: no dated data. Training was not changed.'};
+    var p=(d.probes||[]).filter(function(x){return finite(x.t) && finite(x.w257);}).sort(function(a,b){return a.t-b.t;});
+    var last=p[p.length-1];
+    if(!last && now-d.generated_at<=300 && d.generated_at<=now+60){var hz=d.health||{}, tz=(hz.areas||{}).trainer||{}, lz=d.latest||{}, sz=finite(tz.step)?tz.step:lz.step;
+      return {status:'insufficient',text:((tz.level==='ok'&&tz.state==='training')?'Training is LIVE':'Training state: '+(tz.state||tz.level||'unknown'))+(finite(sz)?' at step '+Number(sz).toLocaleString():'')+'. The current fixed-window monitor has not reported an evaluation for the latest checkpoint. Earlier held-out results may appear in trainer details or archived charts; training loss alone is not a held-out verdict. Training was not changed.'};}
+    if(now-d.generated_at>300 || !last || d.generated_at>now+60 || (last && last.t>now+60))
+      return {status:'stale',text:'Dashboard feed itself is stale or incomplete; current training state cannot be verified from this snapshot.'};
+    if(now-last.t>5400){
+      var hh=d.health||{}, tr=(hh.areas||{}).trainer||{}, mo=(hh.areas||{}).model||{}, ev=mo.evaluation||{};
+      var phase={paused:'quality probe intentionally paused',waiting_interval:'quality monitor active, waiting for its next interval',waiting_checkpoint:'quality monitor waiting for the next completed checkpoint',running:'CPU held-out evaluation is running',suspended:'quality monitor suspended',offline:'quality monitor offline',stalled:'quality evaluation appears stalled'}[ev.phase]||('quality monitor '+(ev.phase||'state unknown'));
+      var tstate=(tr.level==='ok'&&tr.state==='training')?'Training is LIVE':'Training state: '+(tr.state||tr.level||'unknown');
+      return {status:'stale',text:tstate+' at step '+Number(tr.step||0).toLocaleString()+'. Fixed held-out evidence is '+Math.round((now-last.t)/60)+' min old; '+phase+'. The last quality numbers are last-known evidence, not a current regression verdict.'};
+    }
+    var a=series(d,'probes','w257',24), b=series(d,'probes','w2048',24);
+    var sat=series(d,'multimode','sat',12),nat=series(d,'multimode','nat_pooled',12);
+    var contextsFresh=[a,b].every(function(v){return finite(v.last_t) && now-v.last_t<=5400 && v.last_t<=now+60;});
+    if(!contextsFresh) return {status:'stale',text:'Short- and long-context held-out probes are not both fresh. Do not infer a plateau from this chart.',short_context:a,long_context:b};
+    var status=(a.status==='improving' && b.status==='improving')?'improving':
+      (a.status==='worsening' && b.status==='worsening')?'review':
+      (a.status==='insufficient' || b.status==='insufficient')?'insufficient':'mixed_or_flat';
+    var lead={improving:'Held-out loss is still improving',review:'Held-out loss needs review',
+      insufficient:'Not enough comparable history after the last restart',mixed_or_flat:'Held-out trend is mixed or flat/noisy'}[status];
+    var text=lead+'.';
+    if(a.status!=='insufficient') text+=' 24h short-context medians '+a.start.toFixed(4)+' → '+a.end.toFixed(4)+' ('+signed(a.delta)+' nats).';
+    if(b.status!=='insufficient') text+=' Long-context '+signed(b.delta)+' nats.';
+    [['SAT',sat],['NAT',nat]].forEach(function(pair){
+      var v=pair[1];
+      if(v.status==='insufficient') text+=' '+pair[0]+': more comparable data needed.';
+      else if(now-v.last_t>5400) text+=' '+pair[0]+': stale data.';
+      else text+=' '+pair[0]+' 12h: '+signed(v.delta)+' ('+label(v.status)+').';
+    });
+    text+=' Mixed training EMA is not a plateau test. Read-only; no LR changes.';
+    return {status:status,text:text,short_context:a,long_context:b,sat:sat,nat:nat,
+      probe_age_minutes:(now-last.t)/60,threshold_nat:.01,
+      method:'three-probe edge medians plus descriptive slope; same current lineage; not independent statistical evidence'};
+  }
+  function render(d,now){
+    if(typeof document==='undefined') return;
+    var el=document.getElementById('agi44-progress');if(!el)return;
+    var r=analyze(d,now);el.dataset.status=r.status;el.textContent=r.text;
+    el.title='Read-only directional summary. Fixed held-out probes are repeatedly measured on the same tokens; this is not a calibrated significance test.';
+  }
+  function unavailable(){
+    if(typeof document==='undefined')return;
+    var el=document.getElementById('agi44-progress');if(el){el.dataset.status='unavailable';el.textContent='Progress feed unavailable. The previously drawn chart may be stale; training was not changed.';}
+  }
+  var api={analyze:analyze,series:series,render:render,unavailable:unavailable};
+  root.AGILLMProgressV1=api;
+  if(typeof module!=='undefined' && module.exports)module.exports=api;
+})(typeof window!=='undefined'?window:globalThis);
+
+</script>
+<script id="agi44-chart-v2">
+(function(){
+  "use strict";
+  /* AGILLM loss chart v2 (2026-09-23, cowork-opus55-chartfix).
+     One model lineage per axis: RPV16 2.0B on GB10, or Standard 1.1B (3090 archive
+     probes + GB10 continuation). Full-run history comes from /api/training `history`
+     (agillm.rpv16.curve-history.v1, 512-step buckets + 64-step `recent`), the dense
+     tail from `train`. Headline = AR full-stack CE; AR / SAT var / NAT per objective;
+     the mixed-objective loss is only a faint p10-p90 band. */
+  var $=function(id){return document.getElementById(id);};
+  var ROOT=$("agi44-curves"), pill=$("agi44-curves-pill"), lbl=$("agi44-curves-lbl"), spark=$("agi44-spark"),
+      cv=$("agi44-canvas"), tip=$("agi44-tip"), foot=$("agi44-foot"), upd=$("agi44-upd"), nowEl=$("agi44-now"),
+      rangesEl=$("agi44-ranges"), seriesEl=$("agi44-series"), bodyEl=$("agi44-curves-body");
+  if(!ROOT||!cv||!bodyEl) return;
+  var FIX_STEP=2785394; // Standard 1.1B lineage: 2026-09-06 rollback + fused-CE gradient fix
+  var DATA=null, SERVED=null, GEOM=null, MODEL=null, CHROME_SIG="";
+
+  /* ---------- helpers ---------- */
+  function num(v){ if(v===null||v===undefined||v===""||typeof v==="boolean") return null; var n=Number(v); return isFinite(n)?n:null; }
+  function N(v){ var n=num(v); return n===null?"—":Math.round(n).toLocaleString(); }
+  function F(v,d){ var n=num(v); return n===null?"—":n.toFixed(d===undefined?3:d); }
+  function E(v){ var n=num(v); return n===null?"—":n.toExponential(2).replace("e-0","e-").replace("e+0","e"); }
+  function esc(t){ return String(t==null?"":t).replace(/[<>&"]/g,function(c){return {"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c];}); }
+  function ago(t){ t=window.AGILLMTelemetryValues.timestamp(t); if(t===null) return "—"; var s=Math.max(0,Math.floor(Date.now()/1000-t)); return s<90?s+"s ago":s<5400?Math.round(s/60)+"m ago":s<172800?Math.round(s/3600)+"h ago":Math.round(s/86400)+"d ago"; }
+  function kfmt(v){ var n=num(v); if(n===null) return "—"; return n>=1000?(Math.round(n/100)/10+"k").replace(".0k","k"):String(Math.round(n)); }
+  function compact(v){ var n=num(v); if(n===null) return "—"; var a=Math.abs(n); return a>=1e9?(n/1e9).toFixed(2)+"B":a>=1e6?(n/1e6).toFixed(1)+"M":a>=1e4?(n/1e3).toFixed(1)+"k":Math.round(n).toLocaleString(); }
+  function byX(a,b){ return a.x-b.x; }
+  function nsort(a,b){ return a-b; }
+  function q(sorted,p){ if(!sorted.length) return null; var i=(sorted.length-1)*p, lo=Math.floor(i), hi=Math.ceil(i); return sorted[lo]+(sorted[hi]-sorted[lo])*(i-lo); }
+  function mean(a){ if(!a.length) return null; var s=0; for(var i=0;i<a.length;i++) s+=a[i]; return s/a.length; }
+  function niceStep(r){ var p=Math.pow(10,Math.floor(Math.log10(r||1))), m=r/p; return (m<1.5?1:m<3.5?2:m<7.5?5:10)*p; }
+  function fmtStep(v,span){ if(span>=150000) return Math.round(v/1000)+"k"; if(span>=15000) return (v/1000).toFixed(1).replace(/\.0$/,"")+"k"; return Math.round(v).toLocaleString(); }
+  function fmtTime(t,span){ t=window.AGILLMTelemetryValues.timestamp(t); if(t===null) return ""; var d=new Date(t*1000);
+    if(span>129600) return d.toLocaleDateString(undefined,{day:"numeric",month:"short"});
+    return d.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"}); }
+  function fmtStamp(t){ t=window.AGILLMTelemetryValues.timestamp(t); if(t===null) return ""; var d=new Date(t*1000); return d.toLocaleDateString(undefined,{day:"numeric",month:"short"})+" "+d.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"}); }
+
+  /* ---------- series ---------- */
+  var DEFS={
+    anc:{name:"AR · full-stack CE",short:"AR full-stack",col:"#58a6ff",w:2.5,grp:"AR",f:"anc",nf:"anc_n",tipn:"anchor steps"},
+    ar:{name:"AR · block-local CE",short:"AR block-local",col:"#a5d6ff",w:1.3,grp:"AR",f:"ar",nf:"ar_n",dash:[5,3]},
+    sat:{name:"SAT var · CE",short:"SAT var",col:"#d2a8ff",w:1.7,grp:"SAT",f:"sat",nf:"sat_n"},
+    nat:{name:"NAT · CE",short:"NAT",col:"#ff7b72",w:1.7,grp:"NAT",f:"nat",nf:"nat_n"},
+    mix:{name:"all objectives · mean + p10–p90 of every step's loss",short:"mixed",leg:"mixed band",col:"#8b98ab",w:1,grp:"Mixed",f:"loss",nf:"n",band:true},
+    ema:{name:"mixed local-objective EMA (α=.03 per step, all objectives) · raw training telemetry",short:"mixed EMA",leg:"mixed EMA (α=.03)",col:"#e3b341",w:1.6,grp:"Mixed",f:"ema",nf:"n",dash:[6,2]},
+    ref:{name:"unigram entropy (no context): AR above this line is worse than ignoring context",short:"unigram",leg:"unigram baseline",col:"#e6edf3",grp:"AR"},
+    /* AGI44_OBJECTIVE_SERIES_20261002: Standard trainer-validation and full-stack SAT/NAT anchor series, visible by default */
+    tval:{name:"trainer val · AR CE (fixed 12,288-token validation printed by the trainer)",short:"trainer val",leg:"trainer val (AR)",col:"#3fb950",w:1.5,grp:"AR",pk:"val",vk:"ce"},
+    satval:{name:"SAT fixed · trainer validation CE (shift-2 draft)",short:"SAT trainer val",leg:"SAT trainer val",col:"#bc8cff",w:1.4,grp:"SAT",pk:"val",vk:"sat_shift2_ce"},
+    natval:{name:"NAT pooled · trainer validation CE (clean suffix)",short:"NAT trainer val",leg:"NAT trainer val",col:"#ffa657",w:1.4,grp:"NAT",pk:"val",vk:"nat_clean_suffix_ce"},
+    satanc:{name:"SAT fixed · full-stack anchor CE (training batch, raw)",short:"SAT full-stack",leg:"SAT full-stack",col:"#f778ba",w:1.2,grp:"SAT",pk:"anc",kind:"sat_anchor"},
+    satvaranc:{name:"SAT var · full-stack anchor CE (training batch, raw)",short:"SAT var full-stack",leg:"SAT var full-stack",col:"#39d0c8",w:1.2,grp:"SAT",pk:"anc",kind:"satvar_anchor"},
+    natanc:{name:"NAT · full-stack anchor CE (training batch, raw)",short:"NAT full-stack",leg:"NAT full-stack",col:"#ffcc99",w:1.2,grp:"NAT",pk:"anc",kind:"nat_anchor"},
+    held:{name:"held-out CE (recorded eval runs)",short:"held-out",leg:"held-out eval",col:"#3fb950",grp:"AR",pts:true},
+    w257:{name:"held-out 257-tok · 3090 archive",short:"held-out 257",col:"#58a6ff",w:2.2,grp:"AR",pts:true},
+    w2048:{name:"held-out 2048-tok · 3090 archive",short:"held-out 2048",col:"#a5d6ff",w:1.4,grp:"AR",pts:true},
+    lr:{name:"learning rate · right axis, log scale",short:"LR",leg:"LR (right axis)",col:"#d29922",w:1.2,grp:"LR",f:"lr",axis:"lr",dash:[4,3]},
+    ghost:{name:"abandoned (rolled-back) branch · dashed, same colours",short:"abandoned",leg:"abandoned branch",col:"#6e7681",grp:"Mixed"}
+  };
+  var ORDER={rpv16:["anc","ar","sat","nat","mix","ema","held","ref","ghost","lr"],standard:["w257","w2048","anc","ar","sat","nat","mix","ema","tval","satval","natval","satanc","satvaranc","natanc","lr"]};
+  var LINES=["mix","ema","ar","sat","nat","anc"]; // draw order, headline last
+  var LINEAGES=[["rpv16","RPV16 2.0B"],["standard","Standard 1.1B"]];
+  var RANGES={rpv16:[["run","whole archive"],["branch","vs abandoned"],["7d","7 d"],["24h","24 h"],["6h","6 h"],["1h","1 h"],["tail","archive tail"]],
+              standard:[["all","all"],["7d","7 d"],["24h","24 h"]]};
+  var GROUPS=[["all","show all"],["AR","AR"],["SAT","SAT"],["NAT","NAT"],["Mixed","mixed + LR"]];
+
+  /* ---------- persisted view state (same localStorage key the layout runtime edits) ---------- */
+  var ST={lineage:null,range:{rpv16:"run",standard:"all"},hide:{},zoom:null};
+  var saved={}; try{ saved=JSON.parse(localStorage.getItem("agi44_curves")||"{}")||{}; }catch(e){ saved={}; }
+  if(saved.open) ROOT.classList.add("open");
+  if(saved.v2&&typeof saved.v2==="object"){
+    if(saved.v2.range&&typeof saved.v2.range==="object") Object.keys(ST.range).forEach(function(k){ var r=saved.v2.range[k]; if(RANGES[k].some(function(x){return x[0]===r;})) ST.range[k]=r; });
+    if(saved.v2.hide&&typeof saved.v2.hide==="object"&&saved.v2.v===2026100201) ST.hide=saved.v2.hide;
+  }
+  function save(){ try{ var prev=JSON.parse(localStorage.getItem("agi44_curves")||"{}")||{}; prev.open=ROOT.classList.contains("open"); prev.v2={range:ST.range,hide:ST.hide,v:2026100201}; localStorage.setItem("agi44_curves",JSON.stringify(prev)); }catch(e){} }
+  function defaultHidden(k){ return false; } /* AGI44_TELEMETRY_RESTORE_20261002: every series visible by default; hiding is only an explicit user toggle */
+  function visible(k){ var key=lineage()+":"+k; return (key in ST.hide)?!ST.hide[key]:!defaultHidden(k); }
+  function setVisible(k,on){ ST.hide[lineage()+":"+k]=on?0:1; }
+  pill.addEventListener("click",function(){ ROOT.classList.toggle("open"); save(); if(ROOT.classList.contains("open")) draw(); });
+
+  /* The chart follows the model selector; a lineage picked in the chart sticks until the selector changes. */
+  function modelLineage(){ try{ if(typeof modelKey!=="undefined"&&modelKey==="standard") return "standard"; }catch(e){} return "rpv16"; }
+  function lineage(){ return ST.lineage||modelLineage(); }
+  (function(){ var seg=$("modelseg"); if(!seg||!window.MutationObserver) return; var last=modelLineage();
+    new MutationObserver(function(){ var now=modelLineage(); if(now!==last){ last=now; ST.lineage=null; ST.zoom=null; draw(); } }).observe(seg,{attributes:true,subtree:true,attributeFilter:["class"]}); })();
+
+  /* ---------- data model ---------- */
+  var ALIAS={step:"s1",mean:"loss",p10:"lo",p90:"hi",anchor:"anc",anchor_n:"anc_n",tok_s:"tps",grad_norm:"gn",ts:"t1",t:"t1"};
+  var NUMK=["loss","lo","hi","ar","ar_n","sat","sat_n","nat","nat_n","anc","anc_n","lr","tps","gn","tok","ar_deep","ar_p10","ar_p90"];
+  function tableRows(h){
+    if(!h) return [];
+    var rows=Array.isArray(h)?h:h.rows, cols=Array.isArray(h.cols)?h.cols:null;
+    if(!Array.isArray(rows)) return [];
+    return rows.map(function(r){ if(Array.isArray(r)){ if(!cols) return null; var o={}; for(var i=0;i<cols.length;i++) o[cols[i]]=r[i]; return o; } return (r&&typeof r==="object")?r:null; }).filter(Boolean);
+  }
+  function normRow(o){
+    var r={}; for(var k in o) if(Object.prototype.hasOwnProperty.call(o,k)) r[ALIAS[k]||k]=o[k];
+    var s0=num(r.s0), s1=num(r.s1); if(s0===null&&s1===null) return null; if(s0===null) s0=s1; if(s1===null) s1=s0;
+    var out={s0:s0,s1:s1,x:(s0+s1)/2,t0:num(r.t0),t1:num(r.t1),n:num(r.n)};
+    NUMK.forEach(function(k){ out[k]=num(r[k]); });
+    [["ar","ar_n"],["sat","sat_n"],["nat","nat_n"],["anc","anc_n"]].forEach(function(p){ if(out[p[1]]===0) out[p[0]]=null; });
+    if(out.t0===null) out.t0=out.t1;
+    return out;
+  }
+  function inferW(rows){ if(rows.length<2) return null; var d=[]; for(var i=1;i<Math.min(rows.length,64);i++) d.push(rows[i].s0-rows[i-1].s0); d.sort(nsort); return Math.max(1,q(d,.5)); }
+  function tailPts(src){ return (src||[]).filter(function(p){return p&&num(p.step)!==null&&num(p.loss)!==null;}).slice().sort(function(a,b){return a.step-b.step;}); }
+  function bucketTail(pts,w){
+    var out=[],cur=null,hasObj=pts.some(function(p){return !!p.objective;});
+    function flush(){ if(!cur) return; var L=cur.L.slice().sort(nsort);
+      var r={s0:cur.s0,s1:cur.s1,x:(cur.s0+cur.s1)/2,w:w,t0:cur.t0,t1:cur.t1,n:L.length,loss:mean(L),lo:q(L,.1),hi:q(L,.9),lr:cur.lr,tps:mean(cur.tps),tok:cur.tok,ema:cur.ema,src:"tail"};
+      ["ar","sat","nat","anc"].forEach(function(k){ var a=cur.o[k]; r[k]=hasObj&&a.length?mean(a):null; r[k+"_n"]=hasObj?a.length:null; });
+      if(hasObj&&cur.o.ar.length){ var A=cur.o.ar.slice().sort(nsort); r.ar_p10=q(A,.1); r.ar_p90=q(A,.9); } else { r.ar_p10=null; r.ar_p90=null; }
+      out.push(r); }
+    pts.forEach(function(p){ var b=Math.floor(p.step/w);
+      if(!cur||cur.b!==b){ flush(); cur={b:b,s0:p.step,s1:p.step,t0:num(p.ts),t1:num(p.ts),L:[],o:{ar:[],sat:[],nat:[],anc:[]},tps:[],lr:null,tok:null,ema:null}; }
+      cur.s1=p.step; var ts=num(p.ts); if(ts!==null){ if(cur.t0===null) cur.t0=ts; cur.t1=ts; }
+      var rep=Math.min(64,Math.max(1,num(p.n)||1)), ri; for(ri=0;ri<rep;ri++) cur.L.push(p.loss);
+      if(hasObj){ var o=String(p.objective||"").toLowerCase(); for(ri=0;ri<rep;ri++){ if(p.global_anchor===true) cur.o.anc.push(p.loss); else if(cur.o[o]) cur.o[o].push(p.loss); } }
+      if(num(p.lr)!==null) cur.lr=p.lr; if(num(p.tps)!==null) cur.tps.push(p.tps); if(num(p.tok)!==null) cur.tok=p.tok; if(num(p.ema)!==null) cur.ema=p.ema; });
+    flush(); return out;
+  }
+  function wmean(grp,k,nk){ var s=0,w=0,i,g,v,ww;
+    for(i=0;i<grp.length;i++){ g=grp[i]; v=g[k]; if(v===null||v===undefined||!isFinite(v)) continue; ww=nk?num(g[nk]):1; if(ww===null) ww=1; if(!ww) continue; s+=v*ww; w+=ww; }
+    return w?s/w:null; }
+  function sumk(grp,k){ var s=0,any=false; grp.forEach(function(g){ var v=num(g[k]); if(v!==null){ s+=v; any=true; } }); return any?s:null; }
+  function mergeRows(rows,g){ if(g<=1||rows.length<2) return rows; var out=[];
+    for(var i=0;i<rows.length;i+=g){ var grp=rows.slice(i,i+g), a=grp[0], z=grp[grp.length-1];
+      var r={s0:a.s0,s1:z.s1,x:(a.s0+z.s1)/2,w:sumk(grp,"w")||(z.s1-a.s0+1),t0:a.t0,t1:z.t1,src:a.src,n:sumk(grp,"n"),loss:wmean(grp,"loss","n"),lo:wmean(grp,"lo","n"),hi:wmean(grp,"hi","n"),
+             ar_deep:wmean(grp,"ar_deep","ar_n"),ar_p10:wmean(grp,"ar_p10","ar_n"),ar_p90:wmean(grp,"ar_p90","ar_n"),lr:z.lr,tps:wmean(grp,"tps",null),gn:wmean(grp,"gn",null),tok:z.tok,ema:z.ema};
+      ["ar","sat","nat","anc"].forEach(function(k){ r[k]=wmean(grp,k,k+"_n"); r[k+"_n"]=sumk(grp,k+"_n"); });
+      out.push(r); }
+    return out; }
+  function recoveredProbes(){
+    var pts=Array.isArray(DATA.recovered_probes)?DATA.recovered_probes.slice():[];
+    if(!pts.length) pts=(DATA.probes||[]).slice();
+    return pts.filter(function(p){return num(p.step)!==null&&num(p.w257)!==null;}).map(function(p){ return {step:p.step,x:p.step,t:num(p.t),w257:num(p.w257),w2048:num(p.w2048),basis:p.step_basis,ts:p.ts}; }).sort(byX);
+  }
+  function fleetSnapshot(){return !!(DATA&&(DATA.live_history||DATA.source==='current-vast-fleet-with-preserved-historical-curves'));}
+  function archiveLatest(m){
+    if(!fleetSnapshot())return DATA.latest||{};
+    var rows=(m.H||[]).concat(m.R||[]).slice().sort(function(a,b){return a.s1-b.s1;}),r=rows[rows.length-1]||{};
+    return {step:m.last,seen_tok:r.tok,lr:r.lr,raw_tok_s:r.tps,loss:r.loss};
+  }
+  /* AGI44_TELEMETRY_RESTORE_20261002: current-run raw trainer rows (live_history) are charted again, per objective where the feed has it */
+  function liveTail(lin){
+    if(!fleetSnapshot()) return lin==="rpv16"?tailPts(DATA.train):[];
+    var lh=DATA.live_history&&DATA.live_history[lin], rows=lh&&Array.isArray(lh.rows)?lh.rows:[];
+    return tailPts(rows.map(function(p){ if(!p) return null; var o=String(p.objective||"").toLowerCase();
+      return {step:num(p.step),loss:num(p.loss),lr:num(p.lr),tps:num(p.tok_s!=null?p.tok_s:p.raw_tok_s),tok:num(p.seen_tokens),ts:num(p.ts),objective:(o==="ar"||o==="sat"||o==="nat")?o:null,global_anchor:p.global_anchor===true,n:num(p.n)}; }).filter(Boolean));
+  }
+  function addEma(m){ var A=0.03; /* count-aware: a bucket of n samples decays the EMA n times */
+    function rowsEma(rows){ var e=null; (rows||[]).forEach(function(r){ var v=num(r.loss), n=Math.max(1,num(r.n)||1); if(v===null){ r.ema=e; return; } if(e===null) e=v; else { var k=Math.pow(1-A,n); e=e*k+v*(1-k); } r.ema=e; }); }
+    rowsEma(m.H); rowsEma(m.R); (m.branches||[]).forEach(function(b){ rowsEma(b.rows); });
+    var e=null; m.T.forEach(function(p){ var v=num(p.loss); if(v===null) return; e=e===null?v:(1-A)*e+A*v; p.ema=e; });
+  }
+  function lastEma(m){ var i; for(i=m.T.length-1;i>=0;i--) if(num(m.T[i].ema)!==null) return m.T[i].ema; var rr=m.R.length?m.R:m.H; for(i=rr.length-1;i>=0;i--) if(num(rr[i].ema)!==null) return rr[i].ema; return null; }
+  function buildModel(lin){
+    var h=(lin==="standard"?DATA.standard_history:DATA.history)||null;
+    var H=tableRows(h).map(normRow).filter(Boolean).sort(byX);
+    var rec=h&&h.recent, R=rec?tableRows(Array.isArray(rec)?{cols:h.cols,rows:rec}:{cols:rec.cols||h.cols,rows:rec.rows}).map(normRow).filter(Boolean).sort(byX):[];
+    var T=liveTail(lin), P=pointSeries(lin);
+    var probes=lin==="standard"?recoveredProbes():[];
+    var held=((h&&h.heldout)||[]).map(function(p){ var ce=num(p.ce!=null?p.ce:p.value); return (num(p.step)===null||ce===null)?null:{x:p.step,step:p.step,ce:ce,source:p.source,protocol:p.protocol,ckpt:p.ckpt,tokens:num(p.tokens),ab:p.lineage!=null&&p.lineage!=="current",t:num(p.ts!=null?p.ts:(p.t!=null?p.t:p.mtime))}; }).filter(Boolean).sort(byX);
+    var res={}; ((h&&h.resumes)||[]).forEach(function(r){ var s=num(r&&r.step); if(s!==null) res[s]={step:s,t:num(r.ts),path:r.path,max_depth:num(r.max_depth),count:num(r.count)}; });
+    if(lin==="rpv16"&&!fleetSnapshot()) (DATA.markers||[]).forEach(function(m){ var s=num(m&&m.step); if(s!==null&&m.label==="resume"&&!res[s]) res[s]={step:s,t:null,path:m.checkpoint}; });
+    var resumes=Object.keys(res).map(function(k){return res[k];}).sort(function(a,b){return a.step-b.step;});
+    var L=fleetSnapshot()?{}:(DATA.latest||{}), lastS=[], firstS=[];
+    if(H.length){ firstS.push(H[0].s0); lastS.push(H[H.length-1].s1); }
+    if(R.length){ firstS.push(R[0].s0); lastS.push(R[R.length-1].s1); }
+    if(T.length){ firstS.push(T[0].step); lastS.push(T[T.length-1].step); }
+    if(probes.length){ firstS.push(probes[0].step); lastS.push(probes[probes.length-1].step); }
+    var heldCur=held.filter(function(p){return !p.ab;}); if(heldCur.length){ firstS.push(heldCur[0].step); lastS.push(heldCur[heldCur.length-1].step); }
+    if(lin==="rpv16"&&num(L.step)!==null) lastS.push(L.step);
+    var first=firstS.length?Math.min.apply(null,firstS):null, last=lastS.length?Math.max.apply(null,lastS):null;
+    // step <-> time: bucket ends, dense tail stamps, probe stamps; monotone in step
+    var tl=[]; H.concat(R).forEach(function(r){ if(r.t1!==null) tl.push([r.s1,r.t1]); });
+    T.forEach(function(p){ var t=num(p.ts); if(t!==null) tl.push([p.step,t]); });
+    probes.forEach(function(p){ if(p.t!==null) tl.push([p.step,p.t]); });
+    tl.sort(function(a,b){return a[0]-b[0];}); var TL=[]; tl.forEach(function(p){ if(!TL.length||(p[0]>TL[TL.length-1][0]&&p[1]>=TL[TL.length-1][1])) TL.push(p); });
+    if(!fleetSnapshot()&&TL.length<2&&last!==null){ // no stamps yet: anchor the latest step to the feed time at the live median step time
+      var tEnd=num(L.ts)||num(DATA.polled_at)||window.AGILLMTelemetryValues.timestamp(DATA.generated_at)||Date.now()/1000, sps=num((DATA.rpv16_live||DATA.gb10_live||{}).median_step_s)||0.82;
+      TL=[[first,tEnd-(last-first)*sps],[last,tEnd]];
+    }
+    var wH=num(h&&h.bucket_steps)||inferW(H)||512, wR=num(rec&&rec.bucket_steps)||inferW(R)||64;
+    H.forEach(function(r){ r.w=Math.max(r.s1-r.s0+1,wH); r.src="hist"; });
+    R.forEach(function(r){ r.w=Math.max(r.s1-r.s0+1,wR); r.src="recent"; });
+    var branches=((h&&h.branches)||[]).map(function(b){ if(!b) return null; var rows=tableRows({cols:b.cols||(h&&h.cols),rows:b.rows}).map(normRow).filter(Boolean).sort(byX), bw=num(b.bucket_steps)||inferW(rows)||wH;
+      rows.forEach(function(r){ r.w=Math.max(r.s1-r.s0+1,bw); r.src="ghost"; }); return rows.length?{label:b.label||"abandoned branch",from:num(b.from_step)!==null?num(b.from_step):rows[0].s0,to:num(b.to_step)!==null?num(b.to_step):rows[rows.length-1].s1,ended:num(b.ended_ts),rows:rows,w:bw}:null; }).filter(Boolean);
+    branches.forEach(function(b,i){ var src=(h.branches||[]).filter(Boolean)[i]||{}; b.cut=num(src.cut_step)!==null?num(src.cut_step):b.from-1; b.depth=num(src.depth_steps); b.cutTs=num(src.cut_ts)||b.ended; b.meanLast=num(src.ar_mean_last_10k); });
+    resumes=resumes.filter(function(r){ if(last!==null&&r.step>last+1) return false; if(branches.some(function(b){ return r.step>b.cut&&r.step<=b.to&&r.t!==null&&b.cutTs&&r.t<b.cutTs; })) return false;
+      if(r.t!==null&&TL.length>=2&&r.step>=TL[0][0]&&r.step<=TL[TL.length-1][0]){ var tAt=interp(TL,r.step,0,1); if(tAt!==null&&r.t<tAt-900) return false; } return true; });
+    var rbMin=num(h&&h.rollback_min_steps)||4096, cuts=branches.map(function(b){ return {cut:b.cut,depth:b.depth,t:b.cutTs}; });
+    if(!cuts.length&&num(h&&h.summary&&h.summary.rows_abandoned)>0){ var cand=null; resumes.forEach(function(r){ if(num(r.max_depth)===null||r.max_depth<rbMin||r.t===null) return; var prevT=null; for(var i=TL.length-1;i>=0;i--){ if(TL[i][0]<=r.step){ prevT=TL[i][1]; break; } }
+      if(prevT!==null&&r.t-prevT>7200&&(!cand||r.max_depth>cand.max_depth)) cand=r; }); if(cand) cuts.push({cut:cand.step,depth:cand.max_depth,t:cand.t}); }
+    resumes.forEach(function(r){ r.rollback=cuts.some(function(c){return Math.abs(c.cut-r.step)<=1;}); });
+    var ref=h&&h.reference&&num(h.reference.unigram_nats)!==null?{v:num(h.reference.unigram_nats),label:h.reference.label||"unigram entropy",meaning:h.reference.meaning||""}:null;
+    var bandAR=H.concat(R).some(function(r){return r.ar_p10!==null&&r.ar_p10!==undefined;})||(T.length&&T.some(function(p){return !!p.objective;}));
+    var nowT=Date.now()/1000, ghostEnd=null; branches.forEach(function(b){ if(!b.cutTs||nowT-b.cutTs<72*3600) ghostEnd=Math.max(ghostEnd||0,b.to); });
+    var m={lin:lin,h:h||{},H:H,R:R,T:T,wH:wH,wR:wR,probes:probes,held:held,resumes:resumes,branches:branches,cuts:cuts,first:first,last:last,TL:TL,ref:ref,band:bandAR?"ar":"mixed",ghostEnd:ghostEnd,P:P};
+    addEma(m); m.has={}; ORDER[lin].forEach(function(k){ m.has[k]=seriesAvailable(m,k); });
+    return m;
+  }
+  function pointSeries(lin){ var out={}, lh=DATA&&DATA.live_history&&DATA.live_history[lin];
+    Object.keys(DEFS).forEach(function(k){ var d=DEFS[k]; if(!d.pk) return; var src=lh?(d.pk==="val"?lh.val:lh.anchors):null;
+      out[k]=(Array.isArray(src)?src:[]).map(function(p){ if(!p||(d.kind&&p.kind!==d.kind)) return null; var v=num(p[d.vk||"ce"]), st=num(p.step); return (v===null||st===null)?null:{x:st,step:st,v:v,n:num(p.n)}; }).filter(Boolean).sort(byX); });
+    return out; }
+  function seriesAvailable(m,k){ var d=DEFS[k]; if(d&&d.pk) return !!(m.P&&m.P[k]&&m.P[k].length);
+    if(k==="held") return m.held.length>0;
+    if(k==="ghost") return m.branches.length>0;
+    if(k==="ref") return !!m.ref;
+    if(k==="w257"||k==="w2048") return m.probes.some(function(p){return p[k]!==null;});
+    var any=function(rows){ for(var i=0;i<rows.length;i++){ var v=rows[i][d.f]; if(v!==null&&v!==undefined) return true; } return false; };
+    if(any(m.H)||any(m.R)) return true;
+    if(!m.T.length) return false;
+    if(k==="mix"||k==="lr") return true;
+    return m.T.some(function(p){ return k==="anc"?p.global_anchor===true:String(p.objective||"").toLowerCase()===k; });
+  }
+  function model(lin){ lin=lin||lineage(); if(MODEL&&MODEL.d===DATA&&MODEL.lin===lin) return MODEL; if(HMODEL&&HMODEL.d===DATA&&HMODEL.lin===lin) return HMODEL;
+    var m=buildModel(lin); m.d=DATA; if(lin===lineage()) MODEL=m; else HMODEL=m; return m; }
+  var HMODEL=null;
+  function interp(TL,v,a,b){ if(!TL.length) return null; if(v<=TL[0][a]) return TL[0][b]; var n=TL.length-1; if(v>=TL[n][a]) return TL[n][b];
+    var lo=0,hi=n; while(hi-lo>1){ var mid=(lo+hi)>>1; if(TL[mid][a]<=v) lo=mid; else hi=mid; }
+    var p=TL[lo],r=TL[hi]; return p[b]+(r[b]-p[b])*((v-p[a])/Math.max(1e-9,r[a]-p[a])); }
+  function timeAt(m,s){ return interp(m.TL,s,0,1); }
+  function stepAt(m,t){ return interp(m.TL,t,1,0); }
+
+  /* Rows for one series at the resolution the view needs: dense tail, then 64-step recent, then 512-step history. */
+  /* Sparse objectives need wider tail buckets: AR is ~3/4 of steps, SAT var and NAT ~1/10 each, anchors 1 in ~17. */
+  var MINW={mix:32,ema:8,ar:8,lr:8,sat:48,nat:48,anc:96};
+  function rowsFor(m,k,x0,x1,dw){
+    var d=DEFS[k], f=d.f, has=function(rows){ for(var i=0;i<rows.length;i++){ var v=rows[i][f]; if(v!==null&&v!==undefined) return true; } return false; };
+    var out=[], cut=Infinity, rHas=m.R.length&&has(m.R), hHas=m.H.length&&has(m.H);
+    var tw=Math.max(MINW[k]||8,Math.round(dw));
+    if(m.T.length){ var tb=bucketTail(m.T,tw);
+      if(has(tb)){ if((!rHas||tw<m.wR)&&(!hHas||dw<m.wH)){ out=tb.slice(); cut=tb[0].s0; }
+        else { var hrEnd=Math.max(m.R.length?m.R[m.R.length-1].s1:-Infinity,m.H.length?m.H[m.H.length-1].s1:-Infinity); out=tb.filter(function(r){return r.s0>hrEnd;}); } }
+    }
+    if(rHas&&dw<m.wH){ var rr=mergeRows(m.R.filter(function(r){return r.s1<cut;}),Math.max(1,Math.round(dw/m.wR))); if(rr.length){ out=rr.concat(out); cut=Math.min(cut,rr[0].s0); } }
+    if(hHas){ var hh=mergeRows(m.H.filter(function(r){return r.s1<cut;}),Math.max(1,Math.round(dw/m.wH))); out=hh.concat(out); }
+    var lo=-1,hi=out.length; for(var i=0;i<out.length;i++){ if(out[i].x<x0) lo=i; else break; } for(var j=out.length-1;j>=0;j--){ if(out[j].x>x1) hi=j; else break; }
+    return out.slice(Math.max(0,lo),Math.min(out.length,hi+1)).filter(function(r){ var v=r[f]; return v!==null&&v!==undefined; });
+  }
+  /* Window statistic: mean over the last W steps vs the W before, weighted by sample counts, with a row-scatter standard error. */
+  function winStats(m,k,W){
+    var d=DEFS[k]; if(!d||!d.f||m.last===null) return null;
+    var srcs=[]; if(m.R.length) srcs.push(m.R); if(m.T.length) srcs.push(bucketTail(m.T,16)); if(m.H.length) srcs.push(m.H);
+    for(var si=0;si<srcs.length;si++){
+      var rows=srcs[si].filter(function(r){ return r[d.f]!==null&&r[d.f]!==undefined; });
+      if(!rows.length) continue;
+      var end=rows[rows.length-1].s1, a=rows.filter(function(r){return r.x>end-W;}), b=rows.filter(function(r){return r.x<=end-W&&r.x>end-2*W;});
+      if(!a.length) continue;
+      var ma=wmean(a,d.f,d.nf), mb=b.length?wmean(b,d.f,d.nf):null;
+      var se=function(g,mu){ if(g.length<2) return null; var s=0; g.forEach(function(r){ s+=Math.pow(r[d.f]-mu,2); }); return Math.sqrt(s/(g.length-1))/Math.sqrt(g.length); };
+      var sa=se(a,ma), sb=b.length?se(b,mb):null, sd=(sa!==null&&sb!==null)?Math.sqrt(sa*sa+sb*sb):null;
+      return {value:ma,prev:mb,delta:mb===null?null:ma-mb,se:sd,end:end,W:W,n:sumk(a,d.nf),rows:rows};
+    }
+    return null;
+  }
+  function trendW(m){ var span=(m.last||0)-(m.first||0); return Math.max(64,Math.min(5000,Math.round(span/4))); }
+
+  /* ---------- chrome: lineage switch, ranges, legend, quick filters, summary ---------- */
+  var sumEl=$("agi44-sum"); if(!sumEl){ sumEl=document.createElement("div"); sumEl.id="agi44-sum"; sumEl.setAttribute("aria-live","polite"); var h4=bodyEl.querySelector("h4"); bodyEl.insertBefore(sumEl,h4?h4.nextSibling:bodyEl.firstChild); }
+  var qfEl=document.createElement("span"); qfEl.className="qf";
+  var wrapEl=cv.parentNode, selEl=document.createElement("div"); selEl.className="sel"; wrapEl.appendChild(selEl);
+  var titleEl=(bodyEl.querySelector("h4 > span")||null);
+  var notes=Array.prototype.filter.call(bodyEl.children,function(n){return n.classList&&n.classList.contains("note")&&!n.id;});
+  var liveNote=document.createElement("div"); liveNote.className="note"; liveNote.id="agi44-live-note";
+  liveNote.textContent="Archived RPV16 curves are training-batch cross-entropy (nats) from recorded trainer logs (including historical GB10 runs), bucketed by step: AR full-stack = full forward on the anchor steps (the headline); AR block-local, SAT var and NAT = per-objective local-block CE; the grey band is the p10–p90 spread of every step's loss, whatever its objective. Held-out dots appear when an eval run is recorded. The Standard 1.1B / 3090 archive is a different model and is never drawn on this axis. Current-run raw trainer rows are drawn too (dots when zoomed in), and the mixed band, mixed EMA and per-objective AR/SAT/NAT series are all shown by default — toggle any of them off in the legend. Drag across this archive chart to zoom, double-click to reset.";
+  bodyEl.appendChild(liveNote);
+  function paintChrome(m){
+    var lin=m.lin, sig=lin+"|"+m.branches.length+"|"+ORDER[lin].map(function(k){return k+(m.has[k]?1:0)+(visible(k)?1:0);}).join(",")+"|"+(ST.range[lin])+"|"+(ST.zoom?1:0)+"|"+(ST.lineage?1:0);
+    if(sig===CHROME_SIG) return; CHROME_SIG=sig;
+    if(window.AGILLMProgressV1)window.AGILLMProgressV1.render(DATA);
+    if(titleEl) titleEl.textContent=lin==="rpv16"?"RPV16 2.0B · archived training CE"+(window.innerWidth<620?"":" · lower is better"):"Standard 1.1B · archived held-out + training CE"+(window.innerWidth<620?"":" · lower is better");
+    notes.forEach(function(n,i){ n.hidden=(lin==="rpv16"); }); liveNote.hidden=(lin!=="rpv16");
+    // ranges bar: lineage switch + ranges + zoom reset
+    rangesEl.innerHTML="";
+    var seg=document.createElement("span"); seg.className="seg2"; seg.setAttribute("role","group"); seg.setAttribute("aria-label","Model lineage");
+    LINEAGES.forEach(function(L){ var b=document.createElement("button"); b.type="button"; b.textContent=L[1]; b.className=lin===L[0]?"on":""; b.setAttribute("aria-pressed",String(lin===L[0]));
+      b.addEventListener("click",function(){ ST.lineage=(L[0]===modelLineage())?null:L[0]; ST.zoom=null; save(); draw(); }); seg.appendChild(b); });
+    rangesEl.appendChild(seg);
+    RANGES[lin].forEach(function(r){ if(r[0]==="branch"&&!m.branches.length) return; var b=document.createElement("button"); b.type="button"; b.className="rg"+(!ST.zoom&&ST.range[lin]===r[0]?" on":""); b.textContent=r[1];
+      b.addEventListener("click",function(){ ST.range[lin]=r[0]; ST.zoom=null; save(); draw(); }); rangesEl.appendChild(b); });
+    if(ST.zoom){ var z=document.createElement("button"); z.type="button"; z.className="rg on"; z.textContent="reset zoom ×"; z.addEventListener("click",function(){ ST.zoom=null; draw(); }); rangesEl.appendChild(z); }
+    rangesEl.appendChild(qfEl);
+    // legend: only series with data on this lineage
+    seriesEl.innerHTML="";
+    ORDER[lin].forEach(function(k){ if(!m.has[k]) return; var d=DEFS[k], on=visible(k), l=document.createElement("button");
+      l.type="button"; l.dataset.series=k; l.className="sr"+(on?"":" off"); l.setAttribute("aria-pressed",String(on));
+      var leg=k==="mix"?(m.band==="ar"?"mixed mean + AR p10–p90 band":"mixed mean + p10–p90 band"):(d.leg||d.short), tt=k==="mix"?(m.band==="ar"?"spread (p10–p90) of the per-step AR loss in each bucket":d.name):(k==="ref"&&m.ref?m.ref.label+" · "+m.ref.meaning:d.name);
+      l.title=tt; l.innerHTML='<i style="background:'+d.col+(d.band?';height:8px;opacity:.55':'')+(k==="ghost"?';background:repeating-linear-gradient(90deg,#8b98ab 0 3px,transparent 3px 6px)':'')+(k==="ref"?';background:repeating-linear-gradient(90deg,#e6edf3 0 2px,transparent 2px 5px)':'')+'"></i>'+esc(leg)+' <b class="v" data-v="'+k+'"></b>';
+      l.addEventListener("click",function(){ setVisible(k,!visible(k)); save(); draw(); }); seriesEl.appendChild(l); });
+    var na=document.createElement("span"); na.className="sr na";
+    if(lin==="rpv16") na.textContent="SAT fixed: not an RPV16 objective"+(m.has.anc?"":" · per-objective history loading from the collector…");
+    else na.textContent=m.has.anc||m.has.ar?"":"Current Standard training curves are unavailable — showing archived probes";
+    if(na.textContent) seriesEl.appendChild(na);
+    // quick filters
+    qfEl.innerHTML=""; qfEl.title="quick filters";
+    GROUPS.forEach(function(g){ var keys=ORDER[lin].filter(function(k){return m.has[k]&&(g[0]==="all"||DEFS[k].grp===g[0]||(g[0]==="Mixed"&&DEFS[k].grp==="LR"));}); if(!keys.length) return;
+      var b=document.createElement("button"); b.type="button"; b.className="qfb"; b.textContent=g[1];
+      b.addEventListener("click",function(){ ORDER[lin].forEach(function(k){ setVisible(k,keys.indexOf(k)>=0); }); save(); draw(); }); qfEl.appendChild(b); });
+  }
+  function trendHtml(s){
+    if(!s||s.delta===null) return '<i>—</i>';
+    var sig=s.se!==null?2*s.se:0.02, d=s.delta, cls=d< -sig?"dn":d>sig?"up":"", arrow=d< -sig?"▼":d>sig?"▲":"≈";
+    return '<i class="'+cls+'" title="mean of the last '+N(s.W)+' steps minus the '+N(s.W)+' before'+(s.se!==null?' · ±'+F(2*s.se,3)+' (2 s.e.)':'')+'">'+arrow+' '+(d>=0?"+":"−")+F(Math.abs(d),3)+' <span style="opacity:.7">/'+kfmt(s.W)+'</span></i>';
+  }
+  function paintSummary(m){
+    var L=archiveLatest(m), W=trendW(m), tiles=[];
+    function tile(label,val,sub,col,title){ tiles.push('<div class="t"'+(title?' title="'+esc(title)+'"':'')+'><small>'+(col?'<span class="sw" style="background:'+col+'"></span>':'')+esc(label)+'</small><b>'+val+'</b>'+(sub||'<i>&nbsp;</i>')+'</div>'); }
+    if(m.lin==="rpv16"){
+      tile("step",N(L.step!=null?L.step:m.last),'<i>'+compact(L.seen_tok!=null?L.seen_tok:L.seen_tokens)+' tokens</i>',null,"last recorded step in this archive");
+      ["anc","ar","sat","nat"].forEach(function(k){ if(!m.has[k]) return; var s=winStats(m,k,W); tile(DEFS[k].short,s?F(s.value,3):"—",trendHtml(s),DEFS[k].col,DEFS[k].name+" · mean of the last "+N(W)+" steps"+(s&&s.n?" · "+N(s.n)+" samples":"")); });
+      if(m.ref&&(m.has.anc||m.has.ar)){ var ku=m.has.anc?"anc":"ar", su=winStats(m,ku,Math.min(1024,W)); if(su){ var du=su.value-m.ref.v;
+        tile("vs unigram",(du>=0?"+":"−")+F(Math.abs(du),3),'<i class="'+(du>-0.25?"up":"")+'">baseline '+F(m.ref.v,3)+'</i>',"#e6edf3",DEFS[ku].name+" minus the unigram entropy "+F(m.ref.v,3)+" (a context-free model). Negative = better than ignoring context; a working LM sits well below it."); } }
+      { var ema=lastEma(m); tile("mixed EMA",F(ema,3),'<i>all objectives · raw</i>',DEFS.ema.col,"EMA α=.03 of every step's loss, whatever its objective (raw training telemetry, shown by default)"); }
+      if(m.branches.length){ var gb=m.branches[m.branches.length-1], k2=m.has.anc?"anc":(m.has.ar?"ar":null);
+        if(k2){ var f2=DEFS[k2].f, nf2=DEFS[k2].nf, ok2=function(r){return r[f2]!==null&&r[f2]!==undefined;};
+          var cur=(m.R.length?m.R:m.H).filter(function(r){return r.s0>gb.from&&ok2(r);}); if(!cur.length&&m.T.length) cur=bucketTail(m.T,64).filter(function(r){return r.s0>gb.from&&ok2(r);});
+          if(cur.length){ var endS=cur[cur.length-1].s1, gh=gb.rows.filter(function(r){return r.s0>=gb.from&&r.s0<=endS&&ok2(r);}), mc=wmean(cur,f2,nf2), mg=gh.length?wmean(gh,f2,nf2):null;
+            if(mc!==null&&mg!==null){ var dd=mc-mg; tile("vs abandoned",(dd>=0?"+":"−")+F(Math.abs(dd),3),'<i class="'+(dd<0?"dn":"up")+'">'+esc(k2==="anc"?"AR full":"AR local")+' · '+compact(endS-gb.from)+' steps</i>',"#6e7681","live branch minus the abandoned "+gb.label+" over the same steps ("+N(gb.from)+"–"+N(endS)+"), "+DEFS[k2].name); } } } }
+      tile("LR",E(L.lr),'<i>'+compact(L.fullstack_tok_s_64!=null?L.fullstack_tok_s_64:L.raw_tok_s)+' tok/s</i>',DEFS.lr.col,"last recorded archive learning rate and throughput");
+      if(!fleetSnapshot()&&SERVED&&num(SERVED.step)!==null){ var lag=num(L.step)!==null?L.step-SERVED.step:null; tile("CPU serving",N(SERVED.step),'<i class="'+(lag>0?"up":"")+'">'+(lag>0?compact(lag)+' steps behind':'current')+'</i>',"#3fb950","checkpoint loaded by the GETH CPU inference server"); }
+    } else {
+      var P=m.probes, lastP=P[P.length-1], best=P.reduce(function(a,b){return (!a||b.w257<a.w257)?b:a;},null);
+      tile("held-out 257",lastP?F(lastP.w257,4):"—",'<i>'+(lastP?"@"+N(lastP.step):"")+'</i>',DEFS.w257.col,"last recovered 3090 held-out probe");
+      tile("best 257",best?F(best.w257,4):"—",'<i>'+(best?"@"+N(best.step):"")+'</i>',DEFS.w257.col,"best recovered 3090 held-out probe");
+      tile("held-out 2048",lastP?F(lastP.w2048,4):"—",'<i>3090 archive</i>',DEFS.w2048.col,"");
+      ["anc","ar","sat","nat"].forEach(function(k){ if(!m.has[k]) return; var s=winStats(m,k,W); tile(DEFS[k].short,s?F(s.value,3):"—",trendHtml(s),DEFS[k].col,DEFS[k].name); });
+      tile("probes",N(P.length),'<i>recovered · no interpolation</i>',null,"");
+      { var ema2=lastEma(m); tile("mixed EMA",F(ema2,3),'<i>all objectives · raw</i>',DEFS.ema.col,"EMA α=.03 of every step's loss, whatever its objective (raw training telemetry, shown by default)"); }
+    }
+    sumEl.innerHTML=tiles.join("");
+  }
+
+  /* ---------- drawing ---------- */
+  function fitCanvas(){
+    var cs=getComputedStyle(bodyEl), mh=parseFloat(cs.maxHeight); if(!isFinite(mh)||mh<=0||bodyEl.offsetParent===null) return; // full page: CSS decides
+    var top=wrapEl.offsetTop, avail=Math.floor(mh-top-(parseFloat(cs.borderBottomWidth)||0)-(parseFloat(cs.borderTopWidth)||0)-2), lo=window.innerWidth<620?210:240, h=Math.max(lo,Math.min(560,avail));
+    if(Math.abs(cv.getBoundingClientRect().height-h)>1) cv.style.height=h+"px";
+  }
+  /* Count-weighted centred rolling mean so sparse objectives are not drawn as noise: at least MINN samples per plotted point. */
+  var MINN={anc:160,ar:320,sat:160,nat:160,mix:128};
+  var SMOOTH_SPAN=Infinity;
+  function smooth(rows,k){ var d=DEFS[k], f=d.f, nf=d.nf, need=MINN[k], key="_s"+f, i,j,s,w,add,jmax;
+    for(i=0;i<rows.length;i++){ if(rows[i][f]===null||rows[i][f]===undefined){ rows[i][key]=null; continue; }
+      s=0; w=0; add=function(r){ var v=r[f]; if(v===null||v===undefined) return; var c=nf?num(r[nf]):1; if(c===null) c=1; if(!c) return; s+=v*c; w+=c; };
+      jmax=Math.min(12,Math.floor(SMOOTH_SPAN/Math.max(1,rows[i].w||1)));
+      add(rows[i]); for(j=1;need&&w<need&&j<=jmax;j++){ if(i-j>=0) add(rows[i-j]); if(i+j<rows.length) add(rows[i+j]); }
+      rows[i][key]=w?s/w:rows[i][f]; }
+    if(k==="mix"){ ["lo","hi","ar_p10","ar_p90"].forEach(function(e){ for(i=0;i<rows.length;i++){ var ss=0,ww=0,jm=Math.min(12,Math.floor(SMOOTH_SPAN/Math.max(1,rows[i].w||1))),acc=function(r){ var v=r[e],c=num(r.n)||1; if(v===null||v===undefined) return; ss+=v*c; ww+=c; };
+      acc(rows[i]); for(j=1;ww<need&&j<=jm;j++){ if(i-j>=0) acc(rows[i-j]); if(i+j<rows.length) acc(rows[i+j]); } rows[i]["_s"+e]=ww?ss/ww:rows[i][e]; } }); }
+    return key; }
+  function draw(){
+    if(!DATA||!ROOT.classList.contains("open")) return;
+    var m=model(); paintChrome(m); paintSummary(m); fitCanvas();
+    var dpr=window.devicePixelRatio||1, W=cv.clientWidth||600, H=cv.clientHeight||300;
+    if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){ cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); }
+    var g=cv.getContext("2d"); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,W,H);
+    g.font="10.5px ui-sans-serif,system-ui,sans-serif"; g.textBaseline="middle";
+    if(m.first===null||m.last===null){ g.fillStyle="#8b98ab"; g.textAlign="center"; g.fillText(DATA.ok===false?"training feed unavailable":"waiting for training data…",W/2,H/2); GEOM=null; paintFoot(m,null); return; }
+    var dom=domainFor(m), x0=dom[0], x1=Math.max(dom[1],dom[0]+1);
+    var narrow=W<520, showLR=visible("lr")&&m.has.lr;
+    var pad={l:narrow?40:46,r:showLR?(narrow?40:48):12,t:18,b:m.TL.length>=2?34:22}, pw=Math.max(40,W-pad.l-pad.r), ph=Math.max(40,H-pad.t-pad.b);
+    var dw=(x1-x0)/Math.max(40,pw/2.5); SMOOTH_SPAN=(x1-x0)*0.04;
+    var BLO=m.band==="ar"?"_sar_p10":"_slo", BHI=m.band==="ar"?"_sar_p90":"_shi";
+    var S={}, ys=[], band=[], lrs=[];
+    LINES.forEach(function(k){ if(!m.has[k]||!visible(k)) return; S[k]=rowsFor(m,k,x0,x1,dw); var f=smooth(S[k],k);
+      S[k].forEach(function(r){ if(r.x>=x0&&r.x<=x1){ ys.push(r[f]); if(k==="mix"){ var bl=r[BLO], bh=r[BHI]; if(bl!=null) band.push(bl); if(bh!=null) band.push(bh); } } }); });
+    if(showLR){ S.lr=rowsFor(m,"lr",x0,x1,dw); S.lr.forEach(function(r){ if(r.lr>0) lrs.push(r.lr); }); }
+    var GH=[], cmp=!ST.zoom&&ST.range[m.lin]==="branch"; if(m.branches.length&&visible("ghost")) m.branches.forEach(function(b){ var ov=Math.min(x1,b.to)-Math.max(x0,b.from); if(ov<=0||(!cmp&&ov<(x1-x0)*0.1)) return;
+      var rows=b.rows.filter(function(r){return r.x>=x0-b.w&&r.x<=x1+b.w;}); if(!rows.length) return; rows=mergeRows(rows,Math.max(1,Math.round(dw/b.w)));
+      GH.push({b:b,rows:rows}); ["ar","sat","nat","anc"].forEach(function(k){ if(!S[k]) return; var f=smooth(rows,k); if(!cmp&&(k==="sat"||k==="nat")) return; rows.forEach(function(r){ var v=r[f]; if(v!==null&&v!==undefined&&r.x>=x0&&r.x<=x1) ys.push(v); }); }); });
+    var RAW=[]; if(m.T.length&&(x1-x0)<=4096) m.T.forEach(function(p){ if(p.step<x0||p.step>x1) return; var o=p.global_anchor===true?"anc":String(p.objective||"").toLowerCase(); if(!DEFS[o]||!(m.has[o]&&visible(o))){ if(!p.objective&&visible("mix")) o="mix"; else return; } RAW.push({x:p.step,v:p.loss,k:o}); });
+    if(RAW.length){ var rv=RAW.map(function(r){return r.v;}).sort(nsort); ys.push(q(rv,.02),q(rv,.98)); }
+    var HELD=(m.has.held&&visible("held"))?m.held.filter(function(p){return p.x>=x0&&p.x<=x1&&(!p.ab||visible("ghost"));}):[];
+    HELD.forEach(function(p){ ys.push(p.ce); });
+    var PK=[]; Object.keys(DEFS).forEach(function(k){ var d=DEFS[k]; if(!d.pk||!m.has[k]||!visible(k)) return; var pts=m.P[k].filter(function(p){return p.x>=x0&&p.x<=x1;}); if(!pts.length) return; PK.push({k:k,pts:pts}); pts.forEach(function(p){ ys.push(p.v); }); });
+    var PR=m.probes.filter(function(p){return p.x>=x0&&p.x<=x1;});
+    ["w257","w2048"].forEach(function(k){ if(m.has[k]&&visible(k)) PR.forEach(function(p){ if(p[k]!==null) ys.push(p[k]); }); });
+    var REF=(m.ref&&visible("ref")&&(S.anc||S.ar))?m.ref:null; if(REF) ys.push(REF.v);
+    ys.sort(nsort); band.sort(nsort);
+    var ymin=ys.length?q(ys,.004):null, ymax=ys.length?q(ys,.996):null;
+    if(band.length){ var bl=q(band,.02), bh=q(band,.98); ymin=ymin===null?bl:Math.min(ymin,bl); ymax=ymax===null?bh:Math.max(ymax,bh); }
+    if(ymin===null){ ymin=0; ymax=1; }
+    if(ymax-ymin<0.12){ var c=(ymin+ymax)/2; ymin=c-0.06; ymax=c+0.06; }
+    var yp=(ymax-ymin)*0.07; ymin-=yp; ymax+=yp;
+    lrs.sort(nsort); var lmin=lrs.length?Math.log10(lrs[0]):-5, lmax=lrs.length?Math.log10(lrs[lrs.length-1]):-3;
+    if(lmax-lmin<0.3){ var lc=(lmax+lmin)/2; lmin=lc-0.25; lmax=lc+0.25; } else { var lp=(lmax-lmin)*0.08; lmin-=lp; lmax+=lp; }
+    var X=function(s){return pad.l+(s-x0)/(x1-x0)*pw;}, Y=function(v){return pad.t+(ymax-v)/(ymax-ymin)*ph;}, YL=function(v){return pad.t+(lmax-Math.log10(v))/(lmax-lmin)*ph;};
+    GEOM={m:m,X:X,Y:Y,x0:x0,x1:x1,pad:pad,pw:pw,ph:ph,S:S,HELD:HELD,PK:PK,PR:PR,GH:GH,W:W,H:H};
+    // y grid
+    var ystep=niceStep((ymax-ymin)/Math.max(3,Math.floor(ph/46))), yd=ystep<0.1?2:1;
+    for(var y=Math.ceil(ymin/ystep)*ystep;y<=ymax+1e-9;y+=ystep){ var yy=Math.round(Y(y))+.5; g.strokeStyle="#1d2536"; g.lineWidth=1; g.beginPath(); g.moveTo(pad.l,yy); g.lineTo(pad.l+pw,yy); g.stroke(); g.fillStyle="#8b98ab"; g.textAlign="right"; g.fillText(y.toFixed(yd),pad.l-6,yy); }
+    if(showLR&&lrs.length){ g.textAlign="left"; g.fillStyle=DEFS.lr.col; var mult=(lmax-lmin)<1.2?[1,2,5]:[1];
+      for(var e=Math.floor(lmin)-1;e<=Math.ceil(lmax);e++){ mult.forEach(function(k){ var v=k*Math.pow(10,e), lv=Math.log10(v); if(lv<lmin||lv>lmax) return; g.fillText(k+"e"+e,pad.l+pw+5,YL(v)); }); } }
+    // x grid: steps, then local time
+    var span=x1-x0, nx=Math.max(2,Math.floor(pw/(narrow?80:110))), xs=niceStep(span/nx), tspan=(timeAt(m,x1)||0)-(timeAt(m,x0)||0);
+    g.textAlign="center"; var lastDay=null;
+    for(var xv=Math.ceil(x0/xs)*xs;xv<=x1;xv+=xs){ var xx=Math.round(X(xv))+.5; g.strokeStyle="#1d2536"; g.beginPath(); g.moveTo(xx,pad.t); g.lineTo(xx,pad.t+ph); g.stroke();
+      g.fillStyle="#8b98ab"; g.fillText(fmtStep(xv,span),xx,pad.t+ph+9);
+      if(m.TL.length>=2&&xv>=m.TL[0][0]&&xv<=m.TL[m.TL.length-1][0]+1){ var tt=timeAt(m,xv); if(tt){ var dd=new Date(tt*1000), day=dd.toDateString(), lab=fmtTime(tt,tspan);
+        if(tspan<=129600&&day!==lastDay) lab=dd.toLocaleDateString(undefined,{day:"numeric",month:"short"})+" "+lab; lastDay=day; g.fillStyle="#6b7686"; g.fillText(lab,xx,pad.t+ph+22); } } }
+    // restarts: faint ticks, labelled only when sparse
+    var RS=m.resumes.filter(function(r){return r.step>x0&&r.step<x1&&r.step<=m.last+1;});
+    RS.forEach(function(r){ if(m.cuts.some(function(b){return Math.abs(b.cut-r.step)<=1;})) return; var xx=Math.round(X(r.step))+.5; g.strokeStyle=r.rollback?"rgba(240,136,62,.55)":(RS.length>24?"#222c3d":"#2f3b52"); g.setLineDash([2,3]); g.beginPath(); g.moveTo(xx,(RS.length>24&&!r.rollback)?pad.t+ph-8:pad.t); g.lineTo(xx,pad.t+ph); g.stroke(); g.setLineDash([]); });
+    var RL=RS.filter(function(r){ return !m.cuts.some(function(b){return Math.abs(b.cut-r.step)<=1;}); });
+    if(RL.length&&RL.length<=6&&!narrow){ g.fillStyle="#6b7686"; g.textAlign="left"; RL.forEach(function(r){ var xx=X(r.step); g.fillText("restart",Math.min(xx+3,pad.l+pw-40),pad.t+ph-8); }); }
+    // CPU serving checkpoint
+    if(m.lin==="rpv16"&&SERVED&&num(SERVED.step)!==null&&SERVED.step>=x0&&SERVED.step<=x1){ var sx=Math.round(X(SERVED.step))+.5; g.strokeStyle="#3fb950"; g.lineWidth=1.2; g.setLineDash([6,4]); g.beginPath(); g.moveTo(sx,pad.t); g.lineTo(sx,pad.t+ph); g.stroke(); g.setLineDash([]);
+      var st="▼ CPU serving "+N(SERVED.step); g.fillStyle="#3fb950"; g.textAlign=(sx+g.measureText(st).width+6>pad.l+pw)?"right":"left"; g.fillText(st,g.textAlign==="right"?sx+4:sx-4,Math.max(6,pad.t-7)); }
+    // rollback cut(s): where the live lineage restarted from an older checkpoint
+    m.cuts.forEach(function(b){ if(b.cut<x0||b.cut>x1) return; var bx=Math.round(X(b.cut))+.5; g.strokeStyle="#f0883e"; g.lineWidth=1.4; g.setLineDash([]); g.beginPath(); g.moveTo(bx,pad.t); g.lineTo(bx,pad.t+ph); g.stroke();
+      var bt=narrow?"⟲ rollback "+N(b.cut):"⟲ rolled back to "+N(b.cut)+(b.depth?" (−"+compact(b.depth)+" steps)":""), bw=g.measureText(bt).width, bxx=bx+6+bw>pad.l+pw?bx-6-bw:bx+6; bxx=Math.max(pad.l+3,Math.min(bxx,pad.l+pw-bw-3)); g.fillStyle="rgba(11,14,20,.85)"; g.fillRect(bxx-3,pad.t+3,bw+6,15); g.fillStyle="#f0883e"; g.textAlign="left"; g.fillText(bt,bxx,pad.t+11); });
+    if(x1>m.last+(x1-x0)*0.01&&m.last>=x0){ var lx=Math.round(X(m.last))+.5; g.strokeStyle="rgba(230,237,243,.35)"; g.lineWidth=1; g.setLineDash([1,3]); g.beginPath(); g.moveTo(lx,pad.t); g.lineTo(lx,pad.t+ph); g.stroke(); g.setLineDash([]);
+      var lt="live "+N(m.last), lw=g.measureText(lt).width, llx=Math.min(lx+6,pad.l+pw-lw-4); g.fillStyle="rgba(11,14,20,.85)"; g.fillRect(llx-3,pad.t+20,lw+6,15); g.fillStyle="#c9d1d9"; g.textAlign="left"; g.fillText(lt,llx,pad.t+28); }
+    // plot
+    g.save(); g.beginPath(); g.rect(pad.l,pad.t,pw,ph); g.clip();
+    if(REF){ var ry=Math.round(Y(REF.v))+.5; g.strokeStyle="rgba(230,237,243,.55)"; g.lineWidth=1; g.setLineDash([1,3]); g.beginPath(); g.moveTo(pad.l,ry); g.lineTo(pad.l+pw,ry); g.stroke(); g.setLineDash([]); }
+    var GAPX=2.5, gapOf=function(p,r){ return r.s0-p.s1>GAPX*Math.max(p.w||1,r.w||1)+1; };
+    /* sparse objectives (SAT var / NAT were scheduled in 16-step sweeps, anchors 1 in ~17 steps) can skip a few buckets: bridge those */
+    function path(rows,f,yf,k){ GAPX=(k==="sat"||k==="nat"||k==="anc")?8:2.5; var on=false,prev=null; g.beginPath(); rows.forEach(function(r){ var v=r[f]; if(v===null||v===undefined||!isFinite(v)) return; var px=X(r.x), py=yf(v); if(!on||(prev&&gapOf(prev,r))){ g.moveTo(px,py); on=true; } else g.lineTo(px,py); prev=r; }); }
+    if(S.mix&&S.mix.length){ // band, split at gaps
+      var segs=[], cur=[]; S.mix.forEach(function(r,i){ if(r[BLO]==null||r[BHI]==null){ if(cur.length) segs.push(cur); cur=[]; return; } if(cur.length&&gapOf(cur[cur.length-1],r)){ segs.push(cur); cur=[]; } cur.push(r); }); if(cur.length) segs.push(cur);
+      g.fillStyle="rgba(139,152,171,0.16)"; segs.forEach(function(sg){ if(sg.length<2) return; g.beginPath(); sg.forEach(function(r,i){ var px=X(r.x), py=Y(r[BHI]); if(i) g.lineTo(px,py); else g.moveTo(px,py); }); for(var i=sg.length-1;i>=0;i--) g.lineTo(X(sg[i].x),Y(sg[i][BLO])); g.closePath(); g.fill(); });
+    }
+    GH.forEach(function(gb){ ["ar","sat","nat","anc"].forEach(function(k){ if(!S[k]) return; var d=DEFS[k]; g.globalAlpha=(k==="sat"||k==="nat")?.32:.62; g.strokeStyle=d.col; g.lineWidth=Math.max(1,d.w-.7); g.setLineDash([2,4]); path(gb.rows,"_s"+d.f,Y,k); g.stroke(); }); g.setLineDash([]); g.globalAlpha=1; });
+    if(S.lr&&S.lr.length){ g.strokeStyle=DEFS.lr.col; g.lineWidth=DEFS.lr.w; g.setLineDash(DEFS.lr.dash); path(S.lr,"lr",YL); g.stroke(); g.setLineDash([]); }
+    LINES.forEach(function(k){ var rows=S[k]; if(!rows||!rows.length) return; var d=DEFS[k], f="_s"+d.f; g.strokeStyle=d.col; g.lineWidth=d.w; g.setLineDash(d.dash||[]); g.lineJoin="round"; path(rows,f,Y,k); g.stroke(); g.setLineDash([]);
+      if(rows.length<=36&&k!=="mix"){ g.fillStyle=d.col; rows.forEach(function(r){ var v=r[f]; if(v===null||v===undefined) return; g.beginPath(); g.arc(X(r.x),Y(v),1.8,0,6.283); g.fill(); }); } });
+    ["w2048","w257"].forEach(function(k){ if(!m.has[k]||!visible(k)||!PR.length) return; var d=DEFS[k]; g.strokeStyle=d.col; g.lineWidth=d.w; g.beginPath(); var on=false,prev=null;
+      PR.forEach(function(p){ var v=p[k]; if(v===null){ on=false; return; } var px=X(p.x), py=Y(v); if(!on||(prev&&p.x-prev.x>60000)){ g.moveTo(px,py); on=true; } else g.lineTo(px,py); prev=p; }); g.stroke();
+      if(PR.length<=160){ g.fillStyle=d.col; PR.forEach(function(p){ if(p[k]===null) return; g.beginPath(); g.arc(X(p.x),Y(p[k]),k==="w257"?2.6:1.8,0,6.283); g.fill(); }); } });
+    if(RAW.length){ g.globalAlpha=RAW.length>1500?.28:.42; RAW.forEach(function(r){ g.fillStyle=DEFS[r.k].col; g.fillRect(X(r.x)-1,Y(r.v)-1,2.2,2.2); }); g.globalAlpha=1; }
+    HELD.forEach(function(p){ g.beginPath(); g.arc(X(p.x),Y(p.ce),4.2,0,6.283); if(p.ab){ g.strokeStyle="#3fb950"; g.lineWidth=1.6; g.stroke(); } else { g.fillStyle="#3fb950"; g.strokeStyle="#0b0e14"; g.lineWidth=1.5; g.fill(); g.stroke(); } });
+    PK.forEach(function(sr){ var d=DEFS[sr.k], pts=sr.pts, line=pts; g.strokeStyle=d.col; g.fillStyle=d.col; g.lineWidth=d.w||1.2;
+      if(pts.length>160){ var bw=Math.max(1,(x1-x0)/140), B={}, ks=[]; pts.forEach(function(p){ var b=Math.floor((p.x-x0)/bw), w=p.n||1; if(!B[b]){ B[b]={sx:0,sv:0,n:0}; ks.push(b); } B[b].sx+=p.x*w; B[b].sv+=p.v*w; B[b].n+=w; });
+        line=ks.sort(function(a,b){return a-b;}).map(function(b){ return {x:B[b].sx/B[b].n,v:B[b].sv/B[b].n}; }); g.globalAlpha=.3; pts.forEach(function(p){ g.fillRect(X(p.x)-1,Y(p.v)-1,2,2); }); g.globalAlpha=1; }
+      g.setLineDash(d.pk==="val"?[]:[3,2]); g.beginPath(); line.forEach(function(p,i){ var px=X(p.x), py=Y(p.v); if(i) g.lineTo(px,py); else g.moveTo(px,py); }); g.stroke(); g.setLineDash([]);
+      if(pts.length<=160) pts.forEach(function(p){ g.beginPath(); g.arc(X(p.x),Y(p.v),d.pk==="val"?2.6:1.8,0,6.283); g.fill(); }); });
+    g.restore();
+    GH.forEach(function(gb){ var k=S.anc?"anc":S.ar?"ar":S.sat?"sat":S.nat?"nat":null; if(!k) return; var fk="_s"+DEFS[k].f, rows=gb.rows.filter(function(r){return r.x>=x0&&r.x<=x1&&r[fk]!==null&&r[fk]!==undefined;}); if(!rows.length) return;
+      var r=rows[rows.length-1], lx=X(r.x), ly=Y(r[fk]), txt=narrow?"abandoned":"abandoned branch (rolled back)"; g.fillStyle="#8b98ab"; g.textAlign=lx-g.measureText(txt).width-6<pad.l?"left":"right"; if(ly>pad.t+10&&ly<pad.t+ph-4) g.fillText(txt,g.textAlign==="right"?lx-6:lx+6,ly-9); });
+    // best markers
+    var bests=[]; if(m.lin==="standard"&&m.has.w257&&visible("w257")&&PR.length){ var bp=PR.reduce(function(a,b){return b.w257<a.w257?b:a;}); bests.push([bp.w257,narrow?"best "+F(bp.w257,4):"best 257 "+F(bp.w257,4)+" @"+N(bp.step),DEFS.w257.col]); }
+    var hb=m.h&&m.h.best; if(hb&&hb.anc&&visible("anc")&&num(hb.anc.value)!==null){ var bv=num(hb.anc.value); if(bv>=ymin&&bv<=ymax) bests.push([bv,narrow?"best "+F(bv,3):"best AR full-stack "+F(bv,3)+" @"+N(hb.anc.step),DEFS.anc.col]); }
+    if(REF){ var rtxt=narrow?"unigram "+F(REF.v,3):"unigram baseline "+F(REF.v,3)+" · AR above = worse than no context", ryy=Math.round(Y(REF.v))+.5, rtw=g.measureText(rtxt).width+8, rlx=pad.l+pw-rtw-4, rly=ryy-9<pad.t+6?ryy+9:ryy-9; g.fillStyle="rgba(11,14,20,.8)"; g.fillRect(rlx,rly-7,rtw,14); g.fillStyle="#c9d1d9"; g.textAlign="left"; g.fillText(rtxt,rlx+4,rly); }
+    bests.forEach(function(b){ var yy=Math.round(Y(b[0]))+.5; g.strokeStyle=b[2]; g.globalAlpha=.55; g.setLineDash([2,4]); g.beginPath(); g.moveTo(pad.l,yy); g.lineTo(pad.l+pw,yy); g.stroke(); g.setLineDash([]); g.globalAlpha=1;
+      var ly=yy-9<pad.t+6?yy+9:yy-9, tw=g.measureText(b[1]).width+8; g.fillStyle="rgba(11,14,20,.8)"; g.fillRect(pad.l+2,ly-7,tw,14); g.fillStyle=b[2]; g.textAlign="left"; g.fillText(b[1],pad.l+6,ly); });
+    // end-of-line value labels, de-overlapped
+    var ends=[]; LINES.slice().reverse().forEach(function(k){ var rows=S[k]; if(!rows||!rows.length||k==="mix") return; var f="_s"+DEFS[k].f, r=null; for(var i=rows.length-1;i>=0;i--){ if(rows[i].x<=x1&&rows[i][f]!==null&&rows[i][f]!==undefined){ r=rows[i]; break; } } if(!r) return; ends.push({y:Y(r[f]),x:X(r.x),t:F(r[f],3),c:DEFS[k].col}); });
+    ends.sort(function(a,b){return a.y-b.y;}); for(var ei=1;ei<ends.length;ei++){ if(ends[ei].y-ends[ei-1].y<12) ends[ei].y=ends[ei-1].y+12; }
+    ends.forEach(function(e){ if(e.y<pad.t||e.y>pad.t+ph) return; var tw=g.measureText(e.t).width+8, lx=Math.min(e.x+5,pad.l+pw-tw-1); g.fillStyle="rgba(11,14,20,.82)"; g.fillRect(lx,e.y-7,tw,14); g.fillStyle=e.c; g.textAlign="left"; g.fillText(e.t,lx+4,e.y); });
+    cv.setAttribute("aria-label",(m.lin==="rpv16"?"RPV16 training loss chart":"Standard 1.1B loss chart")+", steps "+N(x0)+" to "+N(x1)+". "+ends.map(function(e){return e.t;}).join(", "));
+    // latest in-view value on each legend chip
+    Array.prototype.forEach.call(seriesEl.querySelectorAll("b.v[data-v]"),function(el){ var k=el.getAttribute("data-v"), d=DEFS[k], v=null, i;
+      if(k==="held"){ var hc=HELD.filter(function(p){return !p.ab;}), hp=(hc.length?hc:HELD); v=hp.length?F(hp[hp.length-1].ce,4):""; }
+      else if(d&&d.pk){ var sp=PK.filter(function(z){return z.k===k;})[0]; v=sp&&sp.pts.length?F(sp.pts[sp.pts.length-1].v,3):""; }
+      else if(k==="w257"||k==="w2048"){ for(i=PR.length-1;i>=0;i--) if(PR[i][k]!==null){ v=F(PR[i][k],4); break; } }
+      else { var rows=S[k], ff=k==="lr"?d.f:"_s"+d.f; if(rows) for(i=rows.length-1;i>=0;i--){ if(rows[i].x<=x1&&rows[i][ff]!==null&&rows[i][ff]!==undefined){ v=k==="lr"?E(rows[i][ff]):F(rows[i][ff],3); break; } } }
+      el.textContent=v||""; });
+    paintFoot(m,{x0:x0,x1:x1,dw:dw});
+    paintModesLive(m);
+    upd.textContent="feed checked "+ago(DATA.generated_at||DATA.polled_at);
+  }
+  function domainFor(m){
+    if(ST.zoom&&ST.zoom.lin===m.lin) return [ST.zoom.x0,ST.zoom.x1];
+    var r=ST.range[m.lin], a=m.first, b=m.last;
+    if(r==="run"&&m.ghostEnd&&visible("ghost")) b=Math.max(b,m.ghostEnd);
+    if(r==="tail"&&m.T.length) a=m.T[0].step;
+    else if(r==="branch"&&m.branches.length){ var gb=m.branches[m.branches.length-1], sp=Math.max(b-gb.from,2048); a=Math.max(m.first,Math.floor(gb.from-sp*0.35)); b=Math.ceil(gb.from+sp*1.12); }
+    else if(/^\d+[hd]$/.test(r||"")){ var hrs=parseInt(r,10)*(r.slice(-1)==="d"?24:1), te=timeAt(m,b), s=te===null?null:stepAt(m,te-hrs*3600); if(s!==null) a=Math.max(a,Math.floor(s)); }
+    if(b-a<16) a=Math.max(m.first,b-16);
+    return [a,b];
+  }
+  function paintFoot(m,v){
+    var L=archiveLatest(m), h=m.h||{}, meta=h.meta||{}, rows=[];
+    function row(k,html){ rows.push("<div><em>"+esc(k)+"</em> "+html+"</div>"); }
+    if(m.lin==="rpv16"){
+      if(m.H.length) row("history",N(m.H.length)+" × "+N(m.wH)+"-step buckets · steps "+N(m.H[0].s0)+"–"+N(m.H[m.H.length-1].s1)+(m.R.length?" · "+N(m.wR)+"-step detail for the last "+compact(m.R[m.R.length-1].s1-m.R[0].s0)+" steps":"")+(meta.built_at?" · built "+ago(meta.built_at):""));
+      else row("history",fleetSnapshot()?"Archived training history is unavailable; current-run samples are separate":"collector has not attached the full-run history yet — showing the live tail ("+N(m.T.length)+" steps since the last restart)");
+      var lastRes=m.resumes.length?m.resumes[m.resumes.length-1]:null;
+      if(lastRes){ var after=null,before=null; if(m.has.anc){ var src=m.R.length?m.R:m.H; var a=src.filter(function(r){return r.s0>lastRes.step&&r.anc!==null;}), b=src.filter(function(r){return r.s1<=lastRes.step&&r.s1>lastRes.step-2048&&r.anc!==null;}); after=a.length?wmean(a,"anc","anc_n"):null; before=b.length?wmean(b,"anc","anc_n"):null; }
+        row("last restart","@"+N(lastRes.step)+(lastRes.t?" · "+fmtStamp(lastRes.t):"")+(after!==null&&before!==null?" · AR full-stack "+F(before,3)+" → "+F(after,3)+" since":"")+" · "+N(m.resumes.length)+" restarts on this lineage"); }
+      var hb=h.best||{}; if(hb.anc&&num(hb.anc.value)!==null) row("best AR full-stack",F(hb.anc.value,3)+" @"+N(hb.anc.step)); if(hb.ar&&num(hb.ar.value)!==null) row("best AR block-local",F(hb.ar.value,3)+" @"+N(hb.ar.step));
+      var hcur=m.held.filter(function(p){return !p.ab;}), hab=m.held.filter(function(p){return p.ab;});
+      if(hcur.length){ var lh=hcur[hcur.length-1]; row("held-out CE",F(lh.ce,4)+" @"+N(lh.step)+(lh.protocol?" · "+esc(lh.protocol):"")+(hab.length?" · abandoned branch "+F(hab[hab.length-1].ce,4)+" @"+N(hab[hab.length-1].step):"")); }
+      else if(hab.length){ var la=hab[hab.length-1]; row("held-out CE","abandoned branch "+F(la.ce,4)+" @"+N(la.step)); }
+      row("mixed EMA (chip value)",F(L.ema,3)+" · last step "+F(L.loss,3)+(L.objective?" ("+esc(String(L.objective).toUpperCase())+")":""));
+      if(meta.legacy_ar_until_step) row("note","steps before "+N(meta.legacy_ar_until_step)+" were AR-only (no objective field logged)");
+    } else {
+      var P=m.probes; row("3090 archive",N(P.length)+" recovered probes · "+N(P.filter(function(p){return p.basis==="explicit_probe_step";}).length)+" exact-step · through "+(P.length?N(P[P.length-1].step):"—"));
+      var rm=DATA.recovered_history_meta||{}; if(rm.provenance) row("provenance",esc(rm.provenance));
+      if(m.H.length) row("Standard 1.1B history (archive)",N(m.H.length)+" buckets · steps "+N(m.H[0].s0)+"–"+N(m.H[m.H.length-1].s1));
+    }
+    if(v) row("view","steps "+N(v.x0)+"–"+N(v.x1)+" · ≈"+compact(Math.max(1,v.dw))+" steps per point");
+    foot.innerHTML=rows.join("");
+  }
+
+  /* ---------- hover + drag-to-zoom ---------- */
+  function nearestRow(rows,x){ var b=null,bd=Infinity; for(var i=0;i<rows.length;i++){ var d=Math.abs(rows[i].x-x); if(d<bd){ bd=d; b=rows[i]; } } return b; }
+  function hover(ev){
+    if(!GEOM||!DATA) return; var r=cv.getBoundingClientRect(), pt=ev.touches?ev.touches[0]:ev, px=pt.clientX-r.left, py=pt.clientY-r.top, G=GEOM, m=G.m;
+    if(px<G.pad.l||px>G.pad.l+G.pw){ tip.style.display="none"; return; }
+    var s=G.x0+(px-G.pad.l)/G.pw*(G.x1-G.x0), tol=(G.x1-G.x0)*0.03, rows=[], t=timeAt(m,s);
+    rows.push("<b>step "+N(s)+"</b>"+(t?" <span style='color:#8b98ab'>"+fmtStamp(t)+"</span>":""));
+    LINES.slice().reverse().forEach(function(k){ var S=G.S[k]; if(!S||!S.length) return; var p=nearestRow(S,s), d=DEFS[k]; if(!p||Math.abs(p.x-s)>Math.max(tol,(p.s1-p.s0))) return; var v=p[d.f]; if(v===null||v===undefined) return;
+      var n=d.nf?num(p[d.nf]):null; if(k==="mix"&&G.m.band==="ar"){ if(p.ar_p10!=null) rows.push("<span style='color:#8b98ab'>▒ AR p10–p90 "+F(p.ar_p10,3)+"–"+F(p.ar_p90,3)+"</span>"); return; }
+      rows.push("<span style='color:"+d.col+"'>●</span> "+esc(d.short)+" <b>"+F(v,3)+"</b>"+(k==="mix"&&p.lo!==null?" <span style='color:#8b98ab'>p10–p90 "+F(p.lo,2)+"–"+F(p.hi,2)+"</span>":"")+(n?" <span style='color:#8b98ab'>n="+N(n)+"</span>":"")); });
+    var any=G.S.mix&&G.S.mix.length?nearestRow(G.S.mix,s):(G.S.anc&&G.S.anc.length?nearestRow(G.S.anc,s):null);
+    if(any) rows.push("<span style='color:#8b98ab'>steps "+N(any.s0)+"–"+N(any.s1)+(any.lr!==null?" · lr "+E(any.lr):"")+(any.tps?" · "+compact(any.tps)+" tok/s":"")+"</span>");
+    (G.GH||[]).forEach(function(gb){ var p=nearestRow(gb.rows,s); if(!p||Math.abs(p.x-s)>Math.max(tol,p.s1-p.s0)) return; var bits=[]; ["anc","ar","sat","nat"].forEach(function(k){ if(G.S[k]&&p[DEFS[k].f]!==null&&p[DEFS[k].f]!==undefined) bits.push(DEFS[k].short+" "+F(p[DEFS[k].f],3)); }); if(bits.length) rows.push("<span style='color:#8b98ab'>┄ abandoned branch: "+bits.join(" · ")+"</span>"); });
+    G.HELD.forEach(function(p){ if(Math.abs(p.x-s)<tol) rows.push("<span style='color:#3fb950'>"+(p.ab?"○":"●")+"</span> held-out <b>"+F(p.ce,4)+"</b> @"+N(p.step)+(p.ab?" · abandoned branch":"")+(p.protocol?" · "+esc(p.protocol):"")+(p.tokens?" · "+compact(p.tokens)+" tok":"")); });
+    (G.PK||[]).forEach(function(sr){ var p=nearestRow(sr.pts,s); if(p&&Math.abs(p.x-s)<Math.max(tol,64)) rows.push("<span style='color:"+DEFS[sr.k].col+"'>●</span> "+esc(DEFS[sr.k].short)+" <b>"+F(p.v,4)+"</b> <span style='color:#8b98ab'>@"+N(p.x)+(p.n>1?" · n="+N(p.n):"")+"</span>"); });
+    if(G.PR.length){ var pp=nearestRow(G.PR,s); if(pp&&Math.abs(pp.x-s)<tol) rows.push("<span style='color:"+DEFS.w257.col+"'>●</span> held-out 257 <b>"+F(pp.w257,4)+"</b> · 2048 "+F(pp.w2048,4)+" <span style='color:#8b98ab'>@"+N(pp.step)+(pp.basis==="explicit_probe_step"?" · exact step":pp.basis==="archive_checkin_step"?" · check-in step":"")+"</span>"); }
+    tip.innerHTML=rows.join("<br>"); tip.style.display="block";
+    var tw=tip.offsetWidth, left=px+14; if(left+tw>r.width-4) left=Math.max(4,px-tw-14); tip.style.left=left+"px"; tip.style.top=Math.max(4,Math.min(py-10,r.height-tip.offsetHeight-4))+"px";
+    drawCross(px);
+  }
+  var crossEl=document.createElement("div"); crossEl.className="xh"; wrapEl.appendChild(crossEl);
+  function drawCross(px){ if(!GEOM) return; crossEl.style.display="block"; crossEl.style.left=Math.round(px)+"px"; crossEl.style.top=GEOM.pad.t+"px"; crossEl.style.height=GEOM.ph+"px"; }
+  function hideHover(){ tip.style.display="none"; crossEl.style.display="none"; }
+  var drag=null;
+  cv.addEventListener("pointerdown",function(ev){ if(ev.pointerType!=="mouse"||ev.button!==0||!GEOM) return; var r=cv.getBoundingClientRect(), px=ev.clientX-r.left; if(px<GEOM.pad.l||px>GEOM.pad.l+GEOM.pw) return; drag={a:px,b:px}; try{cv.setPointerCapture(ev.pointerId);}catch(e){} });
+  cv.addEventListener("pointermove",function(ev){ if(drag){ var r=cv.getBoundingClientRect(); drag.b=Math.max(GEOM.pad.l,Math.min(GEOM.pad.l+GEOM.pw,ev.clientX-r.left)); var lo=Math.min(drag.a,drag.b), w=Math.abs(drag.b-drag.a); selEl.style.display=w>3?"block":"none"; selEl.style.left=lo+"px"; selEl.style.width=w+"px"; selEl.style.top=GEOM.pad.t+"px"; selEl.style.height=GEOM.ph+"px"; } if(ev.pointerType==="mouse") hover(ev); });
+  cv.addEventListener("pointerup",function(ev){ if(!drag) return; var d=drag; drag=null; selEl.style.display="none"; if(Math.abs(d.b-d.a)<8||!GEOM) return;
+    var G=GEOM, s=function(px){ return G.x0+(px-G.pad.l)/G.pw*(G.x1-G.x0); }, a=s(Math.min(d.a,d.b)), b=s(Math.max(d.a,d.b)); if(b-a<16) return; ST.zoom={lin:G.m.lin,x0:Math.floor(a),x1:Math.ceil(b)}; hideHover(); draw(); });
+  cv.addEventListener("pointercancel",function(){ drag=null; selEl.style.display="none"; });
+  cv.addEventListener("dblclick",function(){ if(ST.zoom){ ST.zoom=null; draw(); } });
+  cv.addEventListener("touchstart",hover,{passive:true}); cv.addEventListener("touchmove",hover,{passive:true});
+  cv.addEventListener("mouseleave",function(){ if(!drag) hideHover(); });
+
+  /* ---------- headline for the RPV16 card chip + pill ---------- */
+  function headline(){
+    if(!DATA||DATA.ok===false||fleetSnapshot()) return null; var m; try{ m=model("rpv16"); }catch(e){ return null; }
+    if(m.last===null) return null;
+    var k=m.has.anc?"anc":(m.has.ar?"ar":null), W=Math.min(1024,trendW(m));
+    if(k){ var s=winStats(m,k,W); if(!s) return null;
+      var span=Math.min(40000,m.last-m.first), rr=rowsFor(m,k,m.last-span,m.last,Math.max(1,span/48)), sf=smooth(rr,k), series=rr.filter(function(r){return r.x>=m.last-span;}).map(function(r){return r[sf];}).slice(-48);
+      var hb=(m.h&&m.h.best)||{}, best=hb[k]?num(hb[k].value):null, v=s.value, d=best===null?null:v-best;
+      var glyph=d===null?null:(d<=0.05?"✓":d<=0.15?"◷":"▲"), level=d===null?null:(d<=0.05?"ok":d<=0.15?"maintenance":"warn"), above=!!(m.ref&&v>=m.ref.v);
+      var title=DEFS[k].name+" "+F(v,3)+" (mean of the last "+N(W)+" steps)"+(best!==null?" · best "+F(best,3)+" @"+N(hb[k].step)+" ("+(d>=0?"+":"−")+F(Math.abs(d),3)+")":"")+
+        (m.ref?" · unigram "+F(m.ref.v,3)+(above?" — ABOVE the unigram baseline: worse than ignoring context":" ("+F(v-m.ref.v,3)+" vs unigram)"):"")+" · ✓ within 0.05 of best, ◷ within 0.15, ▲ further";
+      return {value:v,label:k==="anc"?"AR":"AR local",title:title,series:series,glyph:glyph,level:level,above:above}; }
+    var tr=(DATA.train||[]).map(function(p){return num(p.ema);}).filter(function(v){return v!==null;});
+    return {value:num((DATA.latest||{}).ema),label:"EMA",title:"mixed-objective EMA (per-objective history not attached yet)",series:tr.length>=300?tr.slice(100):tr};
+  }
+  window.AGILLMCurves={headline:headline,lineage:lineage,redraw:function(){ try{ draw(); }catch(e){} }};
+
+  /* ---------- status cards (below the chart) ---------- */
+  function paintModesLive(m){
+    var el=$("agi44-mode-loss"); if(!el) return;
+    if(!(m.has.anc||m.has.ar||m.has.sat||m.has.nat)){ paintModesLegacy(false); return; }
+    var W=trendW(m);
+    function card(name,k,extra,state){ var d=DEFS[k]||{}, s=k&&m.has[k]?winStats(m,k,W):null;
+      return '<div class="modecard" data-mode="'+esc(name)+'" data-status="'+(s?"recent":"missing")+'"><strong>'+esc(name)+'</strong><div class="value" style="color:'+(d.col||"#8b98ab")+'">'+(s?"CE "+F(s.value,4):"—")+'</div><div class="status '+(s?"ok":"warn")+'">'+esc(state||(s?"training CE · last "+N(W)+" steps":"no samples"))+'</div><div class="meta">'+(s?trendHtml(s).replace(/<\/?i[^>]*>/g,"")+(s.n?" · "+N(s.n)+" samples":""):"")+(extra?'<span class="detail">'+esc(extra)+'</span>':'')+'</div></div>'; }
+    var hb=(m.h&&m.h.best)||{};
+    el.innerHTML=card("AR","anc",(m.has.ar?"Block-local AR "+F((winStats(m,"ar",W)||{}).value,4)+". ":"")+(hb.anc&&num(hb.anc.value)!==null?"Best full-stack "+F(hb.anc.value,4)+" @"+N(hb.anc.step)+". ":"")+"Full-stack CE on the anchor steps.")+
+      '<div class="modecard" data-mode="sat_fixed" data-status="n/a"><strong>SAT fixed</strong><div class="value" style="color:#8b98ab">—</div><div class="status">not a '+(m.lin==="rpv16"?"RPV16":"")+' training objective</div><div class="meta">This lineage trains AR, SAT var and NAT only.</div></div>'+
+      card("SAT var","sat","Variable-block SAT training CE.")+card("NAT","nat","NAT training CE.");
+  }
+  function paintModesLegacy(unavailable){ var el=$("agi44-mode-loss"); if(!el) return;
+    el.innerHTML='<div class="modecard" data-status="'+(unavailable?"stale":"missing")+'"><strong>Mode telemetry</strong><span class="meta">'+(unavailable?"Feed unavailable — last evidence kept on the chart.":"Per-objective AR / SAT var / NAT history not attached by the collector yet.")+'</span></div>'; }
+
+  /* ---------- pill, health, "now" cards (unchanged behaviour) ---------- */
+  function sparkline(){ var hl=headline(), vals=hl&&hl.series?hl.series.filter(function(v){return v!==null&&isFinite(v);}):[]; if(vals.length<2){ spark.innerHTML=""; return; }
+    var mn=Math.min.apply(null,vals), mx=Math.max.apply(null,vals), d=vals.map(function(v,i){ return (i?"L":"M")+(i/(vals.length-1)*33+0.5).toFixed(1)+","+(13-(v-mn)/Math.max(1e-6,mx-mn)*12).toFixed(1); }).join(" ");
+    spark.innerHTML='<path d="'+d+'" fill="none" stroke="#58a6ff" stroke-width="1.5" stroke-linejoin="round"/>'; }
+  var AREAS=[["trainer","trainer"],["model","model"],["ar","AR"],["sat_fixed","SAT fixed"],["sat_variable","SAT var"],["nat","NAT"],["dblock","DBlock"],["det50","50M student"]];
+  function paintNow(){
+    if(!nowEl||!DATA)return; var h=DATA.health||{}, a=h.areas||{}, tr=(lineage()==='standard'?a.trainer:a.rpv16)||{}, mo=a.model||{}, sv=a.sat_variable||{}, de=a.det50||{};
+    function card(level,key,title,meta){return '<div class="nowcard '+esc(level||'maintenance')+'"><span class="k">'+esc(key)+'</span><strong>'+esc(title)+'</strong><span class="m">'+esc(meta||'')+'</span></div>'; }
+    var tl=tr.level||'maintenance', tt=tr.state==='completed'?'PRETRAINING COMPLETE':(tr.state==='training'&&tl==='ok')?'TRAINING LIVE':(tl==='bad'?'TRAINER PROBLEM':'TRAINER '+String(tr.state||tl).toUpperCase());
+    var L0=(lineage()==='standard'?DATA.standard_live:(DATA.rpv16_live||DATA.gb10_live))||{}, trTok=tr.raw_tok_s!=null?tr.raw_tok_s:(L0.fullstack_tok_s_64!=null?L0.fullstack_tok_s_64:L0.raw_tok_s), trLr=tr.lr!=null?tr.lr:L0.lr, trAge=tr.progress_age_s!=null?tr.progress_age_s:tr.heartbeat_age_s;
+    var tm='step '+N(tr.step)+' · '+(trTok==null?'—':N(Math.round(trTok)))+' tok/s · LR '+E(trLr)+' · progress '+(trAge==null?'—':Math.round(trAge)+'s ago');
+    var ev=mo.evaluation||{}, qfresh=!!mo.fresh, qlevel=qfresh?(mo.level||'ok'):((['paused','waiting_interval','waiting_checkpoint','running'].indexOf(ev.phase)>=0)?'maintenance':'warn');
+    var noProbe=!a.model||(mo.probe_age_s==null&&num(mo.heldout_w257)===null&&!(DATA.probes||[]).length); if(noProbe){qlevel='maintenance';}
+    var qtitle=noProbe?'NO CURRENT HELD-OUT EVALUATION':qfresh?'QUALITY EVIDENCE FRESH':({paused:'QUALITY PROBE PAUSED',waiting_interval:'QUALITY PROBE WAITING',waiting_checkpoint:'WAITING FOR CHECKPOINT',running:'QUALITY PROBE RUNNING',suspended:'QUALITY PROBE SUSPENDED',offline:'QUALITY PROBE OFFLINE',stalled:'QUALITY PROBE STALLED'}[ev.phase]||'QUALITY EVIDENCE STALE');
+    var qa=mo.probe_age_s==null?'—':Math.round(mo.probe_age_s/60)+' min old'; var qm=noProbe?(mo.note||'No held-out result was reported for this exact current checkpoint; earlier results remain in trainer details and archived charts'):qa+' · '+(ev.reason||({paused:'training continues while evaluation is paused',waiting_interval:'monitor alive; next interval pending',waiting_checkpoint:'monitor alive; next checkpoint pending',running:'CPU evaluation in progress'}[ev.phase]||'last-known quality only'));
+    var rr=sv.routing_readiness||'unknown', rl=sv.routing_level||sv.level||'maintenance', gt=sv.last_anchor_gate||{};
+    var rtitle=(rr==='two_class_predictions_seen')?'ROUTING SIGNAL ACTIVE':(rr.indexOf('fail_closed')===0?'NOT ROUTING-READY':'ROUTING STATUS '+String(rr).toUpperCase());
+    var rm='main gate: '+N(gt.predicted_stride2)+' stride-2 predictions / '+N(gt.stride2_labels)+' stride-2 labels · threshold '+F(gt.serving_stride2_threshold,2);
+    if(de.sat_gate_routing_status) rm+=' · 50M gate: '+de.sat_gate_routing_status;
+    nowEl.innerHTML=card(tl,'Training',tt,tm)+card(qlevel,'Quality evidence',qtitle,qm)+card(rl,'SAT-variable routing',rtitle,rm);
+  }
+  function paintHealth(){ var h=DATA.health, el=$("agi44-health"), fl=$("agi44-flags"); if(!h){ el.innerHTML=""; fl.innerHTML=""; return; }
+    var ov=h.overall||"?", txt={ok:"telemetry current",maintenance:(((h.areas||{}).model||{}).fresh?"quality checked · qualification pending":"quality check pending"),warn:"warning",bad:"problem"}[ov]||ov;
+    var html='<span class="ov '+esc(ov)+'">'+esc(txt)+'</span>';
+    AREAS.forEach(function(a){ var ar=(h.areas||{})[a[0]]||{}, lv=ar.level||"?", fs=(h.flags||[]).filter(function(f){return f.area===a[0];}).map(function(f){return f.message;}).join(" · ");
+      html+='<span class="ch '+esc(lv)+'" title="'+esc(fs||(lv==="ok"?"ok":lv))+'"><i></i>'+esc(a[1])+'</span>'; });
+    el.innerHTML=html; paintNow();
+    fl.innerHTML=(h.flags||[]).slice(0,6).map(function(f){ return '<div class="'+esc(f.level)+'">'+esc(f.level==="bad"?"✖":f.level==="maintenance"?"◷":"▲")+' <b>'+esc(f.area)+'</b> '+esc(f.message)+'</div>'; }).join("")||('<div style="color:#8b98ab">'+esc(h.summary||"")+'</div>'); }
+  function paintPill(){
+    var L=DATA.latest||{}, h=DATA.health||{}, ov=h.overall;
+    if(DATA.curves_available===false){
+      var key=lineage(),live=key==="standard"?DATA.standard_live:(DATA.rpv16_live||DATA.gb10_live),step=num(live&&live.step),state=window.AGILLMTelemetryValues.state(live); lbl.textContent=(key==="standard"?"Standard ":"RPV16 ")+(step!==null?N(step):"telemetry unavailable")+" · "+(state.status==="completed"?"completed":state.status)+" · current run in cards · "+((model(key).H.length||model(key).R.length||model(key).probes.length||model(key).held.length)?"archived history":"archive unavailable");
+      lbl.title=(h.summary||DATA.reason||"checkpoint feed live; historical curves temporarily unavailable"); pill.style.borderColor="#58a6ff";
+      sparkline(); try{paintHealth();}catch(e){} return;
+    }
+    var hl=headline(), m=(h.areas||{}).model||{}, ev=m.evaluation||{}, pending=ev.phase==="running";
+    var evidence=hl&&hl.value!==null?(hl.label+" "+F(hl.value,3)):"loss "+F(L.loss,2);
+    lbl.textContent=evidence+" · lr "+E(L.lr)+(pending?" · checking":ov?(" · "+({ok:"telemetry current",maintenance:"◷ checking",warn:"▲ warn",bad:"✖ problem"}[ov]||ov)):"");
+    lbl.title=hl?hl.title:"training loss";
+    pill.style.borderColor=({ok:"#2a3346",maintenance:"#58a6ff",warn:"#d29922",bad:"#f85149"}[ov]||"#2a3346");
+    sparkline(); try{paintHealth();}catch(e){}
+  }
+  function mergeCurrentHeldout(d){ if(!d) return; var mc=d.multimode_current||[]; var mm=d.modes||(d.modes=[]); mm=d.modes=mm.filter(function(p){return !p||p.source!=="cpu_current";}); mc.forEach(function(p){ if(!p) return; mm.push({step:p.step,t:p.t,ts:p.ts,source:"cpu_current",ar_current_ce:p.ar,sat_fixed_ce:p.sat,nat_ce:(p.nat_pooled!=null?p.nat_pooled:null)}); }); mm.sort(function(a,b){return (a.step||0)-(b.step||0);}); }
+  /* AGILLM_TRANSFORMER_NN_PFLOP_TARGET_20260920
+     Owner target: the actual executed Transformer training graph over wall time.
+     Isolated microkernels and 6*conventional-parameter*tok/s are not completion. */
+  function paintPflopTarget(d){
+    var c=(d&&d.transformer_compute)||{},r=c.current||{},runtime=c.runtime||{},stamp=window.AGILLMTelemetryValues.timestamp(c.merged_at),age=stamp===null?Infinity:Date.now()/1000-stamp;
+    var compactEl=document.getElementById("pflopCompact"),full=document.getElementById("pflopFull"),pf=num(r.dense_equivalent_pflop_s),pct=num(r.target_attainment_percent);
+    var fresh=d&&d.fresh===true&&c.ok===true&&runtime.running===true&&age>=-5&&age<90&&pf!==null&&pct!==null;
+    var text=fresh?"Executed Transformer training: "+pf.toFixed(3)+" PF dense-equivalent · "+pct.toFixed(1)+"% of the 1 PF target · "+N(r.updates)+" updates over wall time.":"Training compute unavailable — no current measured Transformer execution rate.";
+    if(compactEl){compactEl.textContent=fresh?"NN "+pf.toFixed(3)+" PF":"Training compute unavailable";compactEl.title=text;}
+    if(full)full.textContent=text;
+  }
+  function refreshPflopTarget(){
+    var pe=document.getElementById("pflopCompact"); if(document.hidden||!pe||pe.offsetParent===null) return;
+    fetch("/agillm-rpv16-training",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();}).then(function(d){paintPflopTarget(d);}).catch(function(){});
+  }
+  refreshPflopTarget(); setInterval(refreshPflopTarget,30000);
+  function refreshServed(){
+    if(document.hidden) return;
+    fetch("/agillm-rpv16-health",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();}).then(function(h){
+      var s=h&&h.ok===true&&h.model?num(h.model.step):null; var prev=SERVED&&SERVED.step; SERVED=s===null?null:{step:s,ckpt:h.ckpt||h.model.ckpt||null};
+      if((SERVED&&SERVED.step)!==prev) draw(); }).catch(function(){});
+  }
+  /* Bandwidth (owner is often on a metered phone hotspot): poll the lean feed (?history=0, ~11 KB gz) every
+     60 s and fetch the full history (~120 KB gz) only on first load, after a rollback, or when the cached
+     history no longer overlaps the live tail. Nothing is fetched while the tab is hidden. */
+  var HIST=null, HIST_SIG=null, HIST_LAST=null, HIST_AT=0, FULL_BUSY=false, LAST_TICK=0;
+  function getJSON(u){ return fetch(u,{cache:"no-store"}).then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); }); }
+  function histSig(d){ var hs=d.history_summary||{}, sm=hs.summary||(d.history&&d.history.summary)||{}; return String(sm.rows_abandoned)+"|"+String(sm.first_step); } // a rollback moves rows_abandoned
+  function keepHistory(d){ var h=d.history&&Array.isArray(d.history.rows)?d.history:null; if(!h) return false;
+    HIST={history:h,standard_history:d.standard_history||null}; HIST_SIG=histSig(d); HIST_AT=Date.now(); var r=h.rows, c=h.cols||[], i1=c.indexOf("s1"); HIST_LAST=r.length&&i1>=0?num(r[r.length-1][i1]):null; return true; }
+  function apply(d){
+    if(HIST){ if(!("history" in d)) d.history=HIST.history; if(!("standard_history" in d)) d.standard_history=HIST.standard_history; }
+    DATA=d;mergeCurrentHeldout(DATA);window.__AGILLM_TRAINING_STATUS=d;paintPflopTarget(d);
+    if(window.AGILLMProgressV1)window.AGILLMProgressV1.render(d);
+    if(typeof renderTrainerMirror==="function")renderTrainerMirror();
+    paintPill();draw();
+  }
+  function fetchFull(){ if(FULL_BUSY) return; FULL_BUSY=true;
+    getJSON("/api/training").then(function(f){ if(f&&f.ok){ keepHistory(f); apply(f); } }).catch(function(){}).then(function(){ FULL_BUSY=false; }); }
+  function tick(force){
+    if(document.hidden&&!force) return; LAST_TICK=Date.now();
+    function unavailable(reason){
+      window.__AGILLM_TRAINING_STATUS={ok:false,reason:reason};
+      if(window.AGILLMProgressV1){ window.dispatchEvent(new Event("agi44-feed-unavailable")); window.AGILLMProgressV1.unavailable(); }
+      if(!DATA)lbl.textContent="curves: "+reason;
+      else{lbl.textContent="last evidence · feed unavailable";lbl.title=reason;}
+      if(typeof renderTrainerMirror==="function")renderTrainerMirror();
+    }
+    getJSON(HIST?"/api/training?history=0":"/api/training").then(function(d){
+      if(!d||!d.ok){unavailable((d&&d.reason)||"unavailable");return;}
+      if(keepHistory(d)){ apply(d); return; }          // full doc (first load, or a server without ?history=0)
+      var tail=d.train||[], t0=tail.length?num(tail[0].step):null;
+      var need=histSig(d)!==HIST_SIG||(HIST_LAST!==null&&t0!==null&&t0>HIST_LAST-64)||(Date.now()-HIST_AT>30*60*1000);
+      apply(d); if(need) fetchFull();
+    }).catch(function(e){unavailable(e&&e.message||"unreachable");});
+    refreshServed();
+  }
+  document.addEventListener("visibilitychange",function(){ if(!document.hidden&&Date.now()-LAST_TICK>20000){ tick(true); refreshPflopTarget(); } });
+  window.addEventListener("agi44-feed-unavailable",function(){ if(!MODEL||!(MODEL.has.anc||MODEL.has.ar)) paintModesLegacy(true); });
+  var rz=0; window.addEventListener("resize",function(){ if(rz) return; rz=requestAnimationFrame(function(){ rz=0; try{draw();}catch(e){} }); });
+  if(window.ResizeObserver) new ResizeObserver(function(){ if(rz) return; rz=requestAnimationFrame(function(){ rz=0; try{draw();}catch(e){} }); }).observe(cv);
+  tick(); setInterval(tick,60000);
+})();
+</script>
+<script>document.getElementById("agi44-curves").classList.add("open");</script>
+<div class="det" id="det"></div>
+<div class="foot">Health is heuristic and read-only: trainer/box (log freshness, tracebacks, disk, GPU, pace), whole model (held-out vs best, probe age, governor), AR / SAT fixed / NAT composition anchors (ran, accepted, spikes, finite, trainer-val trends), SAT-variable gate gradients, DBlock local training (spike streaks, commit rate, block skew, per-block local CE), detachable-50M student (error-skips, commit rate). Same verdicts on the MCP: <code>agillm_health</code>, <code>agillm_curves</code> (text, optional image), <code>agillm_curves_image</code> at <code>https://codex.opentransformers.online/mcp</code>.</div>
+<script>
+(function(){
+  var AREAS=[["trainer","Trainer / box"],["model","Whole model (held-out)"],["ar","AR"],["sat_fixed","SAT fixed"],["sat_variable","SAT variable"],["nat","NAT"],["dblock","DBlock local training"],["det50","Detachable 50M student"]];
+  function esc(t){return String(t==null?"":t).replace(/[<>&]/g,function(c){return {"<":"&lt;",">":"&gt;","&":"&amp;"}[c];});}
+  function fmt(v){ if(v===null||v===undefined) return "—"; if(typeof v==="number") return (Math.abs(v)<1e-3&&v!==0)?v.toExponential(2):(Number.isInteger(v)?v.toLocaleString():(+v.toFixed(4)).toString()); if(typeof v==="object") return Object.keys(v).map(function(k){ var x=v[k]; return esc(k)+"="+((x&&typeof x==="object")?esc(JSON.stringify(x)).slice(0,120):fmt(x)); }).join(" · ").slice(0,480); return esc(String(v)); }
+  function paint(h){ var el=document.getElementById("det"); if(!h||!h.areas){ el.innerHTML=""; return; } var html="";
+    AREAS.forEach(function(a){ var ar=h.areas[a[0]]||{}, lv=ar.level||"?"; var rows="";
+      Object.keys(ar).forEach(function(k){ if(k==="level") return; var v=ar[k]; if(k==="local_ar_ce_by_block"&&v&&typeof v==="object"){ v=Object.keys(v).map(function(b){return b+":"+v[b];}).join(" "); } if(k==="window"&&v&&typeof v==="object"){ v="attempts "+JSON.stringify(v.attempts)+" commits "+JSON.stringify(v.commits)+" err "+JSON.stringify(v.error_skips); } if(k==="last_train"&&Array.isArray(v)){ v=v.map(function(x){return "L"+x.layer+" "+x.sublayer;}).join(", "); } rows+="<dt>"+esc(k)+"</dt><dd>"+fmt(v)+"</dd>"; });
+      var flags=(h.flags||[]).filter(function(f){return f.area===a[0];}).map(function(f){return '<div class="flag '+esc(f.level)+'">'+esc(f.level==="bad"?"✖ ":"▲ ")+esc(f.message)+'</div>';}).join("");
+      html+='<div class="card '+esc(lv)+'"><h3><i></i>'+esc(a[1])+' <span style="margin-left:auto;font-weight:400">'+esc(lv)+'</span></h3>'+flags+'<dl>'+rows+'</dl></div>'; });
+    el.innerHTML=html; }
+  function tick(){ fetch("/api/health",{cache:"no-store"}).then(function(r){return r.json();}).then(paint).catch(function(){}); }
+  tick(); setInterval(tick,60000);
+})();
+</script>
+<style id="agi-live-css">
+#agi-live{padding:4px 18px 8px;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+#agi-live .lc{background:#111624;border:1px solid #2a3346;border-radius:12px;padding:11px 14px}
+#agi-live .lc.stale{opacity:.6}
+#agi-live .lh{display:flex;align-items:center;gap:8px;margin:0 0 8px;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:#8b98ab}
+#agi-live .lh b{color:#e6edf3;font-size:12.5px;letter-spacing:0;text-transform:none}
+#agi-live .dot{width:8px;height:8px;border-radius:50%;background:#3fb950;flex:none}
+#agi-live .dot.stale{background:#8b98ab}
+#agi-live .age{margin-left:auto;font-size:10.5px;color:#6b7688;letter-spacing:0;text-transform:none}
+#agi-live .hero{display:flex;gap:16px;flex-wrap:wrap;margin:2px 0 8px}
+#agi-live .k{font-size:10px;color:#8b98ab;text-transform:uppercase;letter-spacing:.04em}
+#agi-live .v{font:600 20px/1.15 ui-monospace,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+#agi-live .v.rise{color:#d29922}#agi-live .v.good{color:#3fb950}
+#agi-live .s{font-size:10.5px;color:#6b7688;font-family:ui-monospace,Menlo,monospace}
+#agi-live dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:2px 12px;font-size:11.5px}
+#agi-live dt{color:#8b98ab;white-space:nowrap}
+#agi-live dd{margin:0;text-align:right;font-variant-numeric:tabular-nums;font-family:ui-monospace,Menlo,monospace;font-size:11px}
+#agi-live .ramp{margin-top:8px;font-size:11px;color:#8b98ab;background:#0b101a;border:1px solid #223;border-radius:8px;padding:6px 8px}
+#agi-live .ramp b{color:#e6edf3}
+#agi-live .bar{height:5px;border-radius:3px;background:#1b2333;margin-top:5px;overflow:hidden}
+#agi-live .bar i{display:block;height:100%;background:linear-gradient(90deg,#d29922,#3fb950)}
+#agi-live .cap{grid-column:1/-1;color:#6b7688;font-size:10px}
+</style>
+<style id="agi-current-run-css">
+#agi-live .current-run-history{margin:8px 0 0;padding:8px 0 2px;border-top:1px solid #2c3744;font:10.5px/1.5 system-ui,sans-serif;color:#9eadbd;overflow:hidden;text-align:left}
+#agi-live .current-run-history b{font-weight:600;color:#d6e0ec}#agi-live .current-run-history svg{display:block;width:100%;height:64px;margin:4px 0}
+#agi-live .trainer-details>summary .run-loss-chart,#agi-live .trainer-details[open]>summary .run-loss-chart{display:block;width:100%;height:64px;max-width:none;transform:none;transition:none}
+#agi-live .current-run-history .run-range{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+</style>
+<script id="agi-live-js">
+(function(){
+"use strict";
+var V=window.AGILLMTelemetryValues,CID="agi-live",last=null;
+function I(n){n=V.number(n);return n===null?"—":Math.round(n).toLocaleString("en-US");}
+function K(n){n=V.number(n);return n===null?'—':n>=1e9?(n/1e9).toFixed(2)+'B':n>=1e6?(n/1e6).toFixed(2)+'M':I(n);}
+function F(n,k){n=V.number(n);return n===null?"—":n.toFixed(k);}
+function LR(n){n=V.number(n);return n===null?"—":n.toExponential(2);}
+function ag(s){if(V.number(s)===null)return"time unavailable";s=Math.max(0,s);return s<90?Math.round(s)+"s ago":s<5400?Math.round(s/60)+"m ago":s<172800?Math.round(s/3600)+"h ago":Math.round(s/86400)+"d ago";}
+function ec(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function box(k,v,sub){return '<div><div class="k">'+ec(k)+'</div><div class="v">'+ec(v)+'</div>'+(sub?'<div class="s">'+ec(sub)+'</div>':'')+'</div>';}
+function row(k,v){return '<dt>'+ec(k)+'</dt><dd>'+ec(v)+'</dd>';}
+function host(){var el=document.getElementById(CID);if(el)return el;el=document.createElement("section");el.id=CID;var c=document.getElementById("agi44-curves"),b=document.getElementById("agi44-curves-body"),fx=false;try{fx=c&&window.getComputedStyle(c).position==="fixed";}catch(e){}if(fx&&b)b.appendChild(el);else if(c&&c.parentNode)c.parentNode.insertBefore(el,c.nextSibling);else document.body.insertBefore(el,document.body.firstChild);return el;}
+function spark(history,key,d,st){
+ history=history||{};var historyStamp=V.timestamp(history.observed_at),historyAge=historyStamp===null?null:Date.now()/1000-historyStamp;
+ var historyStale=history.fresh!==true||historyAge===null||historyAge < -5||historyAge > 150||st.status==='stale'||st.status==='unavailable';
+ var series=V.runSeries(history,key==='std'?'standard':'rpv16',d),p=series.points,title=st.status==='completed'?'Completed run':!historyStale&&st.status==='training'?'Current run':'Last observed run';
+ if(historyStale)title+=' · history stale';
+ var label=series.label||String(d.objective||'').toUpperCase(),head='<div class="current-run-history"><b>'+ec(title+(label?' · '+label+' batch loss':''))+'</b>';
+ if(p.length<2)return head+'<div>'+ec(series.reason)+'</div></div>';
+ var start=p[0].step,end=p[p.length-1].step,losses=p.map(function(x){return x.loss;}),lo=Math.min.apply(null,losses),hi=Math.max.apply(null,losses),span=Math.max(1e-9,hi-lo);
+ var path=p.map(function(x,i){return(i?'L':'M')+(2+316*(x.step-start)/Math.max(1,end-start)).toFixed(2)+','+(hi===lo?32:60-56*(x.loss-lo)/span).toFixed(2);}).join(' ');
+ var color=historyStale?'#8997a8':({ar:'#79b8ff',sat:'#e0b66f',nat:'#bd9df2',dblock:'#79d695'}[series.objective]||'#79b8ff');
+ var desc=title+' '+label+' loss, steps '+I(start)+' to '+I(end)+', '+p.length+' same-objective samples';
+ var lastSample=p[p.length-1].ts,sampleAge=lastSample===null?'Per-sample times unreported':'Last plotted sample '+ag(Date.now()/1000-lastSample);
+ return head+'<svg class="run-loss-chart" viewBox="0 0 320 64" role="img" aria-label="'+ec(desc)+'" data-objective="'+ec(series.objective)+'" data-samples="'+p.length+'"><title>'+ec(desc)+'</title><path d="'+path+'" fill="none" stroke="'+color+'" stroke-width="1.6" vector-effect="non-scaling-stroke"/></svg><div class="run-range"><span>steps '+I(start)+'–'+I(end)+'</span><span>loss '+F(lo,3)+'–'+F(hi,3)+'</span></div><div>'+ec(sampleAge)+' · history checked '+ec(ag(historyAge))+'</div><div>'+ec(series.lineage)+' · instance '+ec(series.instance_id)+' · source '+ec(series.source===null?'time unavailable':ag(Date.now()/1000-series.source))+'</div><div>Only '+ec(label)+' samples; no other objectives or archived runs joined.</div></div>';
+}
+function trainer(d,key,history){
+ d=d||{};var st=V.state(d),completed=d.status==='completed',current=st.status==='training',stale=st.status==='stale'||st.status==='unavailable',ck=d.last_checkpoint_event||{};
+ var label=key==='std'?'Standard 1.1B':'RPV16 2.0B',stateLabel={training:'Live',starting:'Starting',completed:'Completed',stale:'Stale',unavailable:'Unavailable'}[st.status];
+ var rate=current?(d.raw_tok_s!=null?d.raw_tok_s:d.median_tok_s):null;
+ var dl=row('state',completed&&stale?'Completed · verification delayed':stateLabel)+row('GPU',d.gpu_name||'unavailable')+row('instance',d.instance_id||'unavailable')+row('step',I(d.step))+row('objective',d.objective||'unavailable')+row('seen tokens',I(d.seen_tokens))+(d.target_tokens!=null?row('cumulative target',K(d.target_tokens))+row('progress',F(100*d.seen_tokens/d.target_tokens,2)+'%'):'')+row('LR',LR(d.lr))+row('last batch loss',F(d.loss,3));
+ dl+=row('held-out CE',F(d.heldout_ce,4));if(d.heldout_step!=null)dl+=row('held-out step',I(d.heldout_step));
+ dl+=row('last checkpoint',ck.step!=null?'step '+I(ck.step):'unavailable');if(ck.path)dl+=row('checkpoint file',String(ck.path).split('/').pop());
+ var source=V.timestamp(d.source_observed_at);dl+=row('source event',source===null?'unavailable':ag(Date.now()/1000-source));
+ if(d.error||d.reason)dl+=row('telemetry',d.error||d.reason);
+ var hero=box('batch loss',F(d.loss,3),d.objective||'last measured')+box('train tok/s',I(rate),completed?'pretraining complete':current?'raw/input':'no current sample')+box('seen tokens',K(d.seen_tokens),d.target_tokens!=null?'of '+K(d.target_tokens)+' cumulative':'cumulative');
+ return '<article class="lc '+key+(stale?' stale':'')+'" data-state="'+st.status+'"><div class="lh"><span class="dot'+(current?'':' stale')+'"></span><b>'+ec(label+(d.gpu_name?' · '+d.gpu_name:''))+'</b><span class="step">step <b>'+I(d.step)+'</b></span><span class="age">'+stateLabel+' · checked '+ec(ag(st.age))+'</span></div><div class="hero">'+hero+'</div>'+spark(history,key,d,st)+'<dl>'+dl+'</dl></article>';
+}
+function render(d){last=d||{};var history=last.live_history||{};host().innerHTML=trainer(last.rpv16_live||last.gb10_live,'rpv',history.rpv16)+trainer(last.standard_live,'std',history.standard)+'<div class="cap">Separate model lineages · serving checkpoints shown independently · completed runs have no current throughput · ~1 min refresh</div>';}
+window.AGILLMLiveTele={render:render};
+render(window.__AGILLM_TRAINING_STATUS||{});
+var busy=false;
+function poll(){if(document.hidden||busy)return;busy=true;fetch('/api/training?history=0',{cache:'no-store'}).then(function(r){if(!r.ok)throw Error(r.status);return r.json();}).then(render).catch(function(){var d=Object.assign({},last||{});['rpv16_live','gb10_live','standard_live'].forEach(function(k){if(d[k])d[k]=Object.assign({},d[k],{fresh:false,reason:'Live feed unavailable; last observation retained'});});render(d);}).then(function(){busy=false;});}
+function hook(){var a=window.AGILLMProgressV1;if(a&&!a.__lw){var o=a.render;a.render=function(d){render(d);return o?o.apply(this,arguments):undefined;};a.__lw=true;return true;}return false;}
+hook();poll();setInterval(poll,60000);setInterval(function(){if(last&&!document.hidden)render(last);},30000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden)poll();});
+})();
+</script>
+</body></html>

@@ -1,0 +1,144 @@
+{
+  "acceptance": {
+    "checks": {
+      "ar_smoke": true,
+      "checkpoint_match": true,
+      "manifest_complete": true,
+      "nat_smoke": true,
+      "primary_capacity_ready": true,
+      "primary_ready": true,
+      "primary_two_slots": false,
+      "secondary_ready": false,
+      "sha256_all_files": true
+    },
+    "primary_concurrency": 1,
+    "primary_live_slots": 1,
+    "promotion_completed_at": "2026-09-30T05:25:36Z",
+    "promotion_receipt_sha256": "d3434fbd3439b2caf1624487f497c738a74549d7698370e2a3dcc72a1b8fa56a",
+    "promotion_step": 3133615,
+    "source": "pinned_standard_final_cutover_with_current_public_tunnel_runtime_identity",
+    "verification_scope": "actual_serving_checkpoint",
+    "verified_files": 64
+  },
+  "authoritative_source": "vast-direct-live",
+  "bridge": {
+    "active_request_count": 0,
+    "age_s": 4.849638223648071,
+    "busy": 0,
+    "canonical_modes": [
+      "ar",
+      "sat_fixed",
+      "sat_variable",
+      "nat"
+    ],
+    "checkpoint_step": 3133615,
+    "ckpt": "pretrain_final.pt",
+    "concurrency": 1,
+    "device": "cuda",
+    "draining_slots": 0,
+    "dtype": "fp32",
+    "fresh": true,
+    "health_source": "https://codex.opentransformers.online/agillm43-infer/health",
+    "host": "vast-v100-52631126",
+    "live_slots": 1,
+    "loads": 1,
+    "model": {
+      "name": "AGILLM 4.4 Standard 1.1B",
+      "seen_tokens": 400000421888,
+      "source_checkpoint_sha256": "53aba5977671b7d588227f5de3206bef9822d659d59bf87c77d086bcda17a1c4",
+      "step": 3133615,
+      "tokenizer_sha256": "REDACTED"
+    },
+    "observed_at": 1790746221.5882182,
+    "ok": true,
+    "pending_request_count": 0,
+    "queue_timeout_s": 60.0,
+    "ready": true,
+    "request_timeout_s": 300.0,
+    "slot_dtypes": [
+      "fp32"
+    ],
+    "slot_threads": [
+      4
+    ],
+    "step": 3133615,
+    "uptime_s": 476,
+    "warming": false
+  },
+  "checkpoint_saved_at": "2026-09-29T20:03:37Z",
+  "checkpoint_sha256": "53aba5977671b7d588227f5de3206bef9822d659d59bf87c77d086bcda17a1c4",
+  "compute_status": {},
+  "content_commit": null,
+  "deployment_receipt": {
+    "completed_at": "2026-09-30T05:25:36Z",
+    "path": "/opt/agillm43_netserve/receipts/standard-final-20260930/promotion.json",
+    "sha256": "d3434fbd3439b2caf1624487f497c738a74549d7698370e2a3dcc72a1b8fa56a",
+    "status": "complete",
+    "step": 3133615,
+    "verification": {
+      "pinned_artifacts": {
+        "checkpoint_hash_verification.json": "c7e5b51716332f37c413df3732e90872479edf7b2b87632d6e023e705f551283",
+        "launch.json": "625e21f635304a9ce5fd7e6aaf7b561e1d4b7ea8c7be0415739fcd4da902de99",
+        "promotion.json": "d3434fbd3439b2caf1624487f497c738a74549d7698370e2a3dcc72a1b8fa56a",
+        "public_stream_verification.json": "f86eaf78040f5d144f379803f5160cee35f9edd51f561980103212be0b83106e",
+        "smoke_verified.json": "d439f798e026ed06f41fd6478a3f0703561474079e9a0034e7a22c58512df381"
+      },
+      "public_health_observed_at": 1790746221.5882182,
+      "runtime_attestation": {
+        "bridge_pid": 1741556,
+        "bridge_sha256": "d6c9c5c1d3d3785ce15d1ae67f696555bc3e081ecc5c9d6dd4f7d8993a922f5d",
+        "checkpoint_sha256": "53aba5977671b7d588227f5de3206bef9822d659d59bf87c77d086bcda17a1c4",
+        "observed_at": 1790746228.9360287,
+        "runtime_sha256": "790cd4719a8d2837b5be45bf72432ac953dbb2688896dae5f3c1881631c4d9aa",
+        "tokenizer_sha256": "REDACTED",
+        "worker_pid": 1741558
+      },
+      "scope": "actual_serving_checkpoint",
+      "standard_upstream_sha256": "1a2b15895e7e73aa29ef8d264d557038be3fc831014be2a66ad210dcab1b9d56",
+      "tunnel_unit_sha256": "132d0a490cc7d4350fb2444539e202daa954b578c506c2ab7d6e0666a98c80c4"
+    }
+  },
+  "effective_seen_tok": null,
+  "file": "pretrain_final.pt",
+  "integrity": "live bridge health + matching completed promotion receipt",
+  "last_saved_file": "pretrain_final.pt",
+  "last_saved_step": 3133615,
+  "lineage": "standard-1p1b-400b",
+  "loss": 3.573,
+  "mirror_age_sec": 6.018005132675171,
+  "model_id": "standard",
+  "observed_at": 1790746223.2892814,
+  "package_path": null,
+  "promotion_verification": {
+    "checkpoint": "pretrain_final.pt",
+    "ok": true,
+    "reason": "matching_standard_final_receipt_and_current_public_tunnel_runtime_identity",
+    "scope": "actual_serving_checkpoint",
+    "step": 3133615
+  },
+  "seen_tok": 400000421888,
+  "serving": true,
+  "serving_file": "pretrain_final.pt",
+  "serving_step": 3133615,
+  "source": "vast.ai",
+  "status": "serving_verified",
+  "status_updated_at": "2026-09-30T05:30:29+00:00",
+  "step": 3133615,
+  "target_tokens": 400000000000,
+  "trainer_fresh": true,
+  "trainer_live_step": null,
+  "trainer_source": "vast-current-fleet",
+  "trainer_status": "completed",
+  "training_checkpoint_sha256": "53aba5977671b7d588227f5de3206bef9822d659d59bf87c77d086bcda17a1c4",
+  "training_observed_at": 1790746223.2892814,
+  "training_source_observed_at": 1790712217.0,
+  "ui": {
+    "max_new_tokens": 2048,
+    "nat_default_passes": 1,
+    "request_scoped_stop": true,
+    "saved_decode_intent": true,
+    "url": "https://codex.opentransformers.online/agillm-ui"
+  },
+  "updated_utc": "2026-09-29T20:03:37Z",
+  "verified_at": "2026-09-30T05:30:21Z"
+}

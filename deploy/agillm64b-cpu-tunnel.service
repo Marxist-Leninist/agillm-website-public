@@ -1,0 +1,10 @@
+[Unit]
+Description=SSH tunnel GETH 127.0.0.1:8771 -> vast 55575647 127.0.0.1:8770 (AGILLM-64B bin8 CPU inference; claude-chat-64b-improve-20261019)
+After=network-online.target
+Wants=network-online.target
+[Service]
+ExecStart=/usr/bin/ssh -N -o ExitOnForwardFailure=yes -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o BatchMode=yes -o LogLevel=ERROR -L 127.0.0.1:8771:127.0.0.1:8770 -p 41327 root@x.x.x.x
+Restart=always
+RestartSec=5
+[Install]
+WantedBy=multi-user.target

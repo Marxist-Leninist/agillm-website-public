@@ -1,0 +1,49 @@
+{
+  "artifacts": {
+    "inference_sha256": "cc55d3c762159c4da599801f5f662595398270c9d931a5707c900a3224c4a6dc",
+    "inference_single_file": "/workspace/agillm43_live_infer/agillm41_runtime_938597eb7764_logits_sat_v14.py",
+    "sft_chat_bridge": "/workspace/agillm43_sft_v2_infer/agillm43_http_bridge_sft_v2.py",
+    "sft_sha256": "227c9b77f21325235c514f1f6403312396ad3a178ba2e8ff04aa91f741a43cd7",
+    "sft_single_file": "/workspace/agillm43_sft_stage/agillm43_sft_completion_v2.py",
+    "sft_v2_recipe": "/workspace/agillm43_sft_v2_stage/start_sft_v2.sh",
+    "training_sha256": "731dc44d4ad3cc1cbcb97264e4437e4ec19a4519b751f24a46f8366f993a0cac",
+    "training_single_file": "/workspace/agillm43_production_v14/runtime/agillm43_singlefile_intelligence_v23.py"
+  },
+  "checkpoint": "/workspace/agillm43_production_v14/production_quality_v18_hard_spike_gates/checkpoints/pretrain_step02099274_from02097884_20260818T0815Z.pt",
+  "checkpoint_seen_tokens": 125675036672,
+  "checkpoint_step": 2099274,
+  "checks": {
+    "handoff_receipt": false,
+    "inference_v14_build": false,
+    "inference_v14_file": true,
+    "pointer_valid": true,
+    "qwen_gpu_lane_idle": true,
+    "sft_v2_adaptive": false,
+    "sft_v2_bridge_ready": false,
+    "sft_v2_file": true,
+    "sft_v2_inference": false,
+    "sft_v2_recipe": true,
+    "training_policy": true,
+    "v22_supervisors_gone": true,
+    "v22_trainers_gone": true,
+    "v23_file": true,
+    "v23_single_trainer": true,
+    "versioned_policy_tests": false
+  },
+  "handoff_phase": "already_v23_active",
+  "legacy_v22_process_count": 0,
+  "safety": {
+    "base_playground_replaced": false,
+    "checkpoint_deletion": false,
+    "failed_sft_v1_used_as_training_parent": false,
+    "force_kill": false,
+    "new_paid_compute": false
+  },
+  "schema": "agillm43.v23-public-status.v1",
+  "state": "pending",
+  "sync_error": "RuntimeError: managed Vast route validation failed",
+  "sync_ok": false,
+  "updated_utc": "2026-10-09T05:21:03Z",
+  "v23_active": false,
+  "v23_trainer_count": 0
+}

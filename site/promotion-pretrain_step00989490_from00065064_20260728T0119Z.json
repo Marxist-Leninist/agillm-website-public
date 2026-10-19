@@ -1,0 +1,15 @@
+{
+  "checkpoint": "/mnt/geth-vol1/agillm43/ckpts/artifacts/full/repretrain_v4_wip/pretrain_step00989490_from00065064_20260728T0119Z.pt",
+  "loss": 12.200915336608887,
+  "previous_checkpoint": "/mnt/geth-vol1/agillm43/ckpts/artifacts/full/repretrain_v4_wip/pretrain_step00932388_from00065064_20260727T1019Z.pt",
+  "previous_sha256": "4c8fca8f947927636f468f3739ff74c6d482f1e0f38a8c11dae56462c74e4eb0",
+  "promoted_at": "2026-07-28T03:55:00Z",
+  "promoted_by": "kimi-cloud via SG1",
+  "schema": "agillm43.vast_promotion.v1",
+  "seen_tok": 48635412480,
+  "sha256": "51f4e50ea18363f27e9ca5736f78357422b188a4c293245e75570f02c2d9c346",
+  "source": "vast.ai",
+  "step": 989490,
+  "vast_instance_id": 44137950,
+  "verification": "rsync exit 0; .pt sha256 matches console manifest; systemctl reload OK; POST /infer HTTP 200 on new ckpt"
+}

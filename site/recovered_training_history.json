@@ -1,0 +1,680 @@
+{
+  "archive_checkin_step_count": 39,
+  "dense_heartbeat_history_recovered": false,
+  "explicit_probe_step_count": 35,
+  "generated_at": 1789496404,
+  "lineage": "rtx3090-47086549-old-run",
+  "note": "Recovered historical quality probes only. Original every-heartbeat raw-loss cache was not found after old RTX 3090 deletion.",
+  "point_count": 74,
+  "points": [
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2787025,
+      "step_basis": "explicit_probe_step",
+      "t": 1788715391,
+      "w2048": null,
+      "w257": 6.2807
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2787120,
+      "step_basis": "explicit_probe_step",
+      "t": 1788715391,
+      "w2048": null,
+      "w257": 6.3482
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2787121,
+      "step_basis": "explicit_probe_step",
+      "t": 1788715391,
+      "w2048": 6.4332,
+      "w257": 6.3467
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2787534,
+      "step_basis": "explicit_probe_step",
+      "t": 1788719665,
+      "w2048": null,
+      "w257": 6.2132
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2787711,
+      "step_basis": "explicit_probe_step",
+      "t": 1788723982,
+      "w2048": null,
+      "w257": 6.2332
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2787847,
+      "step_basis": "explicit_probe_step",
+      "t": 1788723982,
+      "w2048": null,
+      "w257": 6.2278
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2787985,
+      "step_basis": "explicit_probe_step",
+      "t": 1788723982,
+      "w2048": null,
+      "w257": 6.2193
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2788552,
+      "step_basis": "archive_checkin_step",
+      "t": 1788728061,
+      "w2048": 6.2658,
+      "w257": 6.1848
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2788779,
+      "step_basis": "archive_checkin_step",
+      "t": 1788729978,
+      "w2048": 6.2512,
+      "w257": 6.1652
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2788997,
+      "step_basis": "archive_checkin_step",
+      "t": 1788731891,
+      "w2048": 6.2417,
+      "w257": 6.1599
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2789216,
+      "step_basis": "archive_checkin_step",
+      "t": 1788733814,
+      "w2048": 6.24,
+      "w257": 6.1523
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2789519,
+      "step_basis": "archive_checkin_step",
+      "t": 1788736418,
+      "w2048": 6.2529,
+      "w257": 6.1457
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2789747,
+      "step_basis": "archive_checkin_step",
+      "t": 1788738407,
+      "w2048": 6.2331,
+      "w257": 6.1315
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2790716,
+      "step_basis": "archive_checkin_step",
+      "t": 1788746932,
+      "w2048": 6.2036,
+      "w257": 6.1272
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2790933,
+      "step_basis": "archive_checkin_step",
+      "t": 1788748918,
+      "w2048": null,
+      "w257": 6.1059
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2791165,
+      "step_basis": "archive_checkin_step",
+      "t": 1788750989,
+      "w2048": 6.1666,
+      "w257": 6.0853
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2791264,
+      "step_basis": "explicit_probe_step",
+      "t": 1788752984,
+      "w2048": 6.1577,
+      "w257": 6.08
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2791537,
+      "step_basis": "explicit_probe_step",
+      "t": 1788755123,
+      "w2048": null,
+      "w257": 6.0749
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2791858,
+      "step_basis": "archive_checkin_step",
+      "t": 1788757082,
+      "w2048": null,
+      "w257": 6.0644
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2792081,
+      "step_basis": "archive_checkin_step",
+      "t": 1788759040,
+      "w2048": null,
+      "w257": 6.0754
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2793714,
+      "step_basis": "archive_checkin_step",
+      "t": 1788773481,
+      "w2048": 6.09,
+      "w257": 6.0232
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2793941,
+      "step_basis": "archive_checkin_step",
+      "t": 1788775489,
+      "w2048": 6.09,
+      "w257": 6.0232
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2794160,
+      "step_basis": "archive_checkin_step",
+      "t": 1788777476,
+      "w2048": null,
+      "w257": 6.0367
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2794411,
+      "step_basis": "archive_checkin_step",
+      "t": 1788779682,
+      "w2048": 6.0612,
+      "w257": 6.0307
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2794631,
+      "step_basis": "archive_checkin_step",
+      "t": 1788781624,
+      "w2048": 6.0744,
+      "w257": 6.0242
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2794865,
+      "step_basis": "archive_checkin_step",
+      "t": 1788783757,
+      "w2048": 6.0521,
+      "w257": 6.012
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2795057,
+      "step_basis": "explicit_probe_step",
+      "t": 1788785813,
+      "w2048": 6.0309,
+      "w257": 5.997
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2795579,
+      "step_basis": "archive_checkin_step",
+      "t": 1788790513,
+      "w2048": 6.0256,
+      "w257": 6.01
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2796394,
+      "step_basis": "explicit_probe_step",
+      "t": 1788798439,
+      "w2048": null,
+      "w257": 5.9584
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2796931,
+      "step_basis": "explicit_probe_step",
+      "t": 1788802553,
+      "w2048": 5.9463,
+      "w257": 5.9322
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2797259,
+      "step_basis": "explicit_probe_step",
+      "t": 1788806610,
+      "w2048": null,
+      "w257": 5.9053
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2797297,
+      "step_basis": "explicit_probe_step",
+      "t": 1788806610,
+      "w2048": 5.9352,
+      "w257": 5.9225
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2797737,
+      "step_basis": "explicit_probe_step",
+      "t": 1788810462,
+      "w2048": 5.8378,
+      "w257": 5.8607
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2798039,
+      "step_basis": "explicit_probe_step",
+      "t": 1788814365,
+      "w2048": null,
+      "w257": 5.8519
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2798175,
+      "step_basis": "explicit_probe_step",
+      "t": 1788814365,
+      "w2048": 5.8499,
+      "w257": 5.8712
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2798721,
+      "step_basis": "explicit_probe_step",
+      "t": 1788818234,
+      "w2048": 5.8045,
+      "w257": 5.8225
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2798935,
+      "step_basis": "explicit_probe_step",
+      "t": 1788821999,
+      "w2048": null,
+      "w257": 5.821
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2799069,
+      "step_basis": "explicit_probe_step",
+      "t": 1788821999,
+      "w2048": 5.808,
+      "w257": 5.8306
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2799479,
+      "step_basis": "explicit_probe_step",
+      "t": 1788825814,
+      "w2048": 5.7648,
+      "w257": 5.79
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2799839,
+      "step_basis": "explicit_probe_step",
+      "t": 1788829693,
+      "w2048": 5.7605,
+      "w257": 5.7937
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2800247,
+      "step_basis": "explicit_probe_step",
+      "t": 1788833456,
+      "w2048": 5.7557,
+      "w257": 5.7864
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2800529,
+      "step_basis": "explicit_probe_step",
+      "t": 1788837233,
+      "w2048": 5.7438,
+      "w257": 5.7797
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2801076,
+      "step_basis": "explicit_probe_step",
+      "t": 1788840996,
+      "w2048": 5.7177,
+      "w257": 5.7542
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2801350,
+      "step_basis": "explicit_probe_step",
+      "t": 1788844784,
+      "w2048": 5.6904,
+      "w257": 5.7298
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2801891,
+      "step_basis": "explicit_probe_step",
+      "t": 1788848711,
+      "w2048": 5.6595,
+      "w257": 5.6997
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2802300,
+      "step_basis": "explicit_probe_step",
+      "t": 1788852539,
+      "w2048": 5.6526,
+      "w257": 5.6937
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2802636,
+      "step_basis": "archive_checkin_step",
+      "t": 1788863637,
+      "w2048": 5.6324,
+      "w257": 5.6949
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2803434,
+      "step_basis": "archive_checkin_step",
+      "t": 1788863610,
+      "w2048": 5.6324,
+      "w257": 5.6949
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2804558,
+      "step_basis": "archive_checkin_step",
+      "t": 1788874718,
+      "w2048": 5.5865,
+      "w257": 5.6593
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2805829,
+      "step_basis": "archive_checkin_step",
+      "t": 1788885743,
+      "w2048": 5.5399,
+      "w257": 5.6216
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2807049,
+      "step_basis": "archive_checkin_step",
+      "t": 1788896934,
+      "w2048": 5.5187,
+      "w257": 5.5863
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2808204,
+      "step_basis": "archive_checkin_step",
+      "t": 1788907902,
+      "w2048": null,
+      "w257": 5.5822
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2809440,
+      "step_basis": "archive_checkin_step",
+      "t": 1788918837,
+      "w2048": null,
+      "w257": 5.523
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2810598,
+      "step_basis": "archive_checkin_step",
+      "t": 1788929785,
+      "w2048": null,
+      "w257": 5.4972
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2811849,
+      "step_basis": "archive_checkin_step",
+      "t": 1788940795,
+      "w2048": null,
+      "w257": 5.4699
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2814013,
+      "step_basis": "archive_checkin_step",
+      "t": null,
+      "w2048": null,
+      "w257": 5.4166
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2814358,
+      "step_basis": "archive_checkin_step",
+      "t": 1788962989,
+      "w2048": 5.3376,
+      "w257": 5.4163
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2820539,
+      "step_basis": "archive_checkin_step",
+      "t": 1789029003,
+      "w2048": null,
+      "w257": 5.2872
+    },
+    {
+      "samples": 1,
+      "source": "sg_exact_landmark",
+      "step": 2823147,
+      "step_basis": "explicit_probe_step",
+      "t": null,
+      "w2048": null,
+      "w257": 5.2812
+    },
+    {
+      "samples": 13,
+      "source": "sg_archive_recovered",
+      "step": 2831704,
+      "step_basis": "archive_checkin_step",
+      "t": 1789069689,
+      "w2048": 5.3044,
+      "w257": 5.3258
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_exact_pair",
+      "step": 2875945,
+      "step_basis": "explicit_probe_step",
+      "t": 1789207221,
+      "w2048": 5.4072,
+      "w257": 5.3819
+    },
+    {
+      "samples": 1,
+      "source": "sg_exact_landmark",
+      "step": 2911034,
+      "step_basis": "explicit_probe_step",
+      "t": null,
+      "w2048": null,
+      "w257": 5.371775
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2953465,
+      "step_basis": "archive_checkin_step",
+      "t": null,
+      "w2048": null,
+      "w257": 5.3817
+    },
+    {
+      "samples": 1,
+      "source": "sg_exact_landmark",
+      "step": 2958567,
+      "step_basis": "explicit_probe_step",
+      "t": null,
+      "w2048": null,
+      "w257": 5.3735
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2960989,
+      "step_basis": "archive_checkin_step",
+      "t": null,
+      "w2048": null,
+      "w257": 5.3772
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2964888,
+      "step_basis": "archive_checkin_step",
+      "t": null,
+      "w2048": 5.3775,
+      "w257": 5.3705
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2966743,
+      "step_basis": "archive_checkin_step",
+      "t": null,
+      "w2048": 5.3814,
+      "w257": 5.3724
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2968602,
+      "step_basis": "archive_checkin_step",
+      "t": null,
+      "w2048": 5.3788,
+      "w257": 5.3697
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2972781,
+      "step_basis": "archive_checkin_step",
+      "t": null,
+      "w2048": 5.3775,
+      "w257": 5.3667
+    },
+    {
+      "samples": 1,
+      "source": "sg_exact_landmark",
+      "step": 2976229,
+      "step_basis": "explicit_probe_step",
+      "t": null,
+      "w2048": 5.3727,
+      "w257": 5.3632
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2978246,
+      "step_basis": "archive_checkin_step",
+      "t": null,
+      "w2048": 5.3718,
+      "w257": 5.3654
+    },
+    {
+      "samples": 1,
+      "source": "sg_archive_recovered",
+      "step": 2979970,
+      "step_basis": "archive_checkin_step",
+      "t": null,
+      "w2048": null,
+      "w257": 5.3671
+    },
+    {
+      "samples": 1,
+      "source": "sg_exact_landmark",
+      "step": 2990066,
+      "step_basis": "explicit_probe_step",
+      "t": null,
+      "w2048": 5.3696,
+      "w257": 5.3627
+    },
+    {
+      "samples": 2,
+      "source": "sg_exact_landmark",
+      "step": 2995989,
+      "step_basis": "explicit_probe_step",
+      "t": null,
+      "w2048": 5.3657,
+      "w257": 5.3605
+    }
+  ],
+  "protocol": "legacy heldout_v3 / w257,w2048 as recorded",
+  "provenance": "Recovered from Silicon Goddess memory + coordination archives after RTX 3090 deletion. Explicit probe-step pairs are marked separately from check-in snapshots; no interpolation.",
+  "schema": "agillm.recovered-training-history.v2"
+}

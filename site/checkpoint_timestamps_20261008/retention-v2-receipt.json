@@ -1,0 +1,18 @@
+{
+  "marker": "AGILLM_CHECKPOINT_RETENTION_V2",
+  "applied": true,
+  "unit_tests": 20,
+  "inline_scripts_checked": 21,
+  "before_ui_sha256": "52c85a9fd0c4142498c536f118b3ea3b0e20f2189e2e905aeff94b7b061a3c91",
+  "after_ui_sha256": "fc1b1d12175fecbe49a3d0795dca7c8220d91baaaa8ac3d1cb2a82a776dead12",
+  "addon_sha256": "adce9363e9495901a6ed1bbf68597b7accc32002cb93391ca3c0198175adb020",
+  "changes": [
+    "Keep last-known checkpoint step/time pairs with explicit label",
+    "Accept lower-step rollback metadata",
+    "Never substitute poll times or cross-step timestamps",
+    "Render each telemetry feed independently as it arrives"
+  ],
+  "model_or_service_changes": [],
+  "applied_at": "20261008T144959Z",
+  "backup": "/opt/agillm43_netserve/checkpoint_timestamps_20261008/backup-retention-v2-20261008T144959Z"
+}

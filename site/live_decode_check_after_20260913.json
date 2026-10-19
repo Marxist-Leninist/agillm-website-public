@@ -1,0 +1,137 @@
+[
+  {
+    "mode": "nat",
+    "variable": false,
+    "wall_s": 3.49,
+    "response": {
+      "ok": true,
+      "text": "The year is 2050 and                        ",
+      "stats": {
+        "seconds": 0.33,
+        "tokens": 24,
+        "tok_s": 72.7,
+        "nat_trace": {
+          "confidence_impl": "softmax",
+          "dedup_candidates": 64,
+          "dedup_mode": "candidate",
+          "mean_selected_confidence": 0.05247,
+          "parallel_dedup": true,
+          "pass": 1,
+          "passes": 1,
+          "predicted": 24,
+          "remasked": 0,
+          "schedule": "cosine"
+        }
+      },
+      "finish_reason": null,
+      "generation_finish": {},
+      "wall_s": 0.332,
+      "button_tok_s": 72.24,
+      "ckpt": "pretrain_step02939922_from02930767_20260913T1425Z.pt",
+      "host": "vast-47086549",
+      "dtype": "fp32",
+      "slot": 1,
+      "threads": 12,
+      "request_id": "legacy-1789311250906694431-130298167686720",
+      "queue_wait_s": 0.001
+    },
+    "text_preservation": "PASS: exactly 24 spaces retained"
+  },
+  {
+    "mode": "sat",
+    "variable": true,
+    "wall_s": 7.977,
+    "response": {
+      "ok": true,
+      "text": "The year is 2050 and  .. The The of of 200.  ..        .",
+      "stats": {
+        "seconds": 2.91,
+        "tokens": 24,
+        "tok_s": 8.3,
+        "sat_trace": {
+          "ar_realign": 0,
+          "core_forwards": 14,
+          "generated_tokens": 24,
+          "mode": "sat-var",
+          "stride_hist": {
+            "1": 2,
+            "2": 11
+          },
+          "var_stride1": 2
+        }
+      },
+      "finish_reason": null,
+      "generation_finish": {},
+      "wall_s": 2.912,
+      "button_tok_s": 8.24,
+      "ckpt": "pretrain_step02939922_from02930767_20260913T1425Z.pt",
+      "host": "vast-47086549",
+      "dtype": "fp32",
+      "slot": 1,
+      "threads": 12,
+      "request_id": "legacy-1789311256303695013-130298251249216",
+      "queue_wait_s": 0.001
+    }
+  },
+  {
+    "mode": "ar",
+    "variable": false,
+    "wall_s": 10.707,
+    "response": {
+      "ok": true,
+      "text": "The year is 2050 and 0. The average of the 0.5% of the 0% of the 0% of the",
+      "stats": {
+        "seconds": 4.22,
+        "tokens": 24,
+        "tok_s": 5.7
+      },
+      "finish_reason": null,
+      "generation_finish": {},
+      "wall_s": 4.227,
+      "button_tok_s": 5.68,
+      "ckpt": "pretrain_step02939922_from02930767_20260913T1425Z.pt",
+      "host": "vast-47086549",
+      "dtype": "fp32",
+      "slot": 1,
+      "threads": 12,
+      "request_id": "legacy-1789311264680570677-130298260764224",
+      "queue_wait_s": 0.001
+    }
+  },
+  {
+    "mode": "sat",
+    "variable": false,
+    "wall_s": 11.33,
+    "response": {
+      "ok": true,
+      "text": "The year is 2050 and 0. %.1%000 of 0. %. %%  %% ",
+      "stats": {
+        "seconds": 3.81,
+        "tokens": 24,
+        "tok_s": 6.3,
+        "sat_trace": {
+          "ar_realign": 0,
+          "core_forwards": 14,
+          "generated_tokens": 24,
+          "mode": "sat-fixed",
+          "stride_hist": {
+            "1": 0,
+            "2": 12
+          },
+          "var_stride1": 0
+        }
+      },
+      "finish_reason": null,
+      "generation_finish": {},
+      "wall_s": 3.816,
+      "button_tok_s": 6.29,
+      "ckpt": "pretrain_step02939922_from02930767_20260913T1425Z.pt",
+      "host": "vast-47086549",
+      "dtype": "fp32",
+      "slot": 1,
+      "threads": 12,
+      "request_id": "legacy-1789311277178260359-130298260764224",
+      "queue_wait_s": 0.001
+    }
+  }
+]

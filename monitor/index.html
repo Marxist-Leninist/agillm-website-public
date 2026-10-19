@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AGILLM Federation</title>
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 13.5h4.2l2.1-6.2 3.4 10 2.1-5.8H20"/><path d="M4 18h16"/></svg>
+          </span>
+          <div>
+            <h1>AGILLM Federation</h1>
+            <p id="rootPath">Connecting to federation</p>
+          </div>
+        </div>
+        <div class="top-actions">
+          <label class="switch" title="Toggle automatic refresh">
+            <input id="autoRefresh" type="checkbox" checked>
+            <span></span>
+          </label>
+          <button id="refreshButton" class="icon-button" type="button" title="Refresh">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6v5h-5"/><path d="M4 18v-5h5"/><path d="M18.2 9A7 7 0 0 0 6.7 6.4L4 9"/><path d="M5.8 15a7 7 0 0 0 11.5 2.6L20 15"/></svg>
+          </button>
+          <div class="live-pill"><span id="liveDot"></span><strong id="liveState">Live</strong></div>
+        </div>
+      </header>
+
+      <section class="summary-strip" aria-label="Federation summary">
+        <article>
+          <span>Update norm</span>
+          <strong id="latestNorm">--</strong>
+          <small id="normSource">Waiting for validation</small>
+        </article>
+        <article>
+          <span>Rolling average</span>
+          <strong id="avgNorm">--</strong>
+          <small id="peakNorm">Peak --</small>
+        </article>
+        <article>
+          <span>Training loss</span>
+          <strong id="latestLoss">--</strong>
+          <small id="avgLoss">Average --</small>
+        </article>
+        <article>
+          <span>Submissions</span>
+          <strong id="submissionCount">--</strong>
+          <small id="stepCount">-- steps</small>
+        </article>
+      </section>
+
+      <section class="layout-grid">
+        <aside class="panel worker-panel">
+          <div class="panel-title">
+            <h2>Workers</h2>
+            <span id="activeWorkers">-- active</span>
+          </div>
+          <div id="workerRows" class="worker-rows"></div>
+        </aside>
+
+        <section class="panel chart-panel">
+          <div class="panel-title">
+            <h2>Update Norm</h2>
+            <span id="normCaption">L2 gradient update magnitude</span>
+          </div>
+          <canvas id="normCanvas" height="260"></canvas>
+        </section>
+
+        <aside class="panel hardware-panel">
+          <div class="panel-title">
+            <h2>Hardware</h2>
+            <span id="schedulerState">Scheduler --</span>
+          </div>
+          <div id="hardwareRows" class="hardware-rows"></div>
+        </aside>
+      </section>
+
+      <section class="lower-grid">
+        <section class="panel">
+          <div class="panel-title">
+            <h2>Recent Batches</h2>
+            <span id="batchCount">-- rows</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Lane</th>
+                  <th>Step</th>
+                  <th>Objective</th>
+                  <th>Loss</th>
+                  <th>Weighted</th>
+                  <th>Memory</th>
+                </tr>
+              </thead>
+              <tbody id="batchRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">
+            <h2>Leases</h2>
+            <span id="leaseCount">-- known</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Lane</th>
+                  <th>Cycle</th>
+                  <th>Result</th>
+                  <th>Expires</th>
+                </tr>
+              </thead>
+              <tbody id="leaseRows"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <section class="panel logs-panel">
+        <div class="panel-title">
+          <h2>Logs</h2>
+          <div class="tabs" role="tablist" aria-label="Log lane">
+            <button class="tab is-active" data-log="cpu" type="button">Master</button>
+            <button class="tab" data-log="cuda" type="button">Merge</button>
+            <button class="tab" data-log="cuda_err" type="button">Coordinator</button>
+          </div>
+        </div>
+        <pre id="logOutput"></pre>
+      </section>
+    </main>
+    <script src="/static/app.js"></script>
+  </body>
+</html>

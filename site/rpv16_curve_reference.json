@@ -1,0 +1,14 @@
+{
+  "schema": "agillm.rpv16.curve-reference.v1",
+  "unigram_nats": 7.7326,
+  "label": "unigram entropy, training stream (in-sample, first 10M tokens)",
+  "meaning": "A context-free model that only predicts token frequencies. Compare full-model training CE (history column anc, or ar_full15) with unigram_nats, and held-out CE with heldout_unigram_ce. The plain ar column averages 16 early-exit depths, so it reads lower than the full model.",
+  "dataset": "fineweb-edu sample-10BT, trainer stream order (first 10,000,000 tokens, revision 87f09149)",
+  "tokenizer_sha256_prefix": "1e1170051da8",
+  "tokens": 10000000,
+  "distinct_tokens": 63714,
+  "method": "plug-in H1 over the first 10M tokens (in-sample); an out-of-sample unigram scores somewhat higher",
+  "source": "/opt/claude_opus55_diag_20260923 tok.py + fit.py stats (session 9825b862, 2026-09-23)",
+  "heldout_unigram_ce": 7.8007,
+  "heldout_unigram_source": "/workspace/cowork_loss_diag_20260923/head_probe_204303.json unigram_fitprior_eval_ce on the fixed held-out set (fineweb-edu CC-MAIN-2024-10, 96x2048)"
+}
